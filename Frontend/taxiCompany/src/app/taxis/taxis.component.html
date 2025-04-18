@@ -1,7 +1,7 @@
 <h2>Lista de Táxis</h2>
 <ul class="taxis">
   <li *ngFor="let taxi of taxis">
-    <button type="button">
+    <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)">
       <span class="badge">ID: {{ taxi.id }}</span>
       <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
       <span class="marca">Marca: {{ taxi.marca }}</span>
@@ -11,3 +11,5 @@
     </button>
   </li>
 </ul>
+
+<app-taxi-details [taxi]="selectedTaxi"></app-taxi-details>
