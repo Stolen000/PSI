@@ -12,10 +12,14 @@ import { MotoristaService } from '../services/motorista.service';
 export class MotoristaComponent implements OnInit {
   motoristas: Motorista[] = [];
 
-  constructor() { }
+  constructor(private motoristaService: MotoristaService) { }
 
   ngOnInit(): void {
     // Inicialização futura se necessário
+  }
+
+  getMotoristas(): void {
+
   }
 
   registarMotorista(
