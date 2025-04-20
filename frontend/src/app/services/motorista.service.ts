@@ -27,6 +27,16 @@ export class MotoristaService {
     );
   }
 
+
+  getMotoristas(): Observable<Motorista[]> {
+    return this.http.get<Motorista[]>(this.motoristaUrl)
+
+      .pipe(
+        tap(_ => this.log('fetched motoristas')),
+        catchError(this.handleError<Motorista[]>('getMotoristas', []))
+      );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

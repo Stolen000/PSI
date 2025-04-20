@@ -3,7 +3,8 @@ const asyncHandler = require("express-async-handler");
 
 
 exports.motoristas_list = asyncHandler(async (req, res, next) => {
-  res.json("Bruh1");
+  const allMotoristas = await Motorista.find().exec();
+  res.json(allMotoristas);
 });
 
 
@@ -13,10 +14,16 @@ exports.motorista_create = asyncHandler(async (req, res, next) => {
     name: req.body.name,
     ano_nascimento: req.body.ano_nascimento,
     carta_conducao: req.body.carta_conducao,
-    morada: req.body.morada
+    nif: req.body.nif,
+    genero: req.body.genero,
+    morada: req.body.morada,
   });
 
   motorista.save();
-  res.status(201).json({ message: 'Motorista recebido com sucesso!' });
+  res.status(201).json(motorista);
+
 });
+
+
+
 
