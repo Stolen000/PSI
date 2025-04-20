@@ -9,7 +9,7 @@ import { Motorista } from '../motorista';
 @Injectable({ providedIn: 'root' })
 export class MotoristaService {
 
-  private motoristaUrl = 'http://localhost:3000/motorista';  // URL to web api
+  private motoristaUrl = 'http://localhost:3000/motoristas';  // URL to web api
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
