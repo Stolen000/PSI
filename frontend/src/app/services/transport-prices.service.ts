@@ -1,13 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { Price } from '../price';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransportPricesService {
-  private petsUrl = 'http://localhost:4200/prices';  // URL to web api
+  private pricesUrl = 'http://localhost:4200/prices';  // URL to web api
+
+  constructor(private http: HttpClient) { }
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-  constructor() { }
+  
+  getPrices(): Observable<Price> {
+    return this.http.get<Price>(this.pricesUrl).pipe(
+      catchError(err => {
+        console.error('Error occurred:', err);
+        return throwError(err); // or return a fallback value
+      })
+    );
+  }
+  
+  updatePrices(price: Price): Observable<any> {
+    return this.http.put(this.pricesUrl, price, this.httpOptions).pipe(
+      catchError(err => {
+        console.error('Error occurred:', err);
+        return throwError(err); // or return a fallback value
+      })
+    );
+  }
+  
 }
