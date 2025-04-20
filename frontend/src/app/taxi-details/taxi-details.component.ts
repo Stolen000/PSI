@@ -6,7 +6,7 @@ import { Taxi } from '../taxi';
   selector: 'app-taxi-details',
   standalone: false,
   templateUrl: './taxi-details.component.html',
-  styleUrl: './taxi-details.component.css'
+  styleUrls: ['./taxi-details.component.css']
 })
 export class TaxiDetailsComponent {
   @Input() taxi?: Taxi;
