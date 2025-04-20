@@ -1,17 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-
-import { HeroesComponent } from './motorista/motorista.component';
-
-
-import { PetsComponent } from './taxis/taxis.component';
+import { MotoristaComponent } from './motorista/motorista.component';
 
 const routes: Routes = [
-
-  { path: 'heroes', component: HeroesComponent },
-  { path: 'pets', component: PetsComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'motorista', component: MotoristaComponent },
 ];
 
 @NgModule({

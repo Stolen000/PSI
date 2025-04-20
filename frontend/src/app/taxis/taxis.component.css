@@ -1,0 +1,40 @@
+.taxis {
+    list-style-type: none;
+    padding: 0;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  .taxis li {
+    margin: 10px 0;
+  }
+  
+  .taxis button {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .taxis button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .badge {
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
+  
+  span {
+    display: inline-block;
+    margin: 2px 0;
+  }
+  
