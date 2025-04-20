@@ -10,9 +10,9 @@ router.get("/taxis", taxi_controller.taxi_list);
 router.post("/taxis", taxi_controller.taxi_create);
 
 
-router.get("/prices", prices_controller.price_get);
+//router.get("/prices", prices_controller.price_get);
 
-router.put("/prices", prices_controller.price_update);
+//router.put("/prices", prices_controller.price_update);
 
 router.get("/motoristas", motoristas_controller.motoristas_list);
 router.post("/motoristas", motoristas_controller.motorista_create);

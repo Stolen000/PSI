@@ -18,11 +18,13 @@
   <label for="numeroPorta">Número da Porta:</label>
   <input id="numeroPorta" type="number" #numeroPorta />
 
+ 
   <label for="codigoPostal">Código Postal:</label>
   <input id="codigoPostal" type="text" #codigoPostal (change)="buscarLocalidade(codigoPostal.value)" />
 
   <label for="localidade">Localidade:</label>
-  <input id="localidade" type="text" #localidade readonly />
+  <input id="localidade" type="text" #localidade  />
+  <!--   readonly-->
 
   <br /><br />
   <button type="button" class="add-button"

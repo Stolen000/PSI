@@ -43,8 +43,18 @@ export class MotoristaComponent implements OnInit {
         localidade: localidade
       }
     };
+
+
+
+
   
     console.log('Motorista a registar:', motorista);
+    
+    this.motoristaService.addMotorista(motorista as Motorista)
+      .subscribe(hero => {
+        this.motoristas.push(hero);
+      });
+
   }
   
 
