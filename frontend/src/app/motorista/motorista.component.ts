@@ -15,8 +15,37 @@ export class MotoristaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
+    // Inicialização futura se necessário
   }
 
+  registarMotorista(
+    name: string,
+    anoNascimento: number,
+    cartaConducao: number,
+    rua: string,
+    numeroPorta: number,
+    codigoPostal: string,
+    localidade: string
+  ): void {
+    const motorista = {
+      _id: '', // será gerado no backend
+      name: name,
+      ano_nascimento: +anoNascimento,
+      carta_conducao: +cartaConducao,
+      morada: {
+        rua: rua,
+        numero_porta: +numeroPorta,
+        codigo_postal: codigoPostal,
+        localidade: localidade
+      }
+    };
+  
+    console.log('Motorista a registar:', motorista);
+  }
+  
 
+  buscarLocalidade(codigoPostal: string): void {
+    // A lógica de busca será implementada depois
+    console.log('Buscar localidade para código postal:', codigoPostal);
+  }
 }

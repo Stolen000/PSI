@@ -1,14 +1,39 @@
-
-<h2>My Motorista</h2>
+<h2>Registar Motorista</h2>
 
 <div>
-  <label for="new-hero">Motorista: </label>
-  <input id="new-hero" #heroName />
+  <label for="name">Nome:</label>
+  <input id="name" type="text" #name />
 
-  <!-- (click) passes input value to add() and then clears the input -->
+  <label for="anoNascimento">Ano de Nascimento:</label>
+  <input id="anoNascimento" type="number" #anoNascimento />
+
+  <label for="cartaConducao">Número da Carta de Condução:</label>
+  <input id="cartaConducao" type="number" #cartaConducao />
+
+  <h3>Morada</h3>
+
+  <label for="rua">Rua:</label>
+  <input id="rua" type="text" #rua />
+
+  <label for="numeroPorta">Número da Porta:</label>
+  <input id="numeroPorta" type="number" #numeroPorta />
+
+  <label for="codigoPostal">Código Postal:</label>
+  <input id="codigoPostal" type="text" #codigoPostal (change)="buscarLocalidade(codigoPostal.value)" />
+
+  <label for="localidade">Localidade:</label>
+  <input id="localidade" type="text" #localidade readonly />
+
+  <br /><br />
+  <button type="button" class="add-button"
+    (click)="registarMotorista(
+      name.value,
+      +anoNascimento.value,
+      +cartaConducao.value,
+      rua.value,
+      +numeroPorta.value,
+      codigoPostal.value,
+      localidade.value)">
+    Registar Motorista
+  </button>
 </div>
-
-<ul class="motorista">
-
-</ul>
-
