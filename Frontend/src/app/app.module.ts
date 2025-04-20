@@ -1,27 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
+import { BrowserModule } from '@angular/platform-browser';
 
-import { TransportPricesComponent } from './transport-prices/transport-prices.component';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TaxisComponent } from './taxis/taxis.component';
-import { TaxiDetailsComponent } from "./taxi-details/taxi-details.component";
-import { MotoristaComponent } from './motorista/motorista.component';
-import { AppRoutes } from './app.routes';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TaxisComponent,
-    TaxiDetailsComponent,
-    MotoristaComponent,
-    TransportPricesComponent 
+    AppComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    AppRoutes,
-],
+    AppRoutingModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
