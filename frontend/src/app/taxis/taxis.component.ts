@@ -6,7 +6,7 @@ import { TaxiService } from '../services/taxi.service';
   selector: 'app-taxis',
   templateUrl: './taxis.component.html',
   standalone: false,
-  styleUrl: './taxis.component.css'
+  styleUrls: ['./taxis.component.css']
 })
 export class TaxisComponent {
   constructor(private taxiService: TaxiService) {}

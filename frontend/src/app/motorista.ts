@@ -2,11 +2,10 @@ import {Morada} from './morada';
 
 export interface Motorista {
     _id: string;
-    nome: string;
-    genero: string;
-    nif: number;
-    ano_de_nascimento: number;
-    carta_conducao: number;
+    name: string;
     morada: Morada;
-}
-
+    nif: number;
+    genero: string;
+    ano_nascimento: number;
+    carta_conducao: number;
+  }

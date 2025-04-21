@@ -8,7 +8,19 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var taxicompany = require("./routes/taxicompany");
 
+let cors = require('cors');
 var app = express();
+app.use(cors())
+
+
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const mongoDB = "mongodb+srv://gcalcadas:72Balerion19@cluster0.1wrld.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

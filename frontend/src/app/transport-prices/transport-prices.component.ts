@@ -4,7 +4,7 @@ import { TransportPricesService } from '../services/transport-prices.service';
 @Component({
   selector: 'app-transport-prices',
   templateUrl: './transport-prices.component.html',
-  styleUrl: './transport-prices.component.css',
+  styleUrls: ['./transport-prices.component.css'],
   standalone: false
 
 })

@@ -1,0 +1,64 @@
+<form #meuFormulario="ngForm">
+  <label for="name">Nome:</label>
+  <input id="name" type="text" name="name" ngModel required />
+
+  <label for="anoNascimento">Ano de Nascimento:</label>
+  <input id="anoNascimento" type="number" name="anoNascimento" ngModel required />
+
+  <label for="cartaConducao">Número da Carta de Condução:</label>
+  <input id="cartaConducao" type="number" name="cartaConducao" ngModel required />
+
+  <label for="nif">NIF:</label>
+  <input id="nif" type="number" name="nif" ngModel required pattern="^[0-9]{9}$" />
+
+  <label for="genero">Género:</label>
+  <select id="genero" name="genero" ngModel required>
+    <option value="">Selecione...</option>
+    <option value="Masculino">Masculino</option>
+    <option value="Feminino">Feminino</option>
+  </select>
+
+  <h3>Morada</h3>
+
+  <label for="rua">Rua:</label>
+  <input id="rua" type="text" name="rua" ngModel required />
+
+  <label for="numeroPorta">Número da Porta:</label>
+  <input id="numeroPorta" type="number" name="numeroPorta" ngModel required />
+
+  <label for="codigoPostal">Código Postal:</label>
+  <input id="codigoPostal" type="text" name="codigoPostal" ngModel required />
+
+  <label for="localidade">Localidade:</label>
+  <input id="localidade" type="text" name="localidade" ngModel required />
+
+  <div class="botoes-formulario">
+    <button type="button" class="add-button"
+      [disabled]="!meuFormulario.form.valid"
+      (click)="registarMotorista(
+        meuFormulario.value.name,
+        +meuFormulario.value.anoNascimento,
+        +meuFormulario.value.cartaConducao,
+        +meuFormulario.value.nif,
+        meuFormulario.value.genero,
+        meuFormulario.value.rua,
+        +meuFormulario.value.numeroPorta,
+        meuFormulario.value.codigoPostal,
+        meuFormulario.value.localidade
+      );">
+      Registar Motorista
+    </button>
+
+    <button type="button" class="clear-button" (click)="meuFormulario.resetForm()">
+      Limpar Formulário
+    </button>
+  </div>
+
+
+</form>
+
+<ul class="motoristas">
+  <li *ngFor="let motorista of motoristas">
+      <span class="badge"></span> {{motorista.name}}
+  </li>
+</ul>
