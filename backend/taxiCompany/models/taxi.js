@@ -10,9 +10,6 @@ const TaxiSchema = new Schema({
     nivel_de_conforto: { type: String, enum: ["basico", "luxuoso"], required: true },
 });
 
-
-
-
 // Virtual for author's URL
 TaxiSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
