@@ -9,19 +9,29 @@ import { Price } from '../price';
   standalone: false
 
 })
-//implements OnInit
-export class TransportPricesComponent {
-  price?:Price;
+//
+export class TransportPricesComponent implements OnInit{
+  price: Price = {
+    basic_price: '',
+    luxurious_price: '',
+    nocturne_tax: ''
+  };
+  validPriceInput = true;
   tripCost: number | null = null;
+  showTripCalculator = false;
   constructor(private transpPriceService : TransportPricesService){ }
 
-  /* ngOnInit(): void {
+  ngOnInit(): void {
     this.getPrices();
-  } */
+  } 
 
   getPrices(): void{
     this.transpPriceService.getPrices()
       .subscribe(prices => this.price = prices);
+  }
+
+  toggleTripCalculator(): void {
+    this.showTripCalculator = !this.showTripCalculator;
   }
 
   savePrice(basic: string, luxury: string, surcharge: string): void {
@@ -30,79 +40,55 @@ export class TransportPricesComponent {
       luxurious_price: luxury,
       nocturne_tax: surcharge
     };
+    console.log(price);
+    if(!price || !(parseFloat(price.basic_price) >= 0 && parseFloat(price.luxurious_price) >= 0 &&
+          parseFloat(price.nocturne_tax) >= 0)){
+      this.validPriceInput = false;
+      return;
+    }
+
+    this.validPriceInput = true;
+
     
-    if (price) {
+    if (price.basic_price !== this.price.basic_price ||
+      price.luxurious_price !== this.price.luxurious_price ||
+      price.nocturne_tax !== this.price.nocturne_tax
+  ) {
       this.transpPriceService.updatePrices(price)
-        .subscribe();
+        .subscribe((response => {
+          if(response && response.prices){
+            this.price = response.prices;
+          }
+        }));
+
     }
   }
 
    // Calculate the cost of the fictional trip
    calculateTripCost(comfortLevel: string, startTime: string, endTime: string): void {
-    // Convert time (HH:mm) to minutes
-    const startParts = startTime.split(':');
-    const endParts = endTime.split(':');
-  
-    const startMinutes = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
-    const endMinutes = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
-  
-    // Calculate duration in minutes
-    let durationInMinutes = endMinutes - startMinutes;
-  
-    // If duration is negative (i.e., end time is earlier than start time), assume it's the next day
-    if (durationInMinutes < 0) {
-      durationInMinutes += 24 * 60; // Add 24 hours worth of minutes
+    if (!this.price || !comfortLevel || !startTime || !endTime) return;
+    
+    const [startH, startM] = startTime.split(':').map(Number);
+    const [endH, endM] = endTime.split(':').map(Number);
+    let startMin = startH * 60 + startM;
+    let endMin = endH * 60 + endM;
+
+    if (endMin <= startMin) endMin += 24 * 60;
+
+    const pricePerMinute = comfortLevel === 'basic'
+      ? parseFloat(this.price.basic_price)
+      : parseFloat(this.price.luxurious_price);
+
+    const taxRate = parseFloat(this.price.nocturne_tax) / 100;
+    let total = 0;
+
+    for (let i = startMin; i < endMin; i++) {
+      const hour = Math.floor(i % 1440 / 60);
+      const isNight = hour >= 21 || hour < 6;
+      total += pricePerMinute * (isNight ? 1 + taxRate : 1);
     }
 
-    // Price per minute, based on comfort level
-    let pricePerMinute: number;
-    if (comfortLevel === 'basic') {
-      pricePerMinute = parseFloat(this.price?.basic_price || '0');
-    } else {
-      pricePerMinute = parseFloat(this.price?.luxurious_price || '0.25');
-    }
-
-    // Check if the trip happens at night (21h - 6h)
-    const startHour = parseInt(startParts[0]);
-    const endHour = parseInt(endParts[0]);
-
-    let normalDuration = 0;
-    let nightDuration = 0;
-
-    // Check if trip starts before 21:00 and ends after 21:00
-    if (startHour < 21 && endHour >= 21) {
-      // Calculate normal time (before 21:00)
-      normalDuration = (21 * 60 - startMinutes); // Time from start to 21:00
-      
-      // Calculate night time (from 21:00 onwards)
-      nightDuration = endMinutes - 21 * 60; // Time from 21:00 to end
-    } else if (startHour >= 21) {
-      // If trip starts after 21:00, apply the surcharge for the entire duration
-      nightDuration = durationInMinutes;
-    } else {
-      // If trip happens before 21:00, apply no surcharge
-      normalDuration = durationInMinutes;
-    }
-
-    // Calculate the surcharge percentage
-    let surcharge = 0;
-    if (nightDuration > 0) {
-      surcharge = parseFloat(this.price?.nocturne_tax || '20') / 100; // Convert tax to percentage
-    }
-
-    // Calculate the total price
-    let totalPrice = 0;
-
-    // Price during the normal hours (before 21:00)
-    totalPrice += normalDuration * pricePerMinute;
-
-    // Price during the night time (after 21:00) with surcharge
-    if (nightDuration > 0) {
-      totalPrice += nightDuration * pricePerMinute * (1 + surcharge);
-    }
-
-    // Set the trip cost
-    this.tripCost = totalPrice;
+    this.tripCost = Math.round(total * 100) / 100;
   }
 
   

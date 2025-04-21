@@ -8,7 +8,7 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TransportPricesService {
-  private pricesUrl = 'http://localhost:4200/prices';  // URL to web api
+  private pricesUrl = 'http://localhost:3000/prices';  // URL to web api
 
   constructor(private http: HttpClient) { }
   httpOptions = {
@@ -19,7 +19,7 @@ export class TransportPricesService {
     return this.http.get<Price>(this.pricesUrl).pipe(
       catchError(err => {
         console.error('Error occurred:', err);
-        return throwError(err); // or return a fallback value
+        return throwError(err); 
       })
     );
   }
@@ -28,7 +28,7 @@ export class TransportPricesService {
     return this.http.put(this.pricesUrl, price, this.httpOptions).pipe(
       catchError(err => {
         console.error('Error occurred:', err);
-        return throwError(err); // or return a fallback value
+        return throwError(err);
       })
     );
   }
