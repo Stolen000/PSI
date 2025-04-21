@@ -27,10 +27,13 @@
   <input id="numeroPorta" type="number" name="numeroPorta" ngModel required />
 
   <label for="codigoPostal">Código Postal:</label>
-  <input id="codigoPostal" type="text" name="codigoPostal" ngModel required />
+  <input id="codigoPostal" type="text" name="codigoPostal" ngModel required 
+         (blur)="buscarLocalidade(meuFormulario.value.codigoPostal)" />
+  
 
   <label for="localidade">Localidade:</label>
-  <input id="localidade" type="text" name="localidade" ngModel required />
+  <input id="localidade" type="text" name="localidade" [(ngModel)]="localidade" required />
+
 
   <div class="botoes-formulario">
     <button type="button" class="add-button"
@@ -57,8 +60,24 @@
 
 </form>
 
-<ul class="motoristas">
-  <li *ngFor="let motorista of motoristas">
-      <span class="badge"></span> {{motorista.name}}
+<h2>Lista de Motoristas Já Registados</h2>
+
+<div *ngIf="motoristas.length === 0">
+  <p>Nenhum motorista registado ainda.</p>
+</div>
+
+<ul class="lista-motoristas" *ngIf="motoristas.length > 0">
+  <li *ngFor="let motorista of motoristas" class="cartao-motorista">
+    <h3>{{ motorista.name }}</h3>
+    <!--
+        <p><strong>NIF:</strong> {{ motorista.nif }}</p>
+    <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>
+    <p><strong>Ano de Nascimento:</strong> {{ motorista.ano_nascimento }}</p>
+    <p><strong>Género:</strong> {{ motorista.genero }}</p>
+    <p><strong>Morada:</strong> {{ motorista.morada.rua }}, Nº {{ motorista.morada.numero_porta }}</p>
+    <p><strong>Código Postal:</strong> {{ motorista.morada.codigo_postal }}</p>
+    <p><strong>Localidade:</strong> {{ motorista.morada.localidade }}</p>
+    -->
+
   </li>
 </ul>
