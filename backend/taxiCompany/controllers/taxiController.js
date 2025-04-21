@@ -13,6 +13,31 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
   exports.taxi_create = asyncHandler(async (req, res, next) => {
     const { number, marca, modelo, ano_de_compra, nivel_de_conforto } = req.body;
   
+    // Criar o objeto Taxi
+    const taxi = new Taxi({
+      number,
+      marca,
+      modelo,
+      ano_de_compra,
+      nivel_de_conforto
+    });
+  
+
+    //aplicar aqui func que verifica todos os parametros
+    //por agr serve
+
+    // Salvar o táxi no banco de dados
+    await taxi.save();
+  
+    // e) Buscar todos os táxis e ordená-los pela data de criação (mais recente primeiro)
+    const todosTaxis = await Taxi.find().sort({ createdAt: -1 });
+  
+    // Enviar a resposta com o táxi recém-criado e a lista de táxis
+    res.status(201).json({ taxi, taxis: todosTaxis });
+  });
+
+
+  /*
     // a) Validação da matrícula (não pode ser só números ou só letras)
     const matriculaRegex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$/;
     if (!matriculaRegex.test(number)) {
@@ -23,8 +48,8 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
     //e tipo modelo
     //abrir instancias deles aqui para verificar se existem e sao validos
 
-    //const marcasValidas = ['Toyota', 'Volkswagen', 'Honda', 'Ford']; // Liste as marcas válidas aqui
-    //const modelosValidos = ['Corolla', 'Gol', 'Civic', 'Focus']; // Liste os modelos válidos aqui
+    const marcasValidas = ['Toyota', 'Volkswagen', 'Honda', 'Ford']; // Liste as marcas válidas aqui
+    const modelosValidos = ['Corolla', 'Gol', 'Civic', 'Focus']; // Liste os modelos válidos aqui
   
     if (!marcasValidas.includes(marca)) {
       return res.status(400).json({ message: 'Marca inválida.' });
@@ -45,22 +70,4 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
     if (!niveisDeConfortoValidos.includes(nivel_de_conforto)) {
       return res.status(400).json({ message: 'Nível de conforto inválido.' });
     }
-  
-    // Criar o objeto Taxi
-    const taxi = new Taxi({
-      number,
-      marca,
-      modelo,
-      ano_de_compra,
-      nivel_de_conforto
-    });
-  
-    // Salvar o táxi no banco de dados
-    await taxi.save();
-  
-    // e) Buscar todos os táxis e ordená-los pela data de criação (mais recente primeiro)
-    const todosTaxis = await Taxi.find().sort({ createdAt: -1 });
-  
-    // Enviar a resposta com o táxi recém-criado e a lista de táxis
-    res.status(201).json({ taxi, taxis: todosTaxis });
-  });
+  */
