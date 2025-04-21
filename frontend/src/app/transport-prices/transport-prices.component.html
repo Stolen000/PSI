@@ -1,49 +1,69 @@
 <div class="container">
-    <h2>Definir Preços por Minuto</h2>
-    <form id="priceForm">
-      <div>
-        <label for="basicPrice">Preço por minuto (Básico):</label>
-        <input type="number" id="basicPrice" name="basicPrice" min="0.01" step="0.01" required>
-      </div>
-  
-      <div>
-        <label for="luxuryPrice">Preço por minuto (Luxuoso):</label>
-        <input type="number" id="luxuryPrice" name="luxuryPrice" min="0.01" step="0.01" required>
-      </div>
-  
-      <div>
-        <label for="nightSurcharge">Acréscimo noturno [21h - 6h] (%) :</label>
-        <input type="number" id="nightSurcharge" name="nightSurcharge" min="0" step="1" required>
-      </div>
-  
-      <button type="submit">Guardar Preços</button>
-    </form>
-  
-    <hr>
-  
+  <h2>Definir Preços por Minuto</h2>
+  <form id="priceForm" (ngSubmit)="savePrice(basicPrice.value, luxuryPrice.value, nightSurcharge.value)">
+    <div>
+      <label for="basicPrice">Preço por minuto (Básico):</label>
+      <input type="number" id="basicPrice" name="basicPrice" min="0.01" step="0.01" required #basicPrice [value] = "price.basic_price">
+    </div>
+
+    <div>
+      <label for="luxuryPrice">Preço por minuto (Luxuoso):</label>
+      <input type="number" id="luxuryPrice" name="luxuryPrice" min="0.01" step="0.01" required #luxuryPrice [value]="price.luxurious_price">
+    </div>
+
+    <div>
+      <label for="nightSurcharge">Acréscimo noturno [21h - 6h] (%):</label>
+      <input type="number" id="nightSurcharge" name="nightSurcharge" min="0" step="1" required #nightSurcharge [value]="price.nocturne_tax">
+    </div>
+
+    <button type="submit">Guardar Preços</button>
+  </form>
+
+  <div *ngIf="!validPriceInput" style="color: red; margin-top: 10px;">
+    Os valores devem ser positivos. O acréscimo noturno pode ser zero, mas não pode ser negativo.
+  </div>
+
+  <div *ngIf="price" class = "current-prices">
+    <h4>Preços Atuais:</h4>
+    <ul>
+      <li><strong>Básico:</strong> {{ price.basic_price }} €/min</li>
+      <li><strong>Luxuoso:</strong> {{ price.luxurious_price }} €/min</li>
+      <li><strong>Acréscimo Noturno:</strong> {{ price.nocturne_tax }}%</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <button (click)="toggleTripCalculator()">
+    {{ showTripCalculator ? 'Fechar Calculadora de Viagem' : 'Calcular Custo de Viagem' }}
+  </button>
+
+  <div *ngIf="showTripCalculator" style="margin-top: 1em;">
     <h2>Calcular Custo de Viagem Fictícia</h2>
-    <form id="tripCostForm">
+    <form (ngSubmit)="calculateTripCost(comfortLevel.value, startTime.value, endTime.value)">
       <div>
         <label for="comfortLevel">Nível de Conforto:</label>
-        <select id="comfortLevel" name="comfortLevel" required>
+        <select id="comfortLevel" name="comfortLevel" required #comfortLevel>
           <option value="basic">Básico</option>
           <option value="luxury">Luxuoso</option>
         </select>
       </div>
-  
+
       <div>
         <label for="startTime">Hora de Início:</label>
-        <input type="datetime-local" id="startTime" name="startTime" required>
+        <input type="time" id="startTime" name="startTime" required #startTime>
       </div>
-  
+
       <div>
         <label for="endTime">Hora de Fim:</label>
-        <input type="datetime-local" id="endTime" name="endTime" required>
+        <input type="time" id="endTime" name="endTime" required #endTime>
       </div>
-  
+
       <button type="submit">Calcular Custo</button>
     </form>
-  
-    <div id="tripCostResult"></div>
+
+    <div id="tripCostResult" *ngIf="tripCost !== null">
+      <p><strong>O custo da viagem é:</strong> {{ tripCost }} €</p>
+    </div>
   </div>
-  
+</div>

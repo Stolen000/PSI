@@ -3,18 +3,22 @@ var router = express.Router();
 
 const taxi_controller = require("../controllers/taxiController");
 const motoristas_controller = require("../controllers/motoristasController");
+const prices_controller = require("../controllers/pricesController");
+
 
 
 router.get("/taxis", taxi_controller.taxi_list);
 
 router.post("/taxis", taxi_controller.taxi_create);
 
+router.get("/prices", prices_controller.price_get);
 
-//router.get("/prices", prices_controller.price_get);
+router.put("/prices", prices_controller.price_update);
 
-//router.put("/prices", prices_controller.price_update);
+router.post("/prices", prices_controller.price_create);
 
 router.get("/motoristas", motoristas_controller.motoristas_list);
+
 router.post("/motoristas", motoristas_controller.motorista_create);
 
 
