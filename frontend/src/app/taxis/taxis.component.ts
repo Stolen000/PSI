@@ -11,7 +11,26 @@ import { TaxiService } from '../services/taxi.service';
 export class TaxisComponent {
   constructor(private taxiService: TaxiService) {}
 
+  //por enquanto ficam aqui, podem ser postos noutro ficheiro para maior organizaçao
+  marcas: string[] = ['Toyota', 'Volkswagen', 'Mercedes', 'Renault'];
+  modelos: { [key: string]: string[] } = {
+    'Toyota': ['Corolla', 'Yaris', 'Hilux'],
+    'Volkswagen': ['Golf', 'Polo', 'Tiguan'],
+    'Mercedes': ['Classe A', 'Classe C', 'Classe E'],
+    'Renault': ['Clio', 'Megane', 'Captur']
+  };
+
+  //em primeira instancia como a marca se encontra por omissao em Toyota
+  //a lista de modelos deve ser esta, atualizada se marca mudar na funcao onMarcaChange
+  modelosFiltrados: string[] = ['Corolla', 'Yaris', 'Hilux'];
+  validPlate = true;
+  anosDisponiveis: number[] = [];
+
   ngOnInit(): void {
+    const anoAtual = new Date().getFullYear();
+    for (let i = 0; i < 30; i++) {
+      this.anosDisponiveis.push(anoAtual - i);
+    }
     this.getTaxis();
   }
 
@@ -25,5 +44,51 @@ export class TaxisComponent {
   getTaxis(): void {
     this.taxiService.getTaxis()
         .subscribe(taxis => this.taxis = taxis);
+  }
+
+  createTaxi(matricula: string, marca : string, modelo : string, anoCompra : string, conforto : string){
+
+    const isAlphanumeric = /^[a-zA-Z0-9]+$/.test(matricula);
+
+    const hasLetter = /[a-zA-Z]/.test(matricula);
+    const hasNumber = /[0-9]/.test(matricula);
+
+    if (!isAlphanumeric || !hasLetter || !hasNumber) {
+      console.error("A matrícula deve ser alfanumérica e conter pelo menos uma letra e um número.");
+      this.validPlate = false;
+      return; 
+    }
+    this.validPlate = true;
+
+      const taxi = {
+      matricula: matricula,
+      marca: marca,
+      modelo: modelo,
+      ano_de_compra: anoCompra,
+      nivel_de_conforto: conforto
+    };
+
+    console.log(taxi);
+
+    this.taxiService.addTaxi(taxi)
+    .subscribe(taxi => {
+      console.log("Taxi recebido do backend:", taxi);
+      this.loadTaxis(); // <- recarrega a lista com os dados atualizados direto do backend
+    });
+
+  }
+  //esta funcao estah aqui pq sem ela no subscribe em cima apos criar um novo taxi
+  //quando a lista de taxis eh atualizada este novo elemento aparece com as properties em branco e so apos um refresh ah pagina
+  //eh que este aparece integro
+  loadTaxis() {
+    this.taxiService.getTaxis()
+      .subscribe((taxis) => {
+        this.taxis = taxis;
+      });
+  }
+
+  //logica para cada marca os seus distintos modelos
+  onMarcaChange(marcaSelecionada: string) {
+    this.modelosFiltrados = this.modelos[marcaSelecionada] || [];
   }
 }

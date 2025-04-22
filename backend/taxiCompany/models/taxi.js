@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TaxiSchema = new Schema({
-    number: { type: String, required: true },
+    matricula: { type: String, required: true },
     marca: { type: String },
     modelo: { type: String },
     ano_de_compra: { type: String , required: true},

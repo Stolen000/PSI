@@ -2,9 +2,8 @@
 <ul class="taxis">
   <li *ngFor="let taxi of taxis">
     <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)">
-      <span class="badge">ID: {{ taxi.id }}</span>
       <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
-      <span class="marca">Marca: {{ taxi.marca }}</span>
+      <span class="marca">Marca: {{ taxi.marca }}</span><br />
       <span class="modelo">Modelo: {{ taxi.modelo }}</span><br />
       <span class="ano">Ano de Compra: {{ taxi.ano_de_compra }}</span><br />
       <span class="conforto">Nível de Conforto: {{ taxi.nivel_de_conforto }}</span>
@@ -12,4 +11,48 @@
   </li>
 </ul>
 
-<app-taxi-details [taxi]="selectedTaxi"></app-taxi-details>
+
+<form id="taxiForm" (ngSubmit)="createTaxi(number.value, marca.value, modelo.value, anoCompra.value, conforto.value)">
+  <div>
+    <label for="matricula">Matricula do Táxi:</label>
+    <input type="text" id="number" name="number" required #number>
+  </div>
+  <div *ngIf="!validPlate" style="color: red; margin-top: 10px;">
+    A matricula deve conter tanto letras como números.
+  </div>
+
+  <div>
+    <label for="marca">Marca:</label>
+    <select id="marca" name="marca" required #marca (change)="onMarcaChange(marca.value)">
+      <option *ngFor="let m of marcas" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+  
+  <div>
+    <label for="modelo">Modelo:</label>
+    <select id="modelo" name="modelo" required #modelo>
+      <option *ngFor="let modelo of modelosFiltrados" [value]="modelo">{{ modelo }}</option>
+    </select>
+  </div>
+  
+
+  <div>
+    <label for="anoCompra">Ano de Compra:</label>
+    <select id="anoCompra" name="anoCompra" required #anoCompra>
+      <option *ngFor="let ano of anosDisponiveis" [value]="ano">{{ ano }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="conforto">Nível de Conforto:</label>
+    <select id="conforto" name="conforto" required #conforto>
+      <option value="basico">Básico</option>
+      <option value="luxuoso">Luxuoso</option>
+    </select>
+  </div>
+
+  <button type="submit">Criar Táxi</button>
+</form>
+
+
+

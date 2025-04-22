@@ -7,7 +7,7 @@ import { MotoristaComponent } from './motorista/motorista.component';
 
 export const routes: Routes = [
     
-    { path: "taxi" , component: TaxisComponent },
+    { path: "taxis" , component: TaxisComponent },
     { path: "prices" , component: TransportPricesComponent },
     { path: "motorista", component: MotoristaComponent},
 ]; 
