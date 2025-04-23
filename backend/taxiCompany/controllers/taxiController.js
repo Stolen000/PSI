@@ -11,11 +11,11 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
 
 
   exports.taxi_create = asyncHandler(async (req, res, next) => {
-    const { number, marca, modelo, ano_de_compra, nivel_de_conforto } = req.body;
+    const { matricula, marca, modelo, ano_de_compra, nivel_de_conforto } = req.body;
   
     // Criar o objeto Taxi
     const taxi = new Taxi({
-      number,
+      matricula,
       marca,
       modelo,
       ano_de_compra,

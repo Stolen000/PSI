@@ -2,7 +2,6 @@
 <div *ngIf="taxi">
     <h2>{{ taxi.matricula | uppercase }} Details</h2>
     
-    <div>Id: {{ taxi.id }}</div>
     
     <div>
       <label for="taxi-matricula">Matrícula: </label>
@@ -27,9 +26,8 @@
     <div>
       <label for="taxi-conforto">Nível de Conforto: </label>
       <select id="taxi-conforto" [(ngModel)]="taxi.nivel_de_conforto">
-        <option value="baixo">Baixo</option>
-        <option value="médio">Médio</option>
-        <option value="alto">Alto</option>
+        <option value="basico">Basico</option>
+        <option value="luxuoso">Luxuoso</option>
       </select>
     </div>
   </div>

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Taxi } from '../taxi';
-import { TAXIS } from '../mock-taxis';
 import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { catchError, tap } from 'rxjs/operators';
 
 
 @Injectable({
@@ -9,10 +11,57 @@ import { Observable, of } from 'rxjs';
 })
 export class TaxiService {
 
-  constructor() { }
+  private taxiUrl = 'http://localhost:3000/taxis';  // URL to web api
+
+  
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
+  constructor(
+    private http: HttpClient) { }
+
+  /** POST: add a new taxi to the server */
+  addTaxi(taxi: Taxi): Observable<Taxi> {
+    return this.http.post<Taxi>(this.taxiUrl, taxi, this.httpOptions).pipe(
+      tap((newTaxi: Taxi) => this.log(`added taxi w/ matricula=${newTaxi.matricula}`)),
+      catchError(this.handleError<Taxi>('addTAxi'))
+    );
+  }
+
 
   getTaxis(): Observable<Taxi[]> {
-    const taxis = of(TAXIS);
-    return taxis;
+    return this.http.get<Taxi[]>(this.taxiUrl)
+
+      .pipe(
+        tap(_ => this.log('fetched taxis')),
+        catchError(this.handleError<Taxi[]>('getTaxis', []))
+      );
+  }
+
+  /**
+   * Handle Http operation that failed.
+   * Let the app continue.
+   *
+   * @param operation - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+
+      // TODO: better job of transforming error for user consumption
+      this.log(`${operation} failed: ${error.message}`);
+
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
+
+  /** Log a MotoristaService message with the MessageService */
+  private log(message: string) {
+    
   }
 }
