@@ -1,4 +1,16 @@
-<div class="container">
+<div *ngIf="price" class = "current-prices">
+  <h4>Preços Atuais:</h4>
+  <ul>
+    <li><strong>Básico:</strong> {{ price.basic_price }} €/min</li>
+    <li><strong>Luxuoso:</strong> {{ price.luxurious_price }} €/min</li>
+    <li><strong>Acréscimo Noturno:</strong> {{ price.nocturne_tax }}%</li>
+  </ul>
+</div>
+<button (click)="toggleTripCalculator()">
+  {{ showTripCalculator ? 'Definir Preços' : 'Calcular Custo de Viagem' }}
+</button>
+
+<div *ngIf="!showTripCalculator">
   <h2>Definir Preços por Minuto</h2>
   <form id="priceForm" (ngSubmit)="savePrice(basicPrice.value, luxuryPrice.value, nightSurcharge.value)">
     <div>
@@ -22,21 +34,11 @@
   <div *ngIf="!validPriceInput" style="color: red; margin-top: 10px;">
     Os valores devem ser positivos. O acréscimo noturno pode ser zero, mas não pode ser negativo.
   </div>
+</div>
+ 
 
-  <div *ngIf="price" class = "current-prices">
-    <h4>Preços Atuais:</h4>
-    <ul>
-      <li><strong>Básico:</strong> {{ price.basic_price }} €/min</li>
-      <li><strong>Luxuoso:</strong> {{ price.luxurious_price }} €/min</li>
-      <li><strong>Acréscimo Noturno:</strong> {{ price.nocturne_tax }}%</li>
-    </ul>
-  </div>
 
-  <hr>
 
-  <button (click)="toggleTripCalculator()">
-    {{ showTripCalculator ? 'Fechar Calculadora de Viagem' : 'Calcular Custo de Viagem' }}
-  </button>
 
   <div *ngIf="showTripCalculator" style="margin-top: 1em;">
     <h2>Calcular Custo de Viagem Fictícia</h2>
@@ -66,4 +68,5 @@
       <p><strong>O custo da viagem é:</strong> {{ tripCost }} €</p>
     </div>
   </div>
-</div>
+
+
