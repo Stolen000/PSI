@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Motorista } from '../motorista';
 import { MotoristaService } from '../services/motorista.service';
+import { CodigoPostalService } from '../services/codigo-postal.service';
 
 @Component({
   selector: 'app-motorista',
@@ -11,16 +11,27 @@ import { MotoristaService } from '../services/motorista.service';
 })
 export class MotoristaComponent implements OnInit {
   motoristas: Motorista[] = [];
+  codigosPostais: any[] = [];
+  localidade: string = '';  // Modelo para a localidade
 
-  constructor(private motoristaService: MotoristaService) { }
+  constructor(
+    private motoristaService: MotoristaService,
+    private codigoPostalService: CodigoPostalService
+  ) {}
 
   ngOnInit(): void {
     this.getMotoristas();
+
+    this.codigoPostalService.getCodigosPostais().subscribe(data => {
+      this.codigosPostais = data;
+    });
   }
 
   getMotoristas(): void {
     this.motoristaService.getMotoristas()
-    .subscribe(motoristas => this.motoristas = motoristas);
+      .subscribe(motoristas => {
+        this.motoristas = motoristas.sort((a, b) => (b._id > a._id ? 1 : -1));
+      });
   }
 
   registarMotorista(
@@ -34,14 +45,12 @@ export class MotoristaComponent implements OnInit {
     codigoPostal: string,
     localidade: string
   ) {
-
     if (!name || !anoNascimento || !cartaConducao || !nif || !genero || !rua || !numeroPorta || !codigoPostal || !localidade) {
       alert('Preenche todos os campos corretamente!');
       return;
     }
 
     const jaExisteCC = this.motoristas.some(m => m.carta_conducao === cartaConducao);
-
     if (jaExisteCC) {
       alert('Já existe um motorista com essa carta de condução!');
       return;
@@ -63,9 +72,7 @@ export class MotoristaComponent implements OnInit {
       alert('O motorista deve ter pelo menos 18 anos.');
       return;
     }
-    
-    
-    
+  
     const motorista = {
       name,
       ano_nascimento: anoNascimento,
@@ -80,10 +87,6 @@ export class MotoristaComponent implements OnInit {
       }
     };
 
-
-
-
-  
     console.log('Motorista a registar:', motorista);
 
     this.motoristaService.addMotorista(motorista as Motorista)
@@ -91,20 +94,19 @@ export class MotoristaComponent implements OnInit {
         console.log("Motorista recebido do backend:", motorista);
         this.motoristas.unshift(motorista);
       });
-
-
-
   }
-
- 
 
   buscarLocalidade(codigoPostal: string): void {
-    // A lógica de busca será implementada depois
-    console.log('Buscar localidade para código postal:', codigoPostal);
+    const resultado = this.codigosPostais.find(
+      c => c.codigo_postal === codigoPostal
+    );
+  
+    if (resultado) {
+      this.localidade = resultado.localidade;
+    } else {
+      alert("Código postal não encontrado.");
+      this.localidade = '';
+    }
   }
-
-
-
-
-
+  
 }
