@@ -33,6 +33,7 @@ export class TransportPricesComponent implements OnInit{
   toggleTripCalculator(): void {
     this.showTripCalculator = !this.showTripCalculator;
     this.tripCost = null;
+    this.validPriceInput = true;
   }
 
   savePrice(basic: string, luxury: string, surcharge: string): void {

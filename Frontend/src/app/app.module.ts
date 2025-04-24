@@ -10,6 +10,7 @@ import { TaxisComponent } from './taxis/taxis.component';
 import { TaxiDetailsComponent } from "./taxi-details/taxi-details.component";
 import { MotoristaComponent } from './motorista/motorista.component';
 import { AppRoutes } from './app.routes';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AppRoutes } from './app.routes';
     TaxisComponent,
     TaxiDetailsComponent,
     TransportPricesComponent,
-    MotoristaComponent
+    MotoristaComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

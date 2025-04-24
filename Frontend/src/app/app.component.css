@@ -1,0 +1,92 @@
+/* Remove browser defaults and enforce edge-to-edge layout */
+:host {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+  
+/* Global reset */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+  
+  
+  app-root {
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+  
+/* Header styles */
+.header {
+    background-color: #f9fafb;
+    padding: 1.5rem 2rem 1rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    z-index: 1;  /* Keep header above sidenav */
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .header p {
+    margin: 0.25rem 0 0;
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  /* Layout styles */
+  .layout {
+    display: flex;
+    height: calc(100vh - 100px); /* subtract header height */
+  }
+  
+  .sidenav {
+    width: 240px;
+    background-color: #1f2937;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: absolute;
+    top: 89px; /* start the sidenav below the header */
+    bottom: 0;
+    left: 0;
+  }
+  
+  .content {
+    flex-grow: 1;
+    
+    padding: 2rem;
+    padding-top: 0%;
+    background-color: #f3f4f6;
+    overflow-y: auto;
+    margin-left: 240px; /* ensure content shifts right to avoid overlapping with sidenav */
+  }
+  
+  .sidenav a {
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: #d1d5db;
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  .sidenav a:hover,
+  .sidenav a.active {
+    background-color: #374151;
+    color: white;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #f3f4f6;
+    overflow-y: auto;
+  }
+  
