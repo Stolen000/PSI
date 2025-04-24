@@ -68,7 +68,12 @@
 
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
-    <h3>{{ motorista.name }}</h3>
+    <a routerLink="">
+      <span class="badge"></span>{{ motorista.name }}
+    </a>
+    <button type="button" class="delete" title="delete motorista"
+    (click)="delete(motorista)">x</button>
+
     <!--
         <p><strong>NIF:</strong> {{ motorista.nif }}</p>
     <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>

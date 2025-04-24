@@ -19,6 +19,13 @@ export class MotoristaComponent implements OnInit {
     private codigoPostalService: CodigoPostalService
   ) {}
 
+  delete(motorista: Motorista): void {
+    console.log("delete no motorista.ts")
+    this.motoristas = this.motoristas.filter(h => h !== motorista);
+    console.log("delete no motorista.ts")
+    this.motoristaService.deleteMotorista(motorista._id).subscribe();
+  }
+
   ngOnInit(): void {
     this.getMotoristas();
 
@@ -108,5 +115,7 @@ export class MotoristaComponent implements OnInit {
       this.localidade = '';
     }
   }
+
+
   
 }

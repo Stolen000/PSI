@@ -36,6 +36,7 @@ form {
     margin: 0.5rem 1%;
   }
   
+  /*
   button {
     background-color: #374151;
     color: white;
@@ -46,6 +47,7 @@ form {
     cursor: pointer;
     transition: background-color 0.3s;
   }
+  
   
   button:hover {
     background-color: #1f2937;
@@ -58,6 +60,7 @@ form {
   .clear-button:hover {
     background-color: #6b7280;
   }
+    */
   
   div[style*="color: red"] {
     font-size: 0.875rem;
