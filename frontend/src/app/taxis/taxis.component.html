@@ -1,24 +1,10 @@
-<h2>Lista de Táxis</h2>
-<ul class="taxis">
-  <li *ngFor="let taxi of taxis">
-    <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)">
-      <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
-      <span class="marca">Marca: {{ taxi.marca }}</span><br />
-      <span class="modelo">Modelo: {{ taxi.modelo }}</span><br />
-      <span class="ano">Ano de Compra: {{ taxi.ano_de_compra }}</span><br />
-      <span class="conforto">Nível de Conforto: {{ taxi.nivel_de_conforto }}</span>
-    </button>
-  </li>
-</ul>
-
-
 <form id="taxiForm" (ngSubmit)="createTaxi(number.value, marca.value, modelo.value, anoCompra.value, conforto.value)">
   <div>
     <label for="matricula">Matricula do Táxi:</label>
-    <input type="text" id="number" name="number" required #number>
-  </div>
+    <input type="text" id="number" name="number" required #number placeholder="LL-NN-LL ou NN-LL-NN">
+  </div>  
   <div *ngIf="!validPlate" style="color: red; margin-top: 10px;">
-    A matricula deve conter tanto letras como números.
+    A matricula deve conter ser do formato LL-NN-LL ou NN-LL-NN.
   </div>
 
   <div>
@@ -53,6 +39,22 @@
 
   <button type="submit">Criar Táxi</button>
 </form>
+
+
+
+<h2>Lista de Táxis</h2>
+<ul class="taxis">
+  <li *ngFor="let taxi of taxis">
+    <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)">
+      <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
+      <span class="marca">Marca: {{ taxi.marca }}</span><br />
+      <span class="modelo">Modelo: {{ taxi.modelo }}</span><br />
+      <span class="ano">Ano de Compra: {{ taxi.ano_de_compra }}</span><br />
+      <span class="conforto">Nível de Conforto: {{ taxi.nivel_de_conforto }}</span>
+    </button>
+  </li>
+</ul>
+
 
 
 

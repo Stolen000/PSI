@@ -1,4 +1,4 @@
-/* Form Styles for Registering Driver */
+/* Form Styles */
 form {
   background-color: #ffffff;
   padding: 1.5rem;
@@ -15,7 +15,8 @@ form label {
   font-size: 1rem;
 }
 
-form input, form select {
+form input,
+form select {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1.25rem;
@@ -25,17 +26,32 @@ form input, form select {
   background-color: #ffffff;
 }
 
-form input:focus, form select:focus {
+form input:focus,
+form select:focus {
   border-color: #4b5563;
   outline: none;
 }
 
-/* Button Styles */
-.botoes-formulario button {
-  width: 48%;
-  margin: 0.5rem 1%;
+/* Inline inputs for matrícula */
+form .matricula-inputs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
+form .matricula-inputs input {
+  width: 40px;
+  margin-bottom: 0;
+}
+
+/* Error message */
+div[style*="color: red"] {
+  font-size: 0.875rem;
+  color: red;
+  margin-top: 1rem;
+}
+
+/* Buttons */
 button {
   background-color: #374151;
   padding: 0.75rem 1.5rem;
@@ -50,38 +66,15 @@ button:hover {
   background-color: #1f2937;
 }
 
-div[style*="color: red"] {
-  font-size: 0.875rem;
-  color: red;
-  margin-top: 1rem;
+.clear-button {
+  background-color: #9ca3af;
 }
-/* Motoristas and Táxis List */
-.taxis {
+
+.clear-button:hover {
+  background-color: #6b7280;
+}
+ul, ol {
   list-style: none;
-  padding: 0;
+  padding-left: 0;
+  margin-left: 0;
 }
-
-.taxis li {
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-
-.taxis li button {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-  text-align: left;
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-.taxis li button.selected {
-  background-color: #374151;
-  color: white;
-}
-

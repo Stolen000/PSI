@@ -21,6 +21,8 @@ router.get("/motoristas", motoristas_controller.motoristas_list);
 
 router.post("/motoristas", motoristas_controller.motorista_create);
 
+router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
+
 
 
 

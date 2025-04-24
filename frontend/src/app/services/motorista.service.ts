@@ -37,6 +37,17 @@ export class MotoristaService {
       );
   }
 
+  deleteMotorista(id: string): Observable<Motorista> {
+    console.log("delete no motoristaService.ts")
+    const url = `${this.motoristaUrl}/${id}`;
+    console.log(url)
+
+    return this.http.delete<Motorista>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted motorista id=${id}`)),
+      catchError(this.handleError<Motorista>('deleteMotorista'))
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

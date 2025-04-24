@@ -12,12 +12,20 @@ import { CodigoPostalService } from '../services/codigo-postal.service';
 export class MotoristaComponent implements OnInit {
   motoristas: Motorista[] = [];
   codigosPostais: any[] = [];
-  localidade: string = '';  // Modelo para a localidade
+  localidade: string = ''; 
+  codigoPostalNaoEncontrado: boolean = false;
 
   constructor(
     private motoristaService: MotoristaService,
     private codigoPostalService: CodigoPostalService
   ) {}
+
+  delete(motorista: Motorista): void {
+    console.log("delete no motorista.ts")
+    this.motoristas = this.motoristas.filter(h => h !== motorista);
+    console.log("delete no motorista.ts")
+    this.motoristaService.deleteMotorista(motorista._id).subscribe();
+  }
 
   ngOnInit(): void {
     this.getMotoristas();
@@ -103,10 +111,22 @@ export class MotoristaComponent implements OnInit {
   
     if (resultado) {
       this.localidade = resultado.localidade;
+      this.codigoPostalNaoEncontrado = false;
     } else {
-      alert("Código postal não encontrado.");
+      this.codigoPostalNaoEncontrado = true;
       this.localidade = '';
     }
   }
+
+  verificaIdadeValida(ano: number): boolean {
+    const anoAtual = new Date().getFullYear();
+    return ((ano && (anoAtual - ano)) >= 18);
+  }
+
+  verificaCartaConducaoUnica(numero: number): boolean {
+    return !this.motoristas.some(m => m.carta_conducao === numero);
+  }
+  
+  
   
 }
