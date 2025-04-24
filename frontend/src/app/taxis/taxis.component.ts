@@ -48,15 +48,13 @@ export class TaxisComponent {
 
   createTaxi(matricula: string, marca : string, modelo : string, anoCompra : string, conforto : string){
 
-    const isAlphanumeric = /^[a-zA-Z0-9]+$/.test(matricula);
-
-    const hasLetter = /[a-zA-Z]/.test(matricula);
-    const hasNumber = /[0-9]/.test(matricula);
-
-    if (!isAlphanumeric || !hasLetter || !hasNumber) {
-      console.error("A matrícula deve ser alfanumérica e conter pelo menos uma letra e um número.");
+    const formato1 = /^[A-Z]{2}-\d{2}-[A-Z]{2}$/; //LL-NN-LL
+    const formato2 = /^\d{2}-[A-Z]{2}-\d{2}$/;    //NN-LL-NN
+    
+    if (!formato1.test(matricula) && !formato2.test(matricula)) {
+      console.error("A matrícula deve ser do formato LL-NN-LL ou NN-LL-NN.");
       this.validPlate = false;
-      return; 
+      return;
     }
     this.validPlate = true;
 
@@ -75,8 +73,8 @@ export class TaxisComponent {
       console.log("Taxi recebido do backend:", taxi);
       this.loadTaxis(); // <- recarrega a lista com os dados atualizados direto do backend
     });
-
   }
+  
   //esta funcao estah aqui pq sem ela no subscribe em cima apos criar um novo taxi
   //quando a lista de taxis eh atualizada este novo elemento aparece com as properties em branco e so apos um refresh ah pagina
   //eh que este aparece integro
