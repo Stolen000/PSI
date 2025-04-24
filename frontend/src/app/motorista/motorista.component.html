@@ -1,15 +1,62 @@
+
+
 <form #meuFormulario="ngForm">
   <label for="name">Nome:</label>
   <input id="name" type="text" name="name" ngModel required />
 
   <label for="anoNascimento">Ano de Nascimento:</label>
-  <input id="anoNascimento" type="number" name="anoNascimento" ngModel required />
+
+  <input
+    id="anoNascimento"
+    type="number"
+    name="anoNascimento"
+    ngModel
+    required
+    #anoNascimento="ngModel"
+    [ngClass]="{
+      'input-invalido': anoNascimento.invalid && anoNascimento.touched
+    }"
+  />
+  
+  <!-- Mostra a mensagem só se for inválido e já tiver sido tocado -->
+  <div *ngIf="anoNascimento.touched && !verificaIdadeValida(anoNascimento.value)" class="info-msg">
+    O motorista deve ter pelo menos 18 anos.
+  </div>
+  
 
   <label for="cartaConducao">Número da Carta de Condução:</label>
-  <input id="cartaConducao" type="number" name="cartaConducao" ngModel required />
+
+  <input
+    id="cartaConducao"
+    type="number"
+    name="cartaConducao"
+    ngModel
+    required
+    #cartaConducao="ngModel"
+    [ngClass]="{
+      'input-invalido': cartaConducao.touched && !verificaCartaConducaoUnica(cartaConducao.value)
+    }"
+  />
+  
+  <div *ngIf="cartaConducao.touched && !verificaCartaConducaoUnica(cartaConducao.value)" class="info-msg">
+    Já existe um motorista com essa carta de condução.
+  </div>
+  
 
   <label for="nif">NIF:</label>
-  <input id="nif" type="number" name="nif" ngModel required pattern="^[0-9]{9}$" />
+
+  <input 
+    id="nif" 
+    type="number" 
+    name="nif" 
+    ngModel 
+    required 
+    pattern="^[0-9]{9}$"
+    #nif="ngModel"
+  />
+  <div *ngIf="nif.invalid && nif.touched" class="info-msg">
+    O nif deve ter 9 dígitos
+  </div>
 
   <label for="genero">Género:</label>
   <select id="genero" name="genero" ngModel required>
@@ -26,9 +73,20 @@
   <label for="numeroPorta">Número da Porta:</label>
   <input id="numeroPorta" type="number" name="numeroPorta" ngModel required />
 
-  <label for="codigoPostal">Código Postal:</label>
-  <input id="codigoPostal" type="text" name="codigoPostal" ngModel required 
-         (blur)="buscarLocalidade(meuFormulario.value.codigoPostal)" />
+    <label for="codigoPostal">Código Postal:</label>
+    <input
+      id="codigoPostal"
+      type="text"
+      name="codigoPostal"
+      ngModel
+      required
+      (blur)="buscarLocalidade(meuFormulario.value.codigoPostal)" />
+  
+    <div *ngIf="codigoPostalNaoEncontrado" class="info-msg">
+      Código postal não encontrado.
+    </div>
+
+  
   
 
   <label for="localidade">Localidade:</label>
@@ -60,7 +118,7 @@
 
 </form>
 
-<h2>Lista de Motoristas Já Registados</h2>
+<h2>Motoristas</h2>
 
 <div *ngIf="motoristas.length === 0">
   <p>Nenhum motorista registado ainda.</p>
