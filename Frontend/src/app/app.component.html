@@ -1,5 +1,18 @@
-<h1>Bem-vindo à {{ title }}</h1>
-
-
-<p>O seu serviço de táxi de confiança.</p>
-<router-outlet></router-outlet>
+<header class="header">
+    <h1>Bem-vindo à {{ title }}</h1>
+    <p>O seu serviço de táxi de confiança.</p>
+  </header>
+  
+  <div class="layout">
+    <nav class="sidenav">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/taxis" routerLinkActive="active">Taxis</a>
+      <a routerLink="/prices" routerLinkActive="active">Prices and Trips</a>
+      <a routerLink="/motorista" routerLinkActive="active">Motoristas</a>
+    </nav>
+  
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  

@@ -1,99 +1,111 @@
-h2 {
-  color: #333;
-  margin-bottom: 15px;
-  text-align: center;
+/* Form Styles for Registering Driver */
+form {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: auto;
 }
 
-.taxis {
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+form input, form select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+form input:focus, form select:focus {
+  border-color: #4b5563;
+  outline: none;
+}
+
+/* Button Styles */
+.botoes-formulario button {
+  width: 48%;
+  margin: 0.5rem 1%;
+}
+
+button {
+  background-color: #374151;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1f2937;
+}
+
+.clear-button {
+  background-color: #9ca3af;
+}
+
+.clear-button:hover {
+  background-color: #6b7280;
+}
+
+div[style*="color: red"] {
+  font-size: 0.875rem;
+  color: red;
+  margin-top: 1rem;
+}
+/* Motoristas and Táxis List */
+.motoristas, .taxis {
   list-style: none;
   padding: 0;
-  margin-bottom: 20px;
 }
 
-.taxis li {
-  margin-bottom: 10px;
-}
-
-.taxis button {
-  display: block;
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.taxis button:hover {
-  background-color: #eee;
-}
-
-.taxis button.selected {
-  background-color: #cce5ff;
-  border-color: #b8daff;
-}
-
-.matricula {
-  font-weight: bold;
-  color: #555;
-}
-
-.marca,
-.modelo,
-.ano,
-.conforto {
-  color: #777;
-  display: block;
-  margin-top: 5px;
-}
-
-#taxiForm {
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f8f8f8;
-}
-
-#taxiForm div {
-  margin-bottom: 15px;
-}
-
-#taxiForm label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
-}
-
-#taxiForm input[type="text"],
-#taxiForm select {
-  width: calc(100% - 12px);
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  box-sizing: border-box;
+.motoristas li, .taxis li {
+  margin-bottom: 1rem;
   font-size: 1rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-#taxiForm button[type="submit"] {
-  background-color: #007bff;
+.motoristas li .badge {
+  background-color: #374151;
   color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 8px;
+  margin-right: 0.5rem;
+}
+
+.taxis li button {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  width: 100%;
+  padding: 1rem;
   font-size: 1rem;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-#taxiForm button[type="submit"]:hover {
-  background-color: #0056b3;
+.taxis li button.selected {
+  background-color: #374151;
+  color: white;
 }
 
-/* Estilo para a mensagem de erro da matrícula */
-#taxiForm div[style*="color: red"] {
-  font-size: 0.9rem;
-  margin-top: 5px;
+.taxis li button:hover {
+  background-color: #f3f4f6;
+  border-color: #ddd;
 }
