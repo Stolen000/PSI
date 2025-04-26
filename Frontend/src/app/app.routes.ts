@@ -10,9 +10,10 @@ export const routes: Routes = [
     
     { path: "taxis" , component: TaxisComponent },
     { path: "prices" , component: TransportPricesComponent },
+    { path: "dashboard", component: DashboardComponent},
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: "motorista", component: MotoristaComponent},
-    { path: "dashboard", component: DashboardComponent},
+    { path: '**', redirectTo: '/dashboard' }
 ]; 
 
 @NgModule({

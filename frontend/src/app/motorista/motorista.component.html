@@ -127,7 +127,7 @@
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
     <a routerLink="">
-      <span class="badge"></span>{{ motorista.name }}
+      <span class="badge">&nbsp;</span>{{ motorista.name }}
     </a>
     <button type="button" class="delete" title="delete motorista"
     (click)="delete(motorista)">x</button>
