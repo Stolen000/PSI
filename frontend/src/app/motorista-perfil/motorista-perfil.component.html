@@ -1,4 +1,23 @@
-<p>motorista-perfil works!</p>
 <div *ngIf="motorista">
-    <h2>{{motorista.name | uppercase}} Details</h2>
-  </div>
+  <h1>Perfil de Motorista</h1>
+
+  <section class="perfil">
+    <h2>{{ motorista.name | uppercase }}</h2>
+
+    <div class="info">
+      <p><strong>NIF:</strong> {{ motorista.nif }}</p>
+      <p><strong>Género:</strong> {{ motorista.genero }}</p>
+      <p><strong>Ano de Nascimento:</strong> {{ motorista.ano_nascimento }}</p>
+      <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>
+      <p *ngIf="motorista.morada">
+        <strong>Morada:</strong>
+        {{ motorista.morada.rua }}, {{ motorista.morada.codigo_postal }} {{ motorista.morada.localidade }}
+      </p>
+    </div>
+    <div class="actions">
+      <button routerLink="/pedido-taxi">Requisição de Táxi</button>
+      <button routerLink="/aceitar-pedido">Aceitação de Pedido de Táxi</button>
+      <button routerLink="/registo-viagem">Registo de Viagem com Clientes</button>
+    </div>
+  </section>
+</div>
