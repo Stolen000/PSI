@@ -4,6 +4,7 @@ import { TransportPricesComponent } from './transport-prices/transport-prices.co
 import { TaxisComponent } from './taxis/taxis.component';
 import { MotoristaComponent } from './motorista/motorista.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 
 
 export const routes: Routes = [
@@ -13,6 +14,7 @@ export const routes: Routes = [
     { path: "dashboard", component: DashboardComponent},
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: "motorista", component: MotoristaComponent},
+    { path: "motorista-perfil/:id", component: MotoristaPerfilComponent},
     { path: '**', redirectTo: '/dashboard' }
 ]; 
 

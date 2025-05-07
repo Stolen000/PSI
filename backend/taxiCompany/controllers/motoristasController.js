@@ -7,6 +7,20 @@ exports.motoristas_list = asyncHandler(async (req, res, next) => {
   res.json(allMotoristas);
 });
 
+exports.get_motorista_by_id = asyncHandler(async (req, res, next) => {
+  console.log("ID recebido:", req.params.id);
+  try {
+    const motorista = await Motorista.findById(req.params.id).exec();
+    if (!motorista) {
+      return res.status(404).json({ message: 'Motorista não encontrado' });
+    }
+    res.json(motorista);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 
 exports.motorista_create = asyncHandler(async (req, res, next) => {
   console.log('Motorista recebido:', req.body);
@@ -36,6 +50,8 @@ exports.motorista_delete_post = asyncHandler(async (req, res, next) => {
   res.json({ message: "Motorista deletado com sucesso", motorista });
 
 });
+
+
 
 
 

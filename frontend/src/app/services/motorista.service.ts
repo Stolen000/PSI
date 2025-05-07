@@ -48,6 +48,14 @@ export class MotoristaService {
     );
   }
 
+  getMotoristaById(id: String): Observable<Motorista> {
+    const url = `${this.motoristaUrl}/${id}`; // Mantém a mesma estrutura de URL
+    return this.http.get<Motorista>(url).pipe(
+      tap(_ => this.log(`fetched motorista _id=${id}`)),
+      catchError(this.handleError<Motorista>(`getMotorista _id=${id}`))
+    );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

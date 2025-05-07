@@ -11,6 +11,7 @@ import { TaxiDetailsComponent } from "./taxi-details/taxi-details.component";
 import { MotoristaComponent } from './motorista/motorista.component';
 import { AppRoutes } from './app.routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     TaxiDetailsComponent,
     TransportPricesComponent,
     MotoristaComponent,
-    DashboardComponent
+    DashboardComponent,
+    MotoristaPerfilComponent,
   ],
   imports: [
     BrowserModule,

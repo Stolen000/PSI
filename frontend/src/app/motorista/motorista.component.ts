@@ -14,6 +14,9 @@ export class MotoristaComponent implements OnInit {
   codigosPostais: any[] = [];
   localidade: string = ''; 
   codigoPostalNaoEncontrado: boolean = false;
+  nifProcurado: number = 0;
+  motoristaNaoEncontrado: boolean = false;
+
 
   constructor(
     private motoristaService: MotoristaService,
@@ -125,6 +128,17 @@ export class MotoristaComponent implements OnInit {
 
   verificaCartaConducaoUnica(numero: number): boolean {
     return !this.motoristas.some(m => m.carta_conducao === numero);
+  }
+  
+  procurarMotorista() {
+    const motorista = this.motoristas.find(m => m.nif === this.nifProcurado);
+    if (motorista) {
+      this.motoristaNaoEncontrado = false;
+      // Navegar para a página do motorista
+      window.location.href = `/motorista-perfil/${motorista._id}`;
+    } else {
+      this.motoristaNaoEncontrado = true;
+    }
   }
   
   

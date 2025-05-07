@@ -19,6 +19,8 @@ router.post("/prices", prices_controller.price_create);
 
 router.get("/motoristas", motoristas_controller.motoristas_list);
 
+router.get("/motoristas/:id", motoristas_controller.get_motorista_by_id);
+
 router.post("/motoristas", motoristas_controller.motorista_create);
 
 router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
