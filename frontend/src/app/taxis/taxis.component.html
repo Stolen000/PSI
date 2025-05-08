@@ -44,7 +44,8 @@
 
 <h2>Lista de Táxis</h2>
 <ul class="taxis">
-  <li *ngFor="let taxi of taxis">
+  <!-- Apenas para inverter a ordem e o taxi criado aparecer no topo da lista -->
+  <li *ngFor="let taxi of taxis.slice().reverse()">
     <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)">
       <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
       <span class="marca">Marca: {{ taxi.marca }}</span><br />
@@ -52,6 +53,7 @@
       <span class="ano">Ano de Compra: {{ taxi.ano_de_compra }}</span><br />
       <span class="conforto">Nível de Conforto: {{ taxi.nivel_de_conforto }}</span>
     </button>
+    <button type="button" class="delete" title="delete taxi" (click)="deleteTaxi(taxi)">x</button>
   </li>
 </ul>
 
