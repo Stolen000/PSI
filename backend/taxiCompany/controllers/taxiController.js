@@ -47,3 +47,15 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
     res.json({ message: "Taxi deletado com sucesso", taxi });
 
   });
+
+
+  exports.taxi_get = asyncHandler(async (req, res, next) => {
+    const taxi = await Taxi.findById(req.params.id);
+    if (!taxi) {
+      const err = new Error("Taxi não encontrado");
+      err.status = 404;
+      return next(err); 
+    }
+    res.json(taxi);
+  }
+  );  
