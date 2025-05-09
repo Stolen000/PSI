@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Turno } from '../turno';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,4 +35,16 @@ export class TurnoService {
   }
 
 
+  /** POST: add a new motorista to the server */
+  addTurno(turno: Turno): Observable<Turno> {
+    return this.http.post<Turno>(this.turnosUrl, turno, this.httpOptions).pipe(
+      catchError(err => {
+        console.error('Error occurred:', err);
+        return throwError(err); 
+      })
+    );
+  }
+
+
 }
+
