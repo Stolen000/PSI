@@ -4,6 +4,7 @@ import { TransportPricesComponent } from './transport-prices/transport-prices.co
 import { TaxisComponent } from './taxis/taxis.component';
 import { MotoristaComponent } from './motorista/motorista.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem.component';
 
 
 export const routes: Routes = [
@@ -13,6 +14,7 @@ export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: "motorista", component: MotoristaComponent},
     { path: "dashboard", component: DashboardComponent},
+    { path: "pedidos", component: RequisitarViagemComponent},
 ]; 
 
 @NgModule({
