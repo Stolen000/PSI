@@ -6,12 +6,15 @@ const motoristas_controller = require("../controllers/motoristasController");
 const prices_controller = require("../controllers/pricesController");
 const turnos_controller = require("../controllers/turnosController");
 const viagem_controller = require("../controllers/viagemController");
+const pedidos_controller = require("../controllers/pedidosViagemController");
 
 
 
 router.get("/taxis", taxi_controller.taxi_list);
 
 router.post("/taxis", taxi_controller.taxi_create);
+
+router.get("/taxis/:id", taxi_controller.taxi_get);
 
 router.delete("/taxis/:id", taxi_controller.taxi_delete_post);
 
@@ -29,12 +32,14 @@ router.post("/motoristas", motoristas_controller.motorista_create);
 
 router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
 
+router.get("/pedidos", pedidos_controller.pedido_list);
 router.get("/turnos",turnos_controller.get_turnos_list);
 
 router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
 router.post("/turnos",turnos_controller.turno_create);
 
+router.post("/pedidos", pedidos_controller.pedido_create);
 router.post("/viagem", viagem_controller.viagem_post)
 
 router.get("/viagem/viagem-atual/:motorista_id", viagem_controller.viagem_mais_recente_turno_atual)
