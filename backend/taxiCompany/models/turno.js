@@ -2,11 +2,15 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+const PeriodoSchema = new Schema({
+  inicio: { type: Date, required: true },
+  fim: { type: Date, required: true }
+});
+
 const TurnoSchema = new Schema({
     motorista_id: { type: String, required: true},
     taxi_id: { type: String, required: true},
-    inicio_turno: { type: Date, required: true},
-    fim_turno: { type: Date, required: true},
+    periodo: { type: PeriodoSchema, required: true }, 
     viagens_realizadas: { type: Number}
 });
 

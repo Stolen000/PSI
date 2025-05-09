@@ -39,10 +39,6 @@ router.post("/viagem", viagem_controller.viagem_post)
 
 router.get("/viagem/viagem-atual/:motorista_id", viagem_controller.viagem_mais_recente_turno_atual)
 
-
-
-
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
