@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Motorista } from '../motorista';
 import { MotoristaService } from '../services/motorista.service';
 import { CodigoPostalService } from '../services/codigo-postal.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-motorista',
@@ -16,6 +17,7 @@ export class MotoristaComponent implements OnInit {
   codigoPostalNaoEncontrado: boolean = false;
   nifProcurado: number = 0;
   motoristaNaoEncontrado: boolean = false;
+  mensagemSucesso: string = '';
 
 
   constructor(
@@ -54,7 +56,8 @@ export class MotoristaComponent implements OnInit {
     rua: string,
     numeroPorta: number,
     codigoPostal: string,
-    localidade: string
+    localidade: string,
+    formulario: NgForm
   ) {
     if (!name || !anoNascimento || !cartaConducao || !nif || !genero || !rua || !numeroPorta || !codigoPostal || !localidade) {
       alert('Preenche todos os campos corretamente!');
@@ -105,6 +108,11 @@ export class MotoristaComponent implements OnInit {
         console.log("Motorista recebido do backend:", motorista);
         this.motoristas.unshift(motorista);
       });
+      this.mensagemSucesso = 'Motorista registado com sucesso!';
+      formulario.resetForm();
+      setTimeout(() => {
+        this.mensagemSucesso = '';
+      }, 3000);
   }
 
   buscarLocalidade(codigoPostal: string): void {
