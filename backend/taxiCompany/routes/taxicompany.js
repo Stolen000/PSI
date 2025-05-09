@@ -5,6 +5,7 @@ const taxi_controller = require("../controllers/taxiController");
 const motoristas_controller = require("../controllers/motoristasController");
 const prices_controller = require("../controllers/pricesController");
 const turnos_controller = require("../controllers/turnosController");
+const viagem_controller = require("../controllers/viagemController");
 
 
 
@@ -34,6 +35,9 @@ router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
 router.post("/turnos",turnos_controller.turno_create);
 
+router.post("/viagem", viagem_controller.viagem_post)
+
+router.get("/viagem/viagem-atual/:motorista_id", viagem_controller.viagem_mais_recente_turno_atual)
 
 
 

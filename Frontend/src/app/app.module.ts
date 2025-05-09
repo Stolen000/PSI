@@ -12,6 +12,7 @@ import { MotoristaComponent } from './motorista/motorista.component';
 import { AppRoutes } from './app.routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
+import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.co
     MotoristaComponent,
     DashboardComponent,
     MotoristaPerfilComponent,
+    RegistarViagemComponent,
   ],
   imports: [
     BrowserModule,
