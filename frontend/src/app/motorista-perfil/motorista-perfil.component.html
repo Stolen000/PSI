@@ -11,7 +11,7 @@
       <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>
       <p *ngIf="motorista.morada">
         <strong>Morada:</strong>
-        {{ motorista.morada.rua }}, {{ motorista.morada.codigo_postal }} {{ motorista.morada.localidade }}
+        {{ motorista.morada.rua }} {{motorista.morada.numero_porta}}, {{ motorista.morada.codigo_postal }} {{ motorista.morada.localidade }}
       </p>
     </div>
     <div class="actions">

@@ -105,7 +105,8 @@
         meuFormulario.value.rua,
         +meuFormulario.value.numeroPorta,
         meuFormulario.value.codigoPostal,
-        meuFormulario.value.localidade
+        meuFormulario.value.localidade,
+        meuFormulario
       );">
       Registar Motorista
     </button>
@@ -113,6 +114,11 @@
     <button type="button" class="clear-button" (click)="meuFormulario.resetForm()">
       Limpar Formulário
     </button>
+
+    <div *ngIf="mensagemSucesso" class="mensagem-sucesso">
+      {{ mensagemSucesso }}
+    </div>
+    
   </div>
 
 
@@ -126,6 +132,7 @@
 
 <label for="nif">LOGIN:</label>
 <input type="number" [(ngModel)]="nifProcurado" placeholder="Introduza o NIF">
+<br>
 <button (click)="procurarMotorista()">Procurar Motorista</button>
 
 <!-- Mensagem de erro, se não encontrado -->
