@@ -34,6 +34,13 @@ export class TaxisComponent {
     this.getTaxis();
   }
 
+  deleteTaxi(taxi: Taxi): void {
+    console.log("delete no taxi.ts")
+    this.taxis = this.taxis.filter(h => h !== taxi);
+    console.log("delete no motorista.ts")
+    this.taxiService.deleteTaxi(taxi._id).subscribe();
+  }
+
   taxis: Taxi[] = [];
   selectedTaxi?: Taxi;
 
@@ -68,11 +75,11 @@ export class TaxisComponent {
 
     console.log(taxi);
 
-    this.taxiService.addTaxi(taxi)
-    .subscribe(taxi => {
-      console.log("Taxi recebido do backend:", taxi);
-      this.loadTaxis(); // <- recarrega a lista com os dados atualizados direto do backend
-    });
+    this.taxiService.addTaxi(taxi as Taxi)
+      .subscribe(taxi => {
+        console.log("Taxi recebido do backend:", taxi);
+        this.taxis.unshift(taxi);
+      });
   }
   
   //esta funcao estah aqui pq sem ela no subscribe em cima apos criar um novo taxi
