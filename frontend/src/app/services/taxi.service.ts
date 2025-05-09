@@ -24,11 +24,18 @@ export class TaxiService {
   /** POST: add a new taxi to the server */
   addTaxi(taxi: Taxi): Observable<Taxi> {
     return this.http.post<Taxi>(this.taxiUrl, taxi, this.httpOptions).pipe(
-      tap((newTaxi: Taxi) => this.log(`added taxi w/ matricula=${newTaxi.matricula}`)),
-      catchError(this.handleError<Taxi>('addTAxi'))
+      tap((newTaxi: Taxi) => this.log(`added taxi w/ matricula=${newTaxi._id}`)),
+      catchError(this.handleError<Taxi>('addTaxi'))
     );
   }
 
+  getTaxi(id: string): Observable<Taxi> {
+    const url = `${this.taxiUrl}/${id}`;
+    return this.http.get<Taxi>(url).pipe(
+      tap(_ => this.log(`fetched taxi id=${id}`)),
+      catchError(this.handleError<Taxi>(`getTaxi id=${id}`))
+    );
+  }
 
   getTaxis(): Observable<Taxi[]> {
     return this.http.get<Taxi[]>(this.taxiUrl)

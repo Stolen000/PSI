@@ -5,12 +5,15 @@ const taxi_controller = require("../controllers/taxiController");
 const motoristas_controller = require("../controllers/motoristasController");
 const prices_controller = require("../controllers/pricesController");
 const turnos_controller = require("../controllers/turnosController");
+const pedidos_controller = require("../controllers/pedidosViagemController");
 
 
 
 router.get("/taxis", taxi_controller.taxi_list);
 
 router.post("/taxis", taxi_controller.taxi_create);
+
+router.get("/taxis/:id", taxi_controller.taxi_get);
 
 router.delete("/taxis/:id", taxi_controller.taxi_delete_post);
 
@@ -33,6 +36,10 @@ router.get("/turnos",turnos_controller.get_turnos_list);
 router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
 router.post("/turnos",turnos_controller.turno_create);
+
+router.get("/pedidos", pedidos_controller.pedido_list);
+
+router.post("/pedidos", pedidos_controller.pedido_create);
 
 
 /* GET users listing. */
