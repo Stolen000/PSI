@@ -66,12 +66,14 @@ export class RequisicaoTaxiComponent {
   }
 
   getTurnosDoMotorista(motoristaId: string) {
+    const dateAtual = new Date();
     this.turnoService.getTurnosByMotorista(motoristaId).subscribe(turnos => {
-      // Sort the original list by start time
-      turnos.sort((a, b) => new Date(a.periodo.inicio).getTime() - new Date(b.periodo.inicio).getTime());
+      // Sort the original list by start time anD filter out only turnos that havent ended
 
+      turnos.sort((a, b) => new Date(a.periodo.inicio).getTime() - new Date(b.periodo.inicio).getTime());
+      let upcomingTurnos = turnos.filter(turno => new Date(turno.periodo.fim) > dateAtual);
       // Create an array of observables for taxi fetches
-      const taxiRequests = turnos.map(turno =>
+      const taxiRequests = upcomingTurnos.map(turno =>
         this.taxiService.getTaxi(turno.taxi_id).pipe(
           map(taxi => ({ ...turno, taxi }))
         )
