@@ -38,6 +38,8 @@ router.post("/turnos",turnos_controller.turno_create);
 
 router.delete("/turnos/:id",turnos_controller.turno_delete);
 
+router.delete("/turnos/motorista/:motorista_id",turnos_controller.turno_delete_by_motorista);
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
