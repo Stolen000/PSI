@@ -1,0 +1,73 @@
+<h1>Marcar uma Viagem</h1>
+<p>Preencha o formulário abaixo para solicitar uma viagem de táxi.</p>
+
+<form id="pedidoForm" (ngSubmit)="createPedidoViagem(nome.value, nif.value, genero.value, origem.value, destino.value, conforto.value, numPessoas.value)">
+    <div>
+      <label for="nome">Nome do Cliente:</label>
+      <input type="text" id="nome" name="nome" required #nome placeholder="Nome completo">
+    </div>
+  
+    <div>
+      <label for="nif">NIF do Cliente:</label>
+      <input type="text" id="nif" name="nif" required #nif placeholder="Número de Identificação Fiscal">
+    </div>
+  
+    <div>
+      <label for="genero">Género:</label>
+      <select id="genero" name="genero" required #genero>
+        <option value="Masculino">Masculino</option>
+        <option value="Feminino">Feminino</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="origem">Morada de Origem:</label>
+      <input type="text" id="origem" name="origem" required #origem placeholder="Ex: Rua A, Lisboa">
+    </div>
+  
+    <div>
+      <label for="destino">Morada de Destino:</label>
+      <input type="text" id="destino" name="destino" required #destino placeholder="Ex: Rua B, Porto">
+    </div>
+  
+    <div>
+      <label for="conforto">Nível de Conforto:</label>
+      <select id="conforto" name="conforto" required #conforto>
+        <option value="basico">Básico</option>
+        <option value="luxuoso">Luxuoso</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="numPessoas">Número de Pessoas:</label>
+      <input type="text" id="numPessoas" name="numPessoas" required #numPessoas placeholder="1-6">
+    </div>
+  
+    <button type="submit">Criar Pedido de Viagem</button>
+  </form>
+
+
+<h2>Lista de Pedidos de Viagem</h2>
+
+<ul class="pedidos">
+  <!-- Inverter ordem para mostrar os mais recentes primeiro -->
+  <li *ngFor="let pedido of pedidos.slice()">
+    <button [class.selected]="pedido === selectedPedido" (click)="onSelect(pedido)">
+      <span class="cliente">Cliente: {{ pedido.cliente_nome }} (NIF: {{ pedido.cliente_nif }})</span><br />
+      <span class="genero">Género: {{ pedido.cliente_genero }}</span><br />
+      <span class="origem">Origem: {{ pedido.morada_origem }}</span><br />
+      <span class="destino">Destino: {{ pedido.morada_destino }}</span><br />
+      <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span><br />
+      <span class="pessoas">Pessoas: {{ pedido.numero_pessoas }}</span><br />
+      <span class="estado">Estado: {{ pedido.estado }}</span><br />
+      <span class="distancia">Distância: {{ pedido.distancia_motorista }} km</span><br />
+      <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
+      <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
+    </button>
+    <!--<button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button> -->
+  </li>
+</ul>
+
+  
+
+            
