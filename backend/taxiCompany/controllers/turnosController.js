@@ -58,3 +58,14 @@ exports.turno_create = asyncHandler(async (req, res, next) => {
     }
   });
 
+exports.turno_delete = asyncHandler(async (req, res, next) => {
+
+  let turno = await Turno.findByIdAndDelete(req.params.id);
+  if(!turno){
+    const err = new Error("Turno não encontrado");
+    err.status = 404;
+    return next(err);
+  }
+  res.json({ message: "Turno deletado com sucesso", turno });
+});
+

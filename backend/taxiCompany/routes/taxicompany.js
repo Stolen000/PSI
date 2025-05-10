@@ -36,6 +36,7 @@ router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
 router.post("/turnos",turnos_controller.turno_create);
 
+router.delete("/turnos/:id",turnos_controller.turno_delete);
 
 
 /* GET users listing. */
