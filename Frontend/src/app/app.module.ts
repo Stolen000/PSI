@@ -15,6 +15,7 @@ import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
+import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 
 @NgModule({
   declarations: [
@@ -27,11 +28,15 @@ import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.compo
     RequisitarViagemComponent,
     MotoristaPerfilComponent,
     RegistarViagemComponent,
+    RequisicaoTaxiComponent,
+    PedidosMotoristaComponent 
+  ],
   imports: [
+    BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutes,
-],
+    AppRoutes
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

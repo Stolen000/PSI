@@ -1,0 +1,47 @@
+<div class="container">
+  <h2>Pedidos de Táxi Próximos</h2>
+
+  <!--
+  <div *ngIf="latitude !== null && longitude !== null">
+    <p><strong>Localização atual:</strong></p>
+    <p>Latitude: {{ latitude }}</p>
+    <p>Longitude: {{ longitude }}</p>
+  </div>
+-->
+  <hr />
+
+    <div>
+    <h3>Selecionado</h3>
+
+    <ng-container *ngIf="pedidoSelecionado; else nenhumSelecionado">
+        <p><strong>ID:</strong> {{ pedidoSelecionado._id }}</p>
+        <button (click)="aceitarPedido()">Aceitar Pedido</button>
+    </ng-container>
+
+    <ng-template #nenhumSelecionado>
+        <p>Nenhum pedido selecionado</p>
+    </ng-template>
+    </div>
+  <hr />
+
+  <div *ngIf="pedidos.length > 0; else semPedidos">
+    <h3>Lista de Pedidos</h3>
+    <ul class="lista-pedidos">
+      <li 
+        *ngFor="let pedido of pedidos" 
+        (click)="selecionarPedido(pedido)" 
+        [class.selecionado]="pedido === pedidoSelecionado"
+      >
+        Pedido ID: {{ pedido._id }}
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #semPedidos>
+    <p>Não há pedidos disponíveis neste momento.</p>
+  </ng-template>
+
+  <hr />
+
+
+</div>
