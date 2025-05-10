@@ -47,3 +47,20 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
       res.status(201).json({ pedido, pedidos: todosPedidos });
   }
 );
+
+exports.pedido_delete = asyncHandler(async (req, res, next) => {
+    const pedidoId = req.params.id;
+  
+    // Verifica se o pedido existe
+    const pedido = await Pedido.findById(pedidoId);
+    if (!pedido) {
+      return res.status(404).json({ message: "Pedido não encontrado" });
+    }
+  
+    // Remove o pedido
+    await Pedido.findByIdAndDelete(pedidoId);
+  
+    // Envia a resposta de sucesso
+    res.status(200).json({ message: "Pedido removido com sucesso" });
+  }
+);  
