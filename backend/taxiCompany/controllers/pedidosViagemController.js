@@ -20,8 +20,10 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
     const { cliente_nome,
         cliente_nif,
         cliente_genero, 
-          morada_origem, 
+          morada_origem,
+          coordenadas_origem, 
           morada_destino, 
+          coordenadas_destino,
           nivel_conforto, 
           numero_pessoas, 
           estado} = req.body;
@@ -31,7 +33,9 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
           cliente_nif : cliente_nif,
           cliente_genero : cliente_genero,
           morada_origem : morada_origem,
+          coordenadas_origem : coordenadas_origem,
           morada_destino : morada_destino,
+          coordenadas_destino : coordenadas_destino,
           nivel_conforto : nivel_conforto,
           numero_pessoas : numero_pessoas,
           estado : estado

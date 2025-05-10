@@ -1,62 +1,112 @@
 <h1>Marcar uma Viagem</h1>
 <p>Preencha o formulário abaixo para solicitar uma viagem de táxi.</p>
 
-<form id="pedidoForm" (ngSubmit)="createPedidoViagem(nome.value, nif.value, genero.value, origem.value, destino.value, conforto.value, numPessoas.value)">
-    <div>
-      <label for="nome">Nome do Cliente:</label>
-      <input type="text" id="nome" name="nome" required #nome placeholder="Nome completo">
-    </div>
-  
-    <div>
-      <label for="nif">NIF do Cliente:</label>
-      <input type="text" id="nif" name="nif" required #nif placeholder="Número de Identificação Fiscal">
-    </div>
-  
-    <div>
-      <label for="genero">Género:</label>
-      <select id="genero" name="genero" required #genero>
-        <option value="Masculino">Masculino</option>
-        <option value="Feminino">Feminino</option>
-      </select>
-    </div>
-  
-    <div>
-      <label for="origem">Morada de Origem:</label>
-      <input type="text" id="origem" name="origem" required #origem placeholder="Ex: Rua A, Lisboa">
-    </div>
-  
-    <div>
-      <label for="destino">Morada de Destino:</label>
-      <input type="text" id="destino" name="destino" required #destino placeholder="Ex: Rua B, Porto">
-    </div>
-  
-    <div>
-      <label for="conforto">Nível de Conforto:</label>
-      <select id="conforto" name="conforto" required #conforto>
-        <option value="basico">Básico</option>
-        <option value="luxuoso">Luxuoso</option>
-      </select>
-    </div>
-  
-    <div>
-      <label for="numPessoas">Número de Pessoas:</label>
-      <input type="text" id="numPessoas" name="numPessoas" required #numPessoas placeholder="1-6">
-    </div>
-  
-    <button type="submit">Criar Pedido de Viagem</button>
-  </form>
+<form #pedidoForm="ngForm" (ngSubmit)="createPedidoViagem(
+  nome.value, nif.value, genero.value,
+  ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem,
+  ruaDestino.value, numeroPortaDestino.value, codigoPostalDestino.value, localidadeDestino,
+  conforto.value, numPessoas.value
+)">
+  <div>
+    <label for="nome">Nome do Cliente:</label>
+    <input type="text" id="nome" name="nome" ngModel required #nome="ngModel">
+  </div>
+
+  <div>
+    <label for="nif">NIF do Cliente:</label>
+    <input type="text" id="nif" name="nif" ngModel required pattern="^[0-9]{9}$" #nif="ngModel">
+    <div *ngIf="nif.invalid && nif.touched" class="info-msg">O NIF deve ter 9 dígitos.</div>
+  </div>
+
+  <div>
+    <label for="genero">Género:</label>
+    <select id="genero" name="genero" ngModel required #genero="ngModel">
+      <option value="">Selecione...</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Feminino">Feminino</option>
+    </select>
+  </div>
+
+  <h3>Morada de Origem</h3>
+  <div>
+    <label for="ruaOrigem">Rua:</label>
+    <input id="ruaOrigem" type="text" name="ruaOrigem" ngModel required #ruaOrigem="ngModel">
+  </div>
+
+  <div>
+    <label for="numeroPortaOrigem">Número da Porta:</label>
+    <input id="numeroPortaOrigem" type="number" name="numeroPortaOrigem" ngModel required #numeroPortaOrigem="ngModel">
+  </div>
+
+  <div>
+    <label for="codigoPostalOrigem">Código Postal:</label>
+    <input id="codigoPostalOrigem" type="text" name="codigoPostalOrigem" ngModel required #codigoPostalOrigem="ngModel"
+      (blur)="buscarLocalidadeOrigem(pedidoForm.value.codigoPostalOrigem)">
+    <div *ngIf="codigoPostalOrigemNaoEncontrado" class="info-msg">Código postal de origem não encontrado.</div>
+  </div>
+
+  <div>
+    <label for="localidadeOrigem">Localidade:</label>
+    <input id="localidadeOrigem" type="text" name="localidadeOrigem" [(ngModel)]="localidadeOrigem" required>
+  </div>
+
+  <h3>Morada de Destino</h3>
+  <div>
+    <label for="ruaDestino">Rua:</label>
+    <input id="ruaDestino" type="text" name="ruaDestino" ngModel required #ruaDestino="ngModel">
+  </div>
+
+  <div>
+    <label for="numeroPortaDestino">Número da Porta:</label>
+    <input id="numeroPortaDestino" type="number" name="numeroPortaDestino" ngModel required #numeroPortaDestino="ngModel">
+  </div>
+
+  <div>
+    <label for="codigoPostalDestino">Código Postal:</label>
+    <input id="codigoPostalDestino" type="text" name="codigoPostalDestino" ngModel required #codigoPostalDestino="ngModel"
+      (blur)="buscarLocalidadeDestino(pedidoForm.value.codigoPostalDestino)">
+    <div *ngIf="codigoPostalDestinoNaoEncontrado" class="info-msg">Código postal de destino não encontrado.</div>
+  </div>
+
+  <div>
+    <label for="localidadeDestino">Localidade:</label>
+    <input id="localidadeDestino" type="text" name="localidadeDestino" [(ngModel)]="localidadeDestino" required>
+  </div>
+
+  <div>
+    <label for="conforto">Nível de Conforto:</label>
+    <select id="conforto" name="conforto" ngModel required #conforto="ngModel">
+      <option value="">Selecione...</option>
+      <option value="basico">Básico</option>
+      <option value="luxuoso">Luxuoso</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="numPessoas">Número de Pessoas:</label>
+    <input type="number" id="numPessoas" name="numPessoas" ngModel required min="1" max="6" #numPessoas="ngModel">
+  </div>
+
+  <button type="submit" [disabled]="!pedidoForm.valid">Criar Pedido de Viagem</button>
+</form>
+
 
 
 <h2>Lista de Pedidos de Viagem</h2>
-
 <ul class="pedidos">
-  <!-- Inverter ordem para mostrar os mais recentes primeiro -->
-  <li *ngFor="let pedido of pedidos.slice()">
+  <!-- Mostra pedidos mais recentes primeiro -->
+  <li *ngFor="let pedido of pedidos.slice().reverse()">
     <button [class.selected]="pedido === selectedPedido" (click)="onSelect(pedido)">
       <span class="cliente">Cliente: {{ pedido.cliente_nome }} (NIF: {{ pedido.cliente_nif }})</span><br />
       <span class="genero">Género: {{ pedido.cliente_genero }}</span><br />
-      <span class="origem">Origem: {{ pedido.morada_origem }}</span><br />
-      <span class="destino">Destino: {{ pedido.morada_destino }}</span><br />
+      <span class="origem">
+        Origem: {{ pedido.morada_origem.rua }}, Nº {{ pedido.morada_origem.numero_porta }},
+        {{ pedido.morada_origem.codigo_postal }} {{ pedido.morada_origem.localidade }}
+      </span><br />
+      <span class="destino">
+        Destino: {{ pedido.morada_destino.rua }}, Nº {{ pedido.morada_destino.numero_porta }},
+        {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
+      </span><br />
       <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span><br />
       <span class="pessoas">Pessoas: {{ pedido.numero_pessoas }}</span><br />
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
@@ -64,9 +114,10 @@
       <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
       <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
     </button>
-    <!--<button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button> -->
+    <button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button>
   </li>
 </ul>
+
 
   
 

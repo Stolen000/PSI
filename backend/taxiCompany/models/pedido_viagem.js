@@ -6,16 +6,34 @@ const PedidoViagemSchema = new Schema({
     cliente_nome: { type: String, required: true },
     cliente_nif: { type: String, required: true },
     cliente_genero: { type: String, enum: ["Masculino", "Feminino"], required: true },
-    morada_origem: { type: String, required: true },
-    morada_destino: { type: String, required: true },
+    morada_origem: {
+      rua: { type: String, required: true },
+      numero_porta: { type: Number, required: true },
+      codigo_postal: { type: String, required: true },
+      localidade: { type: String, required: true },
+    },
+    coordenadas_origem: {
+      lat: { type: Number, required: true },
+      lon: { type: Number, required: true },
+    },
+    morada_destino: {
+      rua: { type: String, required: true },
+      numero_porta: { type: Number, required: true },
+      codigo_postal: { type: String, required: true },
+      localidade: { type: String, required: true },
+    },
+    coordenadas_destino: {
+      lat: { type: Number, required: true },
+      lon: { type: Number, required: true },
+    },
     nivel_conforto: { type: String, enum: ["basico", "luxuoso"], required: true },
     numero_pessoas: { type: String, required: true },
     estado: { type: String, enum: ["pendente", "aceite", "recusada"], required: true },
-    taxi: { type: Schema.Types.ObjectId, ref: "Taxi" , default: null },
+    taxi: { type: String, default: null },
     distancia_motorista: { type: Number, default: null },
     tempo_estimado: { type: Number, default: null },
     custo_estimado: { type: Number, default: null },
-    motorista: { type: Schema.Types.ObjectId, ref: "Motorista" , default: null },
+    motorista: { type: String, default: null },
 
 });
 // Virtual for author's URL

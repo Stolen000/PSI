@@ -1,21 +1,21 @@
-import {Taxi} from './taxi';
-import {Motorista} from './motorista';
-
-
+import { Morada } from './morada';
+import { Coordenadas } from './coordenadas';
 
 export interface Pedido_Viagem {
-    _id?: string;
-    cliente_nome: string; //id do cliente
-    cliente_nif: string;
-    cliente_genero: string; //genero do cliente
-    morada_origem: string; //id da morada origem
-    morada_destino: string; //id da morada destino
-    nivel_conforto: string; //nivel de conforto do taxi
-    numero_pessoas: string; //numero de pessoas na viagem
-    estado: string; //estado da viagem (pendente, aceite, rejeitada, concluida)
-    taxi: Taxi; //id do taxi
-    distancia_motorista: number; //distancia da viagem
-    tempo_estimado: number; //tempo estimado da viagem
-    custo_estimado: number; //custo estimado da viagem
-    motorista: Motorista; //id do motorista
+  _id?: string;
+  cliente_nome: string;
+  cliente_nif: string;
+  cliente_genero: string;
+  morada_origem: Morada;
+  morada_destino: Morada;
+  coordenadas_origem: Coordenadas;  // coordenadas geográficas da origem
+  coordenadas_destino: Coordenadas; // coordenadas geográficas do destino
+  nivel_conforto: string;
+  numero_pessoas: string;
+  estado: string;
+  taxi_id: string;
+  distancia_motorista: number;
+  tempo_estimado: number;
+  custo_estimado: number;
+  motorista_id: string;
 }

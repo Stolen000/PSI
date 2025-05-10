@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Pedido_Viagem } from '../pedido-viagem';
 import { PedidosViagemService } from '../services/pedidos-viagem.service';
+import { CodigoPostalService } from '../services/codigo-postal.service';
+import { LocalizationService } from '../services/localization.service';
+import { NgForm } from '@angular/forms';
+import { Morada } from '../morada';
+import { forkJoin } from 'rxjs';
+
+
 
 
 @Component({
@@ -11,112 +18,151 @@ import { PedidosViagemService } from '../services/pedidos-viagem.service';
 })
 
 
-export class RequisitarViagemComponent {
+export class RequisitarViagemComponent implements OnInit {
 
-  
   pedidos: Pedido_Viagem[] = [];
+  codigosPostais: any[] = [];
+  localidadeOrigem: string = '';
+  localidadeDestino: string = '';
+  codigoPostalOrigemNaoEncontrado: boolean = false;
+  codigoPostalDestinoNaoEncontrado: boolean = false;
 
   selectedPedido?: Pedido_Viagem;
-    constructor( private pedidosViagemService: PedidosViagemService ) {}
 
-    ngOnInit(): void {
-      this.getPedidos(); 
-    }
+  constructor(
+    private pedidosViagemService: PedidosViagemService,
+    private codigoPostalService: CodigoPostalService,
+    private localizationService: LocalizationService
+  ) {}
 
-  //registar um pedido com base nos atributos recebidos
-    //envia lo para a db com o service 
-  createPedidoViagem(nome: string, 
-                      numeroIF: string, 
-                      genre: string, 
-                      origem: string, 
-                      destino: string, 
-                      confort: string, 
-                      numPessoas: string): void {
-    
-    const pedidoViagem = {
-      cliente_nome: nome,
-      cliente_nif: numeroIF,
-      cliente_genero: genre,
-      morada_origem: origem,
-      morada_destino: destino,
-      nivel_conforto: confort,
-      numero_pessoas: numPessoas,
-      estado: 'pendente', 
-    };
-    
-    console.log(pedidoViagem);
+  ngOnInit(): void {
+    this.getPedidos();
 
-    this.pedidosViagemService.addPedido(pedidoViagem as Pedido_Viagem)
-    .subscribe(response => {
-      console.log("pedido de taxi recebido do backend:", response);
-      // Atualiza a lista com os pedidos mais recentes devolvidos pelo backend
-      this.pedidos = response.pedidos;
+    this.codigoPostalService.getCodigosPostais().subscribe(data => {
+      this.codigosPostais = data;
     });
-    
   }
 
   
-  //listar todos os pedidos
-  getPedidos(): void {
-    this.pedidosViagemService.getPedidos()
-        .subscribe(pedidos => this.pedidos = pedidos);
-  }
-
   onSelect(pedido: Pedido_Viagem): void {
     this.selectedPedido = pedido;
   }
-  
+
+  getPedidos(): void {
+    this.pedidosViagemService.getPedidos()
+      .subscribe(pedidos => this.pedidos = pedidos);
+  }
+
   deletePedido(pedido: Pedido_Viagem): void {
     this.pedidosViagemService.deletePedido(pedido._id!)
-        .subscribe(() => {
-          this.pedidos = this.pedidos.filter(p => p !== pedido);
-        });
+      .subscribe(() => {
+        this.pedidos = this.pedidos.filter(p => p !== pedido);
+      });
+  }
+
+  buscarLocalidadeOrigem(codigoPostal: string): void {
+    const resultado = this.codigosPostais.find(
+      c => c.codigo_postal === codigoPostal
+    );
+
+    if (resultado) {
+      this.localidadeOrigem = resultado.localidade;
+      this.codigoPostalOrigemNaoEncontrado = false;
+    } else {
+      this.localidadeOrigem = '';
+      this.codigoPostalOrigemNaoEncontrado = true;
+    }
+  }
+
+  buscarLocalidadeDestino(codigoPostal: string): void {
+    const resultado = this.codigosPostais.find(
+      c => c.codigo_postal === codigoPostal
+    );
+
+    if (resultado) {
+      this.localidadeDestino = resultado.localidade;
+      this.codigoPostalDestinoNaoEncontrado = false;
+    } else {
+      this.localidadeDestino = '';
+      this.codigoPostalDestinoNaoEncontrado = true;
+    }
   }
 
 
+  //ver se pode sacar as coordenadas pela localizacao do dispositivo
+    //se sim criar a morada com elas
+    //se nao eh suposto preencher os campos da morada
+      //e sacar as coordenadas dai
+  createPedidoViagem(
+    nome: string,
+    numeroIF: string,
+    genero: string,
+    ruaOrigem: string,
+    numeroPortaOrigem: number,
+    codigoPostalOrigem: string,
+    localidadeOrigem: string,
+    ruaDestino: string,
+    numeroPortaDestino: number,
+    codigoPostalDestino: string,
+    localidadeDestino: string,
+    conforto: string,
+    numPessoas: string
+  ): void {
+    if (
+      !nome || !numeroIF || !genero ||
+      !ruaOrigem || !numeroPortaOrigem || !codigoPostalOrigem || !localidadeOrigem ||
+      !ruaDestino || !numeroPortaDestino || !codigoPostalDestino || !localidadeDestino ||
+      !conforto || !numPessoas ||
+      this.codigoPostalOrigemNaoEncontrado || this.codigoPostalDestinoNaoEncontrado
+    ) {
+      alert('Por favor preencha todos os campos corretamente e valide os códigos postais.');
+      return;
+    }
+  
+    const morada_origem: Morada = {
+    rua: ruaOrigem,
+    numero_porta: numeroPortaOrigem,
+    codigo_postal: codigoPostalOrigem,
+    localidade: localidadeOrigem
+    };
 
-//um cliente vai usar esta tab para requisitar um taxi para uma viagem
-//este requisitarviagem precisa de um tipo para guardar informaçoes essenciais da viagem
-//objeto pedidoViagem
-//precisa de guardar_
-//  dados do cliente
-        //nif
-        //genero
-    //localizacao atual
-    //destino
-    //nivel de conforto do taxi
-    //numero de pessoas a ir
-    //cliente pessoa morada taxi viagem
+    const morada_destino: Morada = {
+      rua: ruaDestino,
+      numero_porta: numeroPortaDestino,
+      codigo_postal: codigoPostalDestino,
+      localidade: localidadeDestino
+    };
 
+  forkJoin({
+    origem: this.localizationService.getCoordenadasDaMorada(morada_origem),
+    destino: this.localizationService.getCoordenadasDaMorada(morada_destino)
+  }).subscribe(({ origem, destino }) => {
+    if (!origem || !destino) {
+      console.error('Erro ao obter coordenadas.');
+      return;
+    }
 
+    const pedidoViagem = {
+      cliente_nome: nome,
+      cliente_nif: numeroIF,
+      cliente_genero: genero,
+      morada_origem,
+      coordenadas_origem: origem,
+      morada_destino,
+      coordenadas_destino: destino,
+      nivel_conforto: conforto,
+      numero_pessoas: numPessoas,
+      estado: 'pendente'
+    };
 
-//User Story 6: Como cliente, quero poder pedir um táxi, para chegar mais depressa ao destino. Os critérios de aceitação são os seguintes:
+    console.log('Pedido de viagem:', pedidoViagem);
 
-//a) Deve ser possível preencher um formulário com os dados do cliente, da
-//sua localização geográfica atual e do destino para onde pretende ir, bem
-//como o nível de conforto do táxi e o número de pessoas que irão no táxi,
-//com campos provenientes das entidades Cliente, Pessoa, Morada, Táxi,
-//e Viagem;
-
-//b) O NIF e género do cliente devem satisfazer as RIA 10 e 11, o nível de conforto do táxi deve estar conforme a RIA 16, e o número de pessoas que
-//irá na viagem de táxi deve satisfazer a RIA 19;
-//13 Mais precisamente, táxis que não estejam a ser usados em turnos que intersetem o turno
-//em causa, conforme a RIA 8.
-
-//c) Se o browser tiver acesso às coordenadas geográficas,14 a morada da localização atual deve ser obtida automaticamente.
-//15 Caso contrário, a morada deve poder ser preenchida à mão (ex. o código postal) de tal forma
-//que permita a sua correta tradução para coordenadas geográficas;15
-
-//d) A morada de destino deve poder ser preenchida manualmente, contando
-//que possa ser traduzida para coordenadas geográficas, ou então deve
-//poder ser marcado um ponto num mapa;16
-
-//e) Após o pedido de táxi, o cliente deve poder ficar a aguardar a resposta de
-//algum motorista, ou eventualmente cancelar o pedido;
-
-//f) Se um motorista responder, deve ser mostrado o seu nome, a distância a
-//que está, o tempo estimado de chegada até ao cliente e o custo estimado
-//da viagem até ao destino,17 e todos os detalhes do táxi.
-//  O cliente deve, então, poder aceitar ou rejeitar esse motorista e táxi.
-
+    this.pedidosViagemService.addPedido(pedidoViagem as Pedido_Viagem)
+      .subscribe(response => {
+        console.log("Pedido de viagem recebido do backend:", response);
+        this.pedidos = response.pedidos;
+      });
+  });
+  }
 }
+
