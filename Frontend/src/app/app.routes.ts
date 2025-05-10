@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem.component';
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
+import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 
 
 export const routes: Routes = [
@@ -20,7 +21,9 @@ export const routes: Routes = [
     { path: "pedidos", component: RequisitarViagemComponent},
     { path: "motorista-perfil/:id", component: MotoristaPerfilComponent},
     { path: "motorista-perfil/:motorista_id/pedido-taxi", component: RequisicaoTaxiComponent},
-    { path: '**', redirectTo: '/dashboard' }
+    {  path: "motorista-perfil/:motorista._id/aceitar-pedido", component: PedidosMotoristaComponent},
+    { path: '**', redirectTo: '/dashboard' },
+
 ]; 
 
 @NgModule({
