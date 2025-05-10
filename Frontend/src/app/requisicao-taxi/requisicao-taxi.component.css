@@ -85,8 +85,8 @@ select {
 button[type="submit"] {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #007BFF;
-  color: white;
+  background-color: #eee;
+  color: #aaa;
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -95,12 +95,14 @@ button[type="submit"] {
 }
 
 button[disabled] {
-  background-color: #999;
+  background-color: #eee;
+  color: #aaa;
   cursor: not-allowed;
 }
 
 button:hover:not([disabled]) {
-  background-color: #0056b3;
+  background-color: black;
+  color: white;
 }
 
 div[style*="color: red;"] {
