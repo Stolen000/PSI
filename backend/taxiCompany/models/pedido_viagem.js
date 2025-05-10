@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const PedidoViagemSchema = new Schema({
     cliente_nome: { type: String, required: true },
     cliente_nif: { type: String, required: true },
-    cliente_genero: { type: String, enum: ["masculino", "feminino"], required: true },
+    cliente_genero: { type: String, enum: ["Masculino", "Feminino"], required: true },
     morada_origem: { type: String, required: true },
     morada_destino: { type: String, required: true },
     nivel_conforto: { type: String, enum: ["basico", "luxuoso"], required: true },
