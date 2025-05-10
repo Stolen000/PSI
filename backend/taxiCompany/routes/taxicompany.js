@@ -41,6 +41,9 @@ router.post("/turnos",turnos_controller.turno_create);
 
 router.post("/pedidos", pedidos_controller.pedido_create);
 router.post("/viagem", viagem_controller.viagem_post)
+router.delete("/turnos/:id",turnos_controller.turno_delete);
+
+router.delete("/turnos/motorista/:motorista_id",turnos_controller.turno_delete_by_motorista);
 
 router.get("/viagem/viagem-atual/:motorista_id", viagem_controller.viagem_mais_recente_turno_atual)
 

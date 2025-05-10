@@ -13,6 +13,7 @@ import { AppRoutes } from './app.routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
+import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +25,7 @@ import { RegistarViagemComponent } from './registar-viagem/registar-viagem.compo
     DashboardComponent,
     MotoristaPerfilComponent,
     RegistarViagemComponent,
-  ],
   imports: [
-    BrowserModule,
     FormsModule,
     HttpClientModule,
     AppRoutes,
