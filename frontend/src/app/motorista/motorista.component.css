@@ -199,4 +199,9 @@ form {
   .input-invalido {
     border-color: red;
   }
-      
+    
+  .mensagem-sucesso {
+    color: green;
+    font-weight: bold;
+    margin-bottom: 1em;
+  }

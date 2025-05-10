@@ -4,7 +4,7 @@ var router = express.Router();
 const taxi_controller = require("../controllers/taxiController");
 const motoristas_controller = require("../controllers/motoristasController");
 const prices_controller = require("../controllers/pricesController");
-const pedidos_controller = require("../controllers/pedidosViagemController");
+const turnos_controller = require("../controllers/turnosController");
 
 
 
@@ -24,13 +24,21 @@ router.post("/prices", prices_controller.price_create);
 
 router.get("/motoristas", motoristas_controller.motoristas_list);
 
+router.get("/motoristas/:id", motoristas_controller.get_motorista_by_id);
+
 router.post("/motoristas", motoristas_controller.motorista_create);
 
 router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
 
-router.get("/pedidos", pedidos_controller.pedido_list);
+router.get("/turnos",turnos_controller.get_turnos_list);
 
-router.post("/pedidos", pedidos_controller.pedido_create);
+router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
+
+router.post("/turnos",turnos_controller.turno_create);
+
+router.delete("/turnos/:id",turnos_controller.turno_delete);
+
+router.delete("/turnos/motorista/:motorista_id",turnos_controller.turno_delete_by_motorista);
 
 
 /* GET users listing. */

@@ -12,6 +12,8 @@ import { MotoristaComponent } from './motorista/motorista.component';
 import { AppRoutes } from './app.routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem.component';
+import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
+import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem
     TransportPricesComponent,
     MotoristaComponent,
     DashboardComponent,
-    RequisitarViagemComponent
+    RequisitarViagemComponent,
+    MotoristaPerfilComponent,
+    RequisicaoTaxiComponent,
   ],
   imports: [
     BrowserModule,

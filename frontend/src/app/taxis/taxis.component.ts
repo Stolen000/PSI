@@ -50,7 +50,7 @@ export class TaxisComponent {
 
   getTaxis(): void {
     this.taxiService.getTaxis()
-        .subscribe(taxis => this.taxis = taxis);
+        .subscribe(taxis => this.taxis = taxis.reverse());
   }
 
   createTaxi(matricula: string, marca : string, modelo : string, anoCompra : string, conforto : string){
@@ -88,7 +88,7 @@ export class TaxisComponent {
   loadTaxis() {
     this.taxiService.getTaxis()
       .subscribe((taxis) => {
-        this.taxis = taxis;
+        this.taxis = taxis.reverse();
       });
   }
 

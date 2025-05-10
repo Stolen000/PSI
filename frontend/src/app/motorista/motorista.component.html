@@ -105,7 +105,8 @@
         meuFormulario.value.rua,
         +meuFormulario.value.numeroPorta,
         meuFormulario.value.codigoPostal,
-        meuFormulario.value.localidade
+        meuFormulario.value.localidade,
+        meuFormulario
       );">
       Registar Motorista
     </button>
@@ -113,6 +114,11 @@
     <button type="button" class="clear-button" (click)="meuFormulario.resetForm()">
       Limpar Formulário
     </button>
+
+    <div *ngIf="mensagemSucesso" class="mensagem-sucesso">
+      {{ mensagemSucesso }}
+    </div>
+    
   </div>
 
 
@@ -124,10 +130,22 @@
   <p>Nenhum motorista registado ainda.</p>
 </div>
 
+<label for="nif">LOGIN:</label>
+<input type="number" [(ngModel)]="nifProcurado" placeholder="Introduza o NIF">
+<br>
+<button (click)="procurarMotorista()">Procurar Motorista</button>
+
+<!-- Mensagem de erro, se não encontrado -->
+<p *ngIf="motoristaNaoEncontrado" style="color: red;">Motorista não encontrado.</p>
+
+ 
+
+
+
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
-    <a routerLink="">
-      <span class="badge"></span>{{ motorista.name }}
+    <a routerLink="/motorista-perfil/{{motorista._id}}">
+      <span class="badge">&nbsp;</span>{{ motorista.name }}
     </a>
     <button type="button" class="delete" title="delete motorista"
     (click)="delete(motorista)">x</button>

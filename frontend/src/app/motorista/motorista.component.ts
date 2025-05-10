@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Motorista } from '../motorista';
 import { MotoristaService } from '../services/motorista.service';
 import { CodigoPostalService } from '../services/codigo-postal.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-motorista',
@@ -14,6 +15,10 @@ export class MotoristaComponent implements OnInit {
   codigosPostais: any[] = [];
   localidade: string = ''; 
   codigoPostalNaoEncontrado: boolean = false;
+  nifProcurado: number = 0;
+  motoristaNaoEncontrado: boolean = false;
+  mensagemSucesso: string = '';
+
 
   constructor(
     private motoristaService: MotoristaService,
@@ -51,7 +56,8 @@ export class MotoristaComponent implements OnInit {
     rua: string,
     numeroPorta: number,
     codigoPostal: string,
-    localidade: string
+    localidade: string,
+    formulario: NgForm
   ) {
     if (!name || !anoNascimento || !cartaConducao || !nif || !genero || !rua || !numeroPorta || !codigoPostal || !localidade) {
       alert('Preenche todos os campos corretamente!');
@@ -102,6 +108,11 @@ export class MotoristaComponent implements OnInit {
         console.log("Motorista recebido do backend:", motorista);
         this.motoristas.unshift(motorista);
       });
+      this.mensagemSucesso = 'Motorista registado com sucesso!';
+      formulario.resetForm();
+      setTimeout(() => {
+        this.mensagemSucesso = '';
+      }, 3000);
   }
 
   buscarLocalidade(codigoPostal: string): void {
@@ -125,6 +136,17 @@ export class MotoristaComponent implements OnInit {
 
   verificaCartaConducaoUnica(numero: number): boolean {
     return !this.motoristas.some(m => m.carta_conducao === numero);
+  }
+  
+  procurarMotorista() {
+    const motorista = this.motoristas.find(m => m.nif === this.nifProcurado);
+    if (motorista) {
+      this.motoristaNaoEncontrado = false;
+      // Navegar para a página do motorista
+      window.location.href = `/motorista-perfil/${motorista._id}`;
+    } else {
+      this.motoristaNaoEncontrado = true;
+    }
   }
   
   
