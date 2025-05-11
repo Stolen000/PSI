@@ -9,6 +9,18 @@ exports.get_turnos_list = asyncHandler(async (req, res, next) => {
   res.json(allTurno);
 });
 
+exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
+  const turno = await Turno.findById(req.params.id);
+  if(!turno){
+    const err = new Error("Taxi não encontrado");
+    err.status = 404;
+    return next(err); 
+  }
+  res.json(turno);
+}
+);
+
+
 exports.get_turnos_by_motorista = asyncHandler(async (req, res, next) => {
   console.log("ID recebido:", req.params.motorista_id);
   try {
@@ -36,8 +48,6 @@ exports.turno_create = asyncHandler(async (req, res, next) => {
       if (!motorista_id || !taxi_id || !periodo || !periodo.inicio || !periodo.fim) {
         return res.status(400).json({ error: 'Missing required fields.' });
       }
-      console.log("HEllo");
-      console.log("Received body:", req.body);
       // Criar o objeto Taxi
       const turno = new Turno({
         motorista_id,
