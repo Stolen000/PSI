@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { LocalizationService } from '../services/localization.service';
 import { TurnoService } from '../services/turno.service';
 import { ActivatedRoute } from '@angular/router';
+import { Taxi } from '../taxi';
+import { TaxiService } from '../services/taxi.service';
 
 
 @Component({
@@ -14,17 +16,23 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PedidosMotoristaComponent implements OnInit {
   pedidos: Pedido_Viagem[] = [];
+  pedidos_aceite: Pedido_Viagem[] = [];
   latitude: number = 38.756734;
   longitude: number = -9.155412;
   turnoAtivo: boolean = false;
   motoristaId: string = 'TESTE-ID'; // Coloca aqui como vais obter o ID do motorista
+  fim_de_turno?: Date;
+  taxi?: Taxi;
+
+
 
 
   constructor(private pedidoService: PedidosViagemService,
     private http: HttpClient,
     private localizationService: LocalizationService,
     private turnoService: TurnoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private taxiService: TaxiService
   ) {}
 
 
@@ -44,6 +52,13 @@ ngOnInit(): void {
     console.log(turno)
     if (turno) {
       this.turnoAtivo = true;
+      this.fim_de_turno =  new Date(turno.periodo.fim);
+      this.taxiService.getTaxi(turno.taxi_id).subscribe(taxi => {
+        this.taxi = taxi;
+        console.log('Taxi recebido:', this.taxi);
+      });
+
+      console.log(this.fim_de_turno);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -68,9 +83,33 @@ ngOnInit(): void {
 
 
 getPedidos(): void {
+
+  const agora = new Date();
+
   this.pedidoService.getPedidos().subscribe(pedidos => {
     this.pedidos = pedidos
-      .filter(pedido => pedido.estado === 'pendente') // Filtra os pendentes
+      .filter(pedido => {
+        if (pedido.estado !== 'pendente' || pedido.nivel_conforto !== this.taxi?.nivel_de_conforto) {
+          return false;
+        }
+
+        const distancia = this.localizationService.calcularDistanciaKm(
+          this.latitude,
+          this.longitude,
+          pedido.coordenadas_origem.lat,
+          pedido.coordenadas_origem.lon
+        );
+
+        const tempoAteCliente = distancia * 4; // minutos
+        const tempoTotalEstimado = tempoAteCliente + pedido.tempo_estimado;
+
+        const fimPrevisto = new Date(agora.getTime() + tempoTotalEstimado * 60 * 1000);
+        console.log(fimPrevisto)
+
+        if (!this.fim_de_turno) return false;
+        return fimPrevisto <= this.fim_de_turno;
+
+      })
       .map(pedido => {
         const distancia = this.localizationService.calcularDistanciaKm(
           this.latitude,
@@ -80,9 +119,11 @@ getPedidos(): void {
         );
         return { ...pedido, distancia_motorista: distancia };
       })
-      .sort((a, b) => a.distancia_motorista - b.distancia_motorista); // Ordena pela distância crescente
+      .sort((a, b) => a.distancia_motorista - b.distancia_motorista);
   });
 }
+
+
 
 
 
@@ -95,8 +136,29 @@ getPedidos(): void {
     this.pedidoSelecionado = pedido;
   }
 
-  aceitarPedido(): void {
-    // Lógica para aceitar pedido será adicionada depois
-    console.log('Pedido aceite:', this.pedidoSelecionado);
+aceitarPedido(): void {
+  if (this.pedidoSelecionado && this.pedidoSelecionado._id && this.taxi) {
+    const pedidoId = this.pedidoSelecionado._id;
+    const motoristaId = this.motoristaId;
+    const taxiId = this.taxi._id;  // Obtém o ID do taxi
+    const distanciaMotorista = Math.round(this.pedidoSelecionado.distancia_motorista * 100) / 100;  // Distância já calculada
+
+    // Chama a função aceitarPedido no serviço passando os dados
+    this.pedidoService.aceitarPedido(pedidoId, motoristaId, taxiId, distanciaMotorista)
+      .subscribe(
+        (response) => {
+          console.log('Pedido aceito com sucesso:', response);
+          this.getPedidos();
+        },
+        (error) => {
+          console.error('Erro ao aceitar o pedido:', error);
+          this.getPedidos();
+        }
+      );
+  } else {
+    console.log('Nenhum pedido selecionado, ID do motorista ou ID do taxi inválido');
+    this.getPedidos();
   }
+}
+
 }

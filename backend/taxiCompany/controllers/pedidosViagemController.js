@@ -73,3 +73,39 @@ exports.pedido_delete = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Pedido removido com sucesso" });
   }
 );  
+
+exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
+    const pedidoId = req.body.id; // Obtém o ID do pedido a partir do corpo da requisição
+    const motoristaId = req.body.motoristaId; // Obtém o ID do motorista
+    const taxiId = req.body.taxiId; // Obtém o ID do taxi
+    const distanciaMotorista = req.body.distanciaMotorista; // Obtém a distância para o motorista
+
+    // Verifica se o ID do pedido foi enviado
+    if (!pedidoId) {
+        return res.status(400).json({ message: "ID do pedido é necessário." });
+    }
+
+    // Encontra o pedido no banco de dados
+    const pedido = await Pedido.findById(pedidoId);
+    
+    // Verifica se o pedido foi encontrado
+    if (!pedido) {
+        return res.status(404).json({ message: "Pedido não encontrado." });
+    }
+
+    // Atualiza o estado do pedido para "aceite"
+    pedido.estado = 'aceite';
+    
+    // Atualiza os dados do motorista, taxi e distância
+    pedido.motorista = motoristaId;
+    pedido.taxi = taxiId;
+    pedido.distancia_motorista = distanciaMotorista;
+    
+    // Salva a atualização do pedido no banco de dados
+    await pedido.save();
+    
+    // Retorna a resposta com o pedido atualizado
+    res.status(200).json({ message: "Pedido aceito com sucesso.", pedido });
+});
+
+
