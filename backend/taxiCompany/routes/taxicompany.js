@@ -76,6 +76,8 @@ router.put("/viagens/:id/inicio", viagens_controller.viagem_update_inicio);
 
 router.put("/viagens/:id/fim", viagens_controller.viagem_update_fim);
 
+router.delete("/viagens/:id", viagens_controller.viagem_delete_by_id);
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
