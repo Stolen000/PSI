@@ -11,8 +11,11 @@ import { TaxiDetailsComponent } from "./taxi-details/taxi-details.component";
 import { MotoristaComponent } from './motorista/motorista.component';
 import { AppRoutes } from './app.routes';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem.component';
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
+import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
+import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 
 @NgModule({
   declarations: [
@@ -22,15 +25,18 @@ import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.compo
     TransportPricesComponent,
     MotoristaComponent,
     DashboardComponent,
+    RequisitarViagemComponent,
     MotoristaPerfilComponent,
+    RegistarViagemComponent,
     RequisicaoTaxiComponent,
+    PedidosMotoristaComponent 
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutes,
-],
+    AppRoutes
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
