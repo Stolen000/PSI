@@ -129,6 +129,32 @@ criarAutoMoradaOrigem(): void {
       });
   }
 
+  aceitarPedido(pedido: Pedido_Viagem): void {
+    //criar a viagem com estes dados
+    //manda la para a bd
+
+  }
+
+
+  recusarPedido(pedido: Pedido_Viagem): void {
+    //alterar os campos para
+    //estado pendente
+    //retirar valores de 
+      //taxi id
+      //motorista id
+      //distancia ao motorista
+      pedido.distancia_motorista = -1;
+      pedido.estado = 'pendente';
+      pedido.taxi_id = '';
+      pedido.motorista_id = '';
+      //fazer o update para a db
+      this.pedidosViagemService.updatePedido(pedido)
+        .subscribe(() => {
+          console.log('Pedido recusado e atualizado com sucesso.');
+        });
+  }
+    
+
   buscarLocalidadeOrigem(codigoPostal: string): void {
     const resultado = this.codigosPostais.find(
       c => c.codigo_postal === codigoPostal

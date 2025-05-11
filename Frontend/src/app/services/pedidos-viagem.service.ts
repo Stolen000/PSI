@@ -45,6 +45,15 @@ export class PedidosViagemService {
     );
   }
 
+  updatePedido(pedido: Pedido_Viagem): Observable<any> {
+    const url = `${this.pedidosUrl}/${pedido._id}`; // PUT api/pedidos_viagem/1
+    return this.http.put(url, pedido, this.httpOptions).pipe(
+      tap(_ => this.log(`updated pedido id=${pedido._id}`)),
+      catchError(this.handleError<any>('updatePedido'))
+    );
+  }
+
+
 
       /**
    * Handle Http operation that failed.

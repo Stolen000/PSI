@@ -59,6 +59,8 @@ router.post("/pedidos",pedidos_controller.pedido_create);
 
 router.delete("/pedidos/:id",pedidos_controller.pedido_delete);
 
+router.put("/pedidos/:id",pedidos_controller.pedido_update);
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
