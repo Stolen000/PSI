@@ -90,23 +90,41 @@ html, body {
     background-color: #f3f4f6;
     overflow-y: auto;
   }
-  .toggle-btn {
+.toggle-btn {
   position: absolute;
-  top: 100px; /* match header height */
+  top: 30%;
+  transform: translateY(-50%);
   left: 240px;
-  width: 24px;
-  height: 40px;
+  width: 15px;
+  height: 60px;
   background-color: #1f2937;
   color: white;
   border: none;
   cursor: pointer;
   z-index: 2;
   transition: left 0.3s;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding-top: 10px; /* Adjust this value until it looks right */
 }
 
 .toggle-btn.collapsed {
   left: 60px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
+
+
 
 /* Adjust sidenav width when collapsed */
 .sidenav.collapsed {
@@ -142,6 +160,9 @@ html, body {
 }
 .sidenav.collapsed .link_calculadora::before {
   background-image: url('/assets/icons/calcuator.png');
+}
+.sidenav.collapsed .link_requisitar_viagem::before {
+  background-image: url('/assets/icons/touch.png');
 }
 
 .content.expanded {

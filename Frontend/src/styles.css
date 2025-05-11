@@ -51,3 +51,16 @@ html, body {
   height: 100%;
   width: 100%;
 }
+
+.content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f3f4f6;
+  overflow-y: auto;
+  margin-left: 240px;
+  transition: margin-left 0.3s ease; /* <-- this adds the smooth shift */
+}
+
+.content.expanded {
+  margin-left: 60px;
+}
