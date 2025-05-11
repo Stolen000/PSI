@@ -30,7 +30,7 @@ export class RegistarViagemComponent implements OnInit {
 
   ngOnSelect(): void {
   }
-  
+
   onSelect(viagem: Viagem): void {
     this.selectedViagem = viagem;
   }
@@ -40,6 +40,7 @@ export class RegistarViagemComponent implements OnInit {
   //no atributo inicioViagem
   //dar um update da viagem no backend
   iniciarViagem(): void {
+    
     this.viagemEmCurso = true;
     if (this.selectedViagem) {
       const inicio_viagem = new Date();

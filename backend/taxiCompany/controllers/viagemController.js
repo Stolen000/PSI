@@ -108,6 +108,44 @@ exports.viagem_atual_by_motorista = asyncHandler(async (req, res, next) => {
   }
 });
 
+  //funcao que recebe um Date que eh suposto ser a atualizaçao do inicioTime da viagem com base no id
+exports.viagem_update_inicio = asyncHandler(async (req, res, next) => { 
+    const viagem = await Viagem.findById(req.params.id);
+    if (!viagem) {
+        const err = new Error("Viagem não encontrada");
+        err.status = 404;
+        return next(err);
+    }
+    const { inicio_viagem } = req.body;
+    if (!inicio_viagem) {
+        const err = new Error("Inicio da viagem não pode ser nulo");
+        err.status = 400;
+        return next(err);
+    }
+    viagem.inicio_viagem = inicio_viagem;
+    await viagem.save();
+    res.status(200).json(viagem);
+});
+
+exports.viagem_update_fim = asyncHandler(async (req, res, next) => {
+    const viagem = await Viagem.findById(req.params.id);
+    if (!viagem) {
+        const err = new Error("Viagem não encontrada");
+        err.status = 404;
+        return next(err);
+    }
+    const { fim_viagem } = req.body;
+    if (!fim_viagem) {
+        const err = new Error("Fim da viagem não pode ser nulo");
+        err.status = 400;
+        return next(err);
+    }
+    viagem.fim_viagem = fim_viagem; 
+    await viagem.save();
+    res.status(200).json(viagem);
+});
+
+
 
 
 

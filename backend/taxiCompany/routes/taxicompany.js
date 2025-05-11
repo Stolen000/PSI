@@ -72,6 +72,10 @@ router.get("/viagens/viagem-atual/:motorista_id", viagens_controller.viagem_atua
 
 router.get("/viagens/:motorista_id", viagens_controller.viagens_by_motorista);
 
+router.put("/viagens/:id/inicio", viagens_controller.viagem_update_inicio);
+
+router.put("/viagens/:id/fim", viagens_controller.viagem_update_fim);
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
