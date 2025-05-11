@@ -133,6 +133,17 @@ criarAutoMoradaOrigem(): void {
     //criar a viagem com estes dados
     //manda la para a bd
 
+    //criar viagem com os atributos do pedido
+
+
+    /*
+      nif do cliente
+      coordenadas de origem
+      coordenadas de destino
+      numero de pessoas
+      motorista id 
+      taxi id
+    */
   }
 
 

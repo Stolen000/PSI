@@ -18,4 +18,5 @@ export interface Pedido_Viagem {
   tempo_estimado: number;
   custo_estimado: number;
   motorista_id: string;
+  turno_id: string;
 }

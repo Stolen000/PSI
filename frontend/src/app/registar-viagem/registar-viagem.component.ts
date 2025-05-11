@@ -23,4 +23,8 @@ export class RegistarViagemComponent implements OnInit {
       this.turnoAtual = res.turno;
     });
   }
+
+  
+
+
 }
