@@ -10,9 +10,12 @@ exports.get_viagens_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.viagem_create = asyncHandler(async (req, res, next) => {
-  const { turno_id, motorista_id, sequencia, inicio_viagem, fim_viagem, num_pessoas, coordenadas_origem, coordenadas_destino, } = req.body;
-  try{
-    if(!turno_id || !motorista_id ||  !sequencia || !num_pessoas || !coordenadas_origem || !coordenadas_destino || !inicio_viagem || !fim_viagem){
+  const { motorista_id, sequencia, turno_id, num_pessoas, coordenadas_origem, coordenadas_destino } = req.body;
+
+  try {
+    console.log("Dados recebidos no backend:", req.body); // log full request body
+
+    if (!turno_id || !motorista_id || !sequencia || !num_pessoas || !coordenadas_origem || !coordenadas_destino) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
 
@@ -20,19 +23,22 @@ exports.viagem_create = asyncHandler(async (req, res, next) => {
       turno_id,
       motorista_id,
       sequencia,
-      inicio_viagem,
-      fim_viagem,
       num_pessoas,
       coordenadas_origem,
-      coordenadas_destino
+      coordenadas_destino,
     });
+
+    console.log("Viagem criada para guardar na base de dados:", viagem); // log Mongoose object
+
     await viagem.save();
 
-    res.status(201).json( viagem );}
-
-  catch(err) {
+    res.status(201).json(viagem);
+  } catch (err) {
+    console.error("Erro ao criar viagem:", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
+
 
 exports.get_viagem_by_id = asyncHandler(async (req, res, next) => {
   const viagem = await Viagem.findById(req.params.id);
