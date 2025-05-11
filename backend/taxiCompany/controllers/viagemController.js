@@ -1,6 +1,6 @@
 
 const Viagem = require("../models/viagem");
-const Turno = requir("../models/turno");
+const Turno = require("../models/turno");
 const asyncHandler = require("express-async-handler");
 
 

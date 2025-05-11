@@ -9,6 +9,7 @@ import { TurnoService } from '../services/turno.service';
 
 import { Morada } from '../morada';
 import { forkJoin, Observable } from 'rxjs';
+import { Turno } from '../turno';
 
 
 
@@ -37,7 +38,7 @@ export class RequisitarViagemComponent implements OnInit {
   codigoPostalDestinoNaoEncontrado: boolean = false;
   usarLocalizacao: boolean = false;
   coordenadasOrigem: { lat: number; lon: number } | null = null;
-  turnoSelecionado: any;
+  turnoSelecionado?: Turno;
   moradaOrigem: Morada = {
     rua: '',
     numero_porta: 0,
@@ -156,8 +157,14 @@ criarAutoMoradaOrigem(): void {
       .subscribe({
         next: (turno) => {  
           this.turnoSelecionado = turno;
+          console.log(turno)
         }
       });
+
+      if(!this.turnoSelecionado){
+        console.log("Entrei aqui")
+        return;
+      }
     
     //atualizar o numero de viagens do turno
     const viagem = {
@@ -169,7 +176,7 @@ criarAutoMoradaOrigem(): void {
       taxi_id: pedido.taxi_id,
       turno_id: pedido.turno_id,
       num_pessoas: pedido.numero_pessoas,
-      sequencia: this.turnoSelecionado.numero_viagens,
+      sequencia: this.turnoSelecionado.viagens_realizadas,
       inicio_viagem: null,
       fim_viagem: null
     };
