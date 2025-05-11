@@ -1,9 +1,9 @@
 <h1>Marcar uma Viagem</h1>
 <p>Preencha o formulário abaixo para solicitar uma viagem de táxi.</p>
 
+
 <form #pedidoForm="ngForm" (ngSubmit)="createPedidoViagem(
   nome.value, nif.value, genero.value,
-  ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem,
   ruaDestino.value, numeroPortaDestino.value, codigoPostalDestino.value, localidadeDestino,
   conforto.value, numPessoas.value
 )">
@@ -27,6 +27,8 @@
     </select>
   </div>
 
+
+<div *ngIf="!usarLocalizacao">
   <h3>Morada de Origem</h3>
   <div>
     <label for="ruaOrigem">Rua:</label>
@@ -49,6 +51,11 @@
     <label for="localidadeOrigem">Localidade:</label>
     <input id="localidadeOrigem" type="text" name="localidadeOrigem" [(ngModel)]="localidadeOrigem" required>
   </div>
+
+  <!-- Chama a função criarMoradaOrigemManual quando o formulário for preenchido e o botão for clicado -->
+  <button (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">Confirmar Localização Atual</button>
+</div>
+
 
   <h3>Morada de Destino</h3>
   <div>
@@ -93,30 +100,36 @@
 
 
 <h2>Lista de Pedidos de Viagem</h2>
-<ul class="pedidos">
-  <!-- Mostra pedidos mais recentes primeiro -->
+<ul class="lista-pedidos">
   <li *ngFor="let pedido of pedidos.slice().reverse()">
     <button [class.selected]="pedido === selectedPedido" (click)="onSelect(pedido)">
-      <span class="cliente">Cliente: {{ pedido.cliente_nome }} (NIF: {{ pedido.cliente_nif }})</span><br />
-      <span class="genero">Género: {{ pedido.cliente_genero }}</span><br />
-      <span class="origem">
-        Origem: {{ pedido.morada_origem.rua }}, Nº {{ pedido.morada_origem.numero_porta }},
-        {{ pedido.morada_origem.codigo_postal }} {{ pedido.morada_origem.localidade }}
-      </span><br />
+      <span class="cliente">Cliente: {{ pedido.cliente_nome }}</span><br />
       <span class="destino">
-        Destino: {{ pedido.morada_destino.rua }}, Nº {{ pedido.morada_destino.numero_porta }},
-        {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
+        Destino: {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
       </span><br />
       <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span><br />
-      <span class="pessoas">Pessoas: {{ pedido.numero_pessoas }}</span><br />
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
-      <span class="distancia">Distância: {{ pedido.distancia_motorista }} km</span><br />
+
+      <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
+      <ng-container *ngIf="pedido.estado === 'aceite'">
+        <span class="distancia">Distância ao Motorista: {{ pedido.distancia_motorista }} km</span><br />
+        <span class="taxi">Taxi ID: {{ pedido.taxi_id }}</span><br />
+      </ng-container>
+
       <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
       <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
     </button>
+
+    <div *ngIf="pedido === selectedPedido" class="acoes">
+      <button type="button" (click)="aceitarPedido(pedido)">Aceitar</button>
+      <button type="button" (click)="recusarPedido(pedido)">Recusar</button>
+    </div>
+
     <button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button>
   </li>
 </ul>
+
+
 
 
   

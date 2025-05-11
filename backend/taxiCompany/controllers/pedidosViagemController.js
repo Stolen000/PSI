@@ -109,3 +109,23 @@ exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
 });
 
 
+
+exports.pedido_update = asyncHandler(async (req, res, next) => {  
+    const pedidoId = req.params.id;
+  
+    // Verifica se o pedido existe
+    const pedido = await Pedido.findById(pedidoId);
+    if (!pedido) {
+      return res.status(404).json({ message: "Pedido não encontrado" });
+    }
+  
+    // Atualiza os campos do pedido com os dados recebidos
+    Object.assign(pedido, req.body);
+  
+    // Salva as alterações no banco de dados
+    await pedido.save();
+  
+    // Envia a resposta com o pedido atualizado
+    res.status(200).json({ message: "Pedido atualizado com sucesso", pedido });
+  } 
+);

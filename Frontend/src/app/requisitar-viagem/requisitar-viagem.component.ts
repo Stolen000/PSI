@@ -5,8 +5,6 @@ import { CodigoPostalService } from '../services/codigo-postal.service';
 import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
 
-import { Price } from '../price';
-import { NgForm } from '@angular/forms';
 import { Morada } from '../morada';
 import { forkJoin } from 'rxjs';
 
@@ -35,6 +33,15 @@ export class RequisitarViagemComponent implements OnInit {
   localidadeDestino: string = '';
   codigoPostalOrigemNaoEncontrado: boolean = false;
   codigoPostalDestinoNaoEncontrado: boolean = false;
+  usarLocalizacao: boolean = false;
+  coordenadasOrigem: { lat: number; lon: number } | null = null;
+  moradaOrigem: Morada = {
+    rua: '',
+    numero_porta: 0,
+    codigo_postal: '',
+    localidade: ''
+  };
+
 
   selectedPedido?: Pedido_Viagem;
 
@@ -50,7 +57,60 @@ export class RequisitarViagemComponent implements OnInit {
     this.codigoPostalService.getCodigosPostais().subscribe(data => {
       this.codigosPostais = data;
     });
+    this.criarAutoMoradaOrigem(); // Chama a função automaticamente no início
+    
   }
+
+  usarLocalizacaoAtual(): void {  
+    this.usarLocalizacao = true;
+  }
+
+  usarLocalizacaoManual(): void {
+    this.usarLocalizacao = false;
+  }
+
+criarAutoMoradaOrigem(): void {
+  this.localizationService.getLocalizacaoAtual().then(
+    (coords) => {
+      this.coordenadasOrigem = coords;
+      this.usarLocalizacao = true; // <- aqui você define que o utilizador aceitou
+      console.log('Coordenadas de origem obtidas:', coords);
+
+      // Chamar o reverse geocoding com as coordenadas
+      this.localizationService.getMoradaPorCoordenadas(coords.lat, coords.lon)
+        .subscribe(morada => {
+          if (morada) {
+            this.moradaOrigem = morada;
+            console.log('Morada obtida:', morada);
+          } else {
+            console.error('Erro ao obter morada de origem.');
+          }
+        });
+
+    },
+    (error) => {
+      this.usarLocalizacao = false; // <- aqui define que o utilizador recusou
+      console.error('Erro ao obter localização:', error);
+      // Aqui você pode também mostrar uma mensagem ao utilizador, se quiser
+    }
+  );
+}
+
+
+  criarMoradaOrigemManual(ruaOrigem: string,
+      numeroPortaOrigem: number,
+      codigoPostalOrigem: string,
+      localidadeOrigem: string): void{
+      const morada_origem: Morada = {
+        rua: ruaOrigem,
+        numero_porta: numeroPortaOrigem,
+        codigo_postal: codigoPostalOrigem,
+        localidade: localidadeOrigem
+      };
+      this.moradaOrigem = morada_origem;
+  }
+
+  
 
   
   onSelect(pedido: Pedido_Viagem): void {
@@ -68,6 +128,32 @@ export class RequisitarViagemComponent implements OnInit {
         this.pedidos = this.pedidos.filter(p => p !== pedido);
       });
   }
+
+  aceitarPedido(pedido: Pedido_Viagem): void {
+    //criar a viagem com estes dados
+    //manda la para a bd
+
+  }
+
+
+  recusarPedido(pedido: Pedido_Viagem): void {
+    //alterar os campos para
+    //estado pendente
+    //retirar valores de 
+      //taxi id
+      //motorista id
+      //distancia ao motorista
+      pedido.distancia_motorista = -1;
+      pedido.estado = 'pendente';
+      pedido.taxi_id = '';
+      pedido.motorista_id = '';
+      //fazer o update para a db
+      this.pedidosViagemService.updatePedido(pedido)
+        .subscribe(() => {
+          console.log('Pedido recusado e atualizado com sucesso.');
+        });
+  }
+    
 
   buscarLocalidadeOrigem(codigoPostal: string): void {
     const resultado = this.codigosPostais.find(
@@ -106,20 +192,15 @@ export class RequisitarViagemComponent implements OnInit {
       nome: string,
       numeroIF: string,
       genero: string,
-      ruaOrigem: string,
-      numeroPortaOrigem: number,
-      codigoPostalOrigem: string,
-      localidadeOrigem: string,
       ruaDestino: string,
       numeroPortaDestino: number,
       codigoPostalDestino: string,
       localidadeDestino: string,
       conforto: string,
-      numPessoas: string
+      numPessoas: number
     ): void {
       if (
         !nome || !numeroIF || !genero ||
-        !ruaOrigem || !numeroPortaOrigem || !codigoPostalOrigem || !localidadeOrigem ||
         !ruaDestino || !numeroPortaDestino || !codigoPostalDestino || !localidadeDestino ||
         !conforto || !numPessoas ||
         this.codigoPostalOrigemNaoEncontrado || this.codigoPostalDestinoNaoEncontrado
@@ -128,12 +209,11 @@ export class RequisitarViagemComponent implements OnInit {
         return;
       }
 
-      const morada_origem: Morada = {
-        rua: ruaOrigem,
-        numero_porta: numeroPortaOrigem,
-        codigo_postal: codigoPostalOrigem,
-        localidade: localidadeOrigem
-      };
+      //se usarLocalizao estah a true
+      //sacar coordenadas
+      //sacar morada origem atraves das coordenadas
+      //else
+      //sacar como estah agora
 
       const morada_destino: Morada = {
         rua: ruaDestino,
@@ -143,7 +223,7 @@ export class RequisitarViagemComponent implements OnInit {
       };
 
       forkJoin({
-        coords_origem: this.localizationService.getCoordenadasDaMorada(morada_origem),
+        coords_origem: this.localizationService.getCoordenadasDaMorada(this.moradaOrigem),
         coords_destino: this.localizationService.getCoordenadasDaMorada(morada_destino)
       }).subscribe(({ coords_origem, coords_destino }) => {
         if (!coords_origem || !coords_destino) {
@@ -186,7 +266,7 @@ export class RequisitarViagemComponent implements OnInit {
             cliente_nome: nome,
             cliente_nif: numeroIF,
             cliente_genero: genero,
-            morada_origem: morada_origem,
+            morada_origem: this.moradaOrigem,
             coordenadas_origem: coords_origem,
             morada_destino: morada_destino,
             coordenadas_destino: coords_destino,
