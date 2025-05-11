@@ -9,6 +9,23 @@ exports.get_turnos_list = asyncHandler(async (req, res, next) => {
   res.json(allTurno);
 });
 
+exports.patch_turno_mais_um = asyncHandler(async (req, res, next) => {
+  const turno = await Turno.findById(req.params.id);
+  if (!turno) {
+    const err = new Error("Turno não encontrado");
+    err.status = 404;
+    return next(err); 
+  }
+  // Increment viagens_realizadas by 1
+  turno.viagens_realizadas += 1;
+
+  // Save the updated turno
+  await turno.save();
+
+  res.json(turno);  
+});
+
+
 exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
   const turno = await Turno.findById(req.params.id);
   if(!turno){
@@ -19,7 +36,6 @@ exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
   res.json(turno);
 }
 );
-
 
 exports.get_turnos_by_motorista = asyncHandler(async (req, res, next) => {
   console.log("ID recebido:", req.params.motorista_id);
