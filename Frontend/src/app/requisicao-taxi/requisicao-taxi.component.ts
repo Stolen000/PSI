@@ -31,6 +31,7 @@ export class RequisicaoTaxiComponent {
   turnos_motorista: TurnoWithTaxi[] = [];
   motorista_nome: string = "";
   turno_ativo: boolean = false;
+  
   constructor(
     private route: ActivatedRoute,
     private taxiService: TaxiService,
@@ -47,6 +48,7 @@ export class RequisicaoTaxiComponent {
     this.getTurnos();
     this.buscarTaxisDisponiveis();
     this.getTurnosDoMotorista(this.motorista_id);
+    this.getTurnoAtualAtivo();
   }
 
   getMotoristaId(){
@@ -244,4 +246,21 @@ export class RequisicaoTaxiComponent {
       }
     });
   }
+  getTurnoAtualAtivo(): Turno | undefined {
+    let turnoToReturn = undefined;
+    this.turnoService.getTurnoAtual(this.motorista_id).subscribe(turno => {
+      if (turno) {
+        console.log("Existe turno ativo:");
+        turnoToReturn = turno;
+      } else {
+        console.log("Não existe turno ativo");
+      }
+    });
+    return turnoToReturn;
+  }
+
 }
+
+
+
+  

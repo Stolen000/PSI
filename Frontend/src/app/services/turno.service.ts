@@ -59,8 +59,8 @@ export class TurnoService {
         const firstTurno = upcomingTurnos[0];
         if (!firstTurno) return undefined;
 
-        const inicio = firstTurno.periodo.inicio;
-        const fim = firstTurno.periodo.fim;
+        let inicio = new Date(firstTurno.periodo.inicio);
+        let fim = new Date(firstTurno.periodo.fim);
         if (dateAtual >= inicio && dateAtual <= fim) {
           return firstTurno;
         }
