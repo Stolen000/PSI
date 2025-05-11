@@ -23,6 +23,7 @@ export class PedidosMotoristaComponent implements OnInit {
   motoristaId: string = 'TESTE-ID'; // Coloca aqui como vais obter o ID do motorista
   fim_de_turno?: Date;
   taxi?: Taxi;
+  turno_id?: String;
 
 
 
@@ -52,6 +53,7 @@ ngOnInit(): void {
     console.log(turno)
     if (turno) {
       this.turnoAtivo = true;
+      this.turno_id=turno._id;
       this.fim_de_turno =  new Date(turno.periodo.fim);
       this.taxiService.getTaxi(turno.taxi_id).subscribe(taxi => {
         this.taxi = taxi;
@@ -142,9 +144,11 @@ aceitarPedido(): void {
     const motoristaId = this.motoristaId;
     const taxiId = this.taxi._id;  // Obtém o ID do taxi
     const distanciaMotorista = Math.round(this.pedidoSelecionado.distancia_motorista * 100) / 100;  // Distância já calculada
+    const turno_id = this.turno_id;
+    if(!turno_id){return}
 
     // Chama a função aceitarPedido no serviço passando os dados
-    this.pedidoService.aceitarPedido(pedidoId, motoristaId, taxiId, distanciaMotorista)
+    this.pedidoService.aceitarPedido(pedidoId, motoristaId, taxiId, distanciaMotorista, turno_id)
       .subscribe(
         (response) => {
           console.log('Pedido aceito com sucesso:', response);

@@ -1,1 +1,16 @@
-<p>registar-viagem works!</p>
+<div *ngIf="viagens.length > 0; else semViagens">
+  <h2>Viagens do Motorista</h2>
+  <ul class="lista-viagens">
+    <li *ngFor="let viagem of viagens">
+      <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
+      <strong>Sequencia:</strong> {{ viagem.sequencia }}<br>
+      <strong>Data Inicio:</strong> {{ viagem.inicio_viagem| date:'short' }}<br>
+      <strong>Data Fim:</strong> {{ viagem.fim_viagem| date:'short' }}<br>
+    </li>
+  </ul>
+</div>
+
+<ng-template #semViagens>
+  <p>Este motorista ainda não tem viagens registadas.</p>
+</ng-template>
+

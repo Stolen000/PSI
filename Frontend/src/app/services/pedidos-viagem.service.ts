@@ -76,7 +76,7 @@ export class PedidosViagemService {
     };
   }
 
-aceitarPedido(id: string, motoristaId: string, taxiId: string, distanciaMotorista: number): Observable<Pedido_Viagem> {
+aceitarPedido(id: string, motoristaId: string, taxiId: string, distanciaMotorista: number, turno_id: String): Observable<Pedido_Viagem> {
   const url = `${this.pedidosUrl}/${id}/aceitar-pedido`;  // URL do PUT para aceitar o pedido
 
   // Corpo da requisição com os dados adicionais
@@ -84,7 +84,8 @@ aceitarPedido(id: string, motoristaId: string, taxiId: string, distanciaMotorist
     id, 
     motoristaId, 
     taxiId, 
-    distanciaMotorista 
+    distanciaMotorista,
+    turno_id
   };
 
   return this.http.put<Pedido_Viagem>(url, body, this.httpOptions)

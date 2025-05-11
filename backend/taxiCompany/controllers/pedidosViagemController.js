@@ -79,6 +79,7 @@ exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
     const motoristaId = req.body.motoristaId; // Obtém o ID do motorista
     const taxiId = req.body.taxiId; // Obtém o ID do taxi
     const distanciaMotorista = req.body.distanciaMotorista; // Obtém a distância para o motorista
+    const turno_id = req.body.turno_id;
 
     // Verifica se o ID do pedido foi enviado
     if (!pedidoId) {
@@ -100,6 +101,8 @@ exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
     pedido.motorista = motoristaId;
     pedido.taxi = taxiId;
     pedido.distancia_motorista = distanciaMotorista;
+    pedido.turno_id = turno_id;
+    //console.log(pedido.turno_id)
     
     // Salva a atualização do pedido no banco de dados
     await pedido.save();
