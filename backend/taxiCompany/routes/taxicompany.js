@@ -38,8 +38,9 @@ router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
 router.get("/turnos",turnos_controller.get_turnos_list);
 
 router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
+//router.get("/turnos/motorista/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
-router.get("/turnos/:id", turnos_controller.get_turno_by_id);
+router.get("/turnos/turno/:id", turnos_controller.get_turno_by_id);
 
 router.patch("/turnos/maisum/:id", turnos_controller.patch_turno_mais_um);
 

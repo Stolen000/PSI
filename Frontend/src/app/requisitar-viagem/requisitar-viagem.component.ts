@@ -8,8 +8,10 @@ import { ViagemService } from '../services/viagem.service';
 import { TurnoService } from '../services/turno.service';
 
 import { Morada } from '../morada';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { Turno } from '../turno';
+import { MotoristaService } from '../services/motorista.service';
+import { Motorista } from '../motorista';
 
 
 
@@ -55,7 +57,8 @@ export class RequisitarViagemComponent implements OnInit {
     private localizationService: LocalizationService,
     private transpPriceService : TransportPricesService,
     private viagemService: ViagemService,
-    private turnoService: TurnoService
+    private turnoService: TurnoService,
+    private motoristaService: MotoristaService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +67,7 @@ export class RequisitarViagemComponent implements OnInit {
       this.codigosPostais = data;
     });
     this.criarAutoMoradaOrigem(); // Chama a função automaticamente no início
-    
+
   }
 
   usarLocalizacaoAtual(): void {  
@@ -120,6 +123,7 @@ criarAutoMoradaOrigem(): void {
 
   
   onSelect(pedido: Pedido_Viagem): void {
+      console.log("Pedido selecionado:", pedido);
     this.selectedPedido = pedido;
   }
 
@@ -200,14 +204,20 @@ this.turnoService.incrementaTurno(pedido.turno_id)
       //distancia ao motorista
       pedido.distancia_motorista = -1;
       pedido.estado = 'pendente';
-      pedido.taxi_id = '';
-      pedido.motorista_id = '';
+      pedido.taxi = '';
+      pedido.motorista = '';
       //fazer o update para a db
       this.pedidosViagemService.updatePedido(pedido)
         .subscribe(() => {
           console.log('Pedido recusado e atualizado com sucesso.');
         });
   }
+
+
+
+
+
+
     
 
   buscarLocalidadeOrigem(codigoPostal: string): void {
@@ -282,6 +292,8 @@ this.turnoService.incrementaTurno(pedido.turno_id)
         coords_destino: this.localizationService.getCoordenadasDaMorada(morada_destino)
       }).subscribe(({ coords_origem, coords_destino }) => {
         if (!coords_origem || !coords_destino) {
+          console.log(coords_origem);
+          console.log(coords_destino);
           console.error('Erro ao obter coordenadas.');
           return;
         }

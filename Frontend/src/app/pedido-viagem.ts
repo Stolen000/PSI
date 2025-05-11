@@ -13,10 +13,10 @@ export interface Pedido_Viagem {
   nivel_conforto: string;
   numero_pessoas: number;
   estado: string;
-  taxi_id: string;
+  taxi: string;
   distancia_motorista: number;
   tempo_estimado: number;
   custo_estimado: number;
-  motorista_id: string;
+  motorista: string;
   turno_id: string;
 }

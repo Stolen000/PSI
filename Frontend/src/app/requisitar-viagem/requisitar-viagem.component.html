@@ -89,7 +89,7 @@
     </select>
   </div>
 
-  <div>
+<div>
     <label for="numPessoas">Número de Pessoas:</label>
     <input type="number" id="numPessoas" name="numPessoas" ngModel required min="1" max="6" #numPessoas="ngModel">
   </div>
@@ -112,9 +112,12 @@
 
       <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
       <ng-container *ngIf="pedido.estado === 'aceite'">
+        <span class="nome_motorista">Motorista: {{ pedido.motorista }} </span><br />
+
         <span class="distancia">Distância ao Motorista: {{ pedido.distancia_motorista }} km</span><br />
-        <span class="taxi">Taxi ID: {{ pedido.taxi_id }}</span><br />
       </ng-container>
+
+
 
       <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
       <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>

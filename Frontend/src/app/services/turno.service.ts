@@ -46,7 +46,7 @@ export class TurnoService {
   }
 
   getTurnoById(turno_id: string): Observable<Turno> {
-    const url = `${this.turnosUrl}/${turno_id}`;
+    const url = `${this.turnosUrl}/turno/${turno_id}`;
     return this.http.get<Turno>(url).pipe(
       catchError(err => {
         console.error('Error occurred:', err);

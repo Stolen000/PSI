@@ -2,27 +2,30 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ViagemService } from '../services/viagem.service';
 import { Viagem } from '../viagem';
-import { Coordenadas } from '../coordenadas';
-import { LocalizationService } from '../services/localization.service';
+import { TransportPricesService } from '../services/transport-prices.service';
+import { TurnoService } from '../services/turno.service';
+import { TaxiService } from '../services/taxi.service';
 
 @Component({
   selector: 'app-registar-viagem',
   templateUrl: './registar-viagem.component.html',
 })
+
 export class RegistarViagemComponent implements OnInit {
   viagens: Viagem[] = [];
-  viagensTerminadas: Viagem[] = [];
-  viagensPorComecar: Viagem[] = [];
-
   motorista_id: string = "";
   viagemAtual?: Viagem;
   selectedViagem?: Viagem;
   viagemEmCurso: boolean = false;
+  precoViagemSelecionada?: number;
+
 
   constructor(
     private route: ActivatedRoute,
     private viagemService: ViagemService,
-    private localizationService: LocalizationService
+    private transpPriceService: TransportPricesService,
+    private turnoService: TurnoService,
+    private taxiService: TaxiService
   ) {}
 
   ngOnInit(): void {
@@ -36,9 +39,13 @@ export class RegistarViagemComponent implements OnInit {
 
   ngOnSelect(): void {
   }
-
+  
   onSelect(viagem: Viagem): void {
     this.selectedViagem = viagem;
+
+    if (viagem.inicio_viagem && viagem.fim_viagem) {
+      this.calcularPrecoViagem();
+    }
   }
 
   //funcao quando clico no botao começar viagem
@@ -46,7 +53,6 @@ export class RegistarViagemComponent implements OnInit {
   //no atributo inicioViagem
   //dar um update da viagem no backend
   iniciarViagem(): void {
-    
     this.viagemEmCurso = true;
     if (this.selectedViagem) {
       const inicio_viagem = new Date();
@@ -69,68 +75,74 @@ export class RegistarViagemComponent implements OnInit {
           this.getViagens();
         });
     }
+    this.calcularPrecoViagem();
     this.viagemEmCurso = false;
   }
 
   getViagens(): void {
     this.viagemService.getViagens().subscribe(todasViagens => {
-      // viagens do motorista atual
       this.viagens = todasViagens.filter(
         viagem => viagem.motorista_id === this.motorista_id
       );
-      // separar as que já começaram vs as que ainda não
-      this.viagensPorComecar = this.viagens.filter(
-        v => v.inicio_viagem !== null
-      );
-      this.viagensTerminadas = this.viagens.filter(
-        v => v.inicio_viagem === null && v.fim_viagem !== null
+
+      // Atualiza estado da viagem em curso
+      this.viagemEmCurso = this.viagens.some(
+        viagem => viagem.inicio_viagem && !viagem.fim_viagem
       );
     });
   }
 
-  getViagemAtual(): void {
-    this.viagemService.getViagemAtualDoMotorista(this.motorista_id).subscribe({
-      next: (viagem) => {
-        if (viagem) {
-          console.log("Viagem atual do motorista:", viagem);
-          this.viagemAtual = viagem;
-        } else {
-          console.log("Nenhuma viagem atual encontrada.");
-        }
-      },
-      error: (err) => {
-        console.error("Erro ao obter viagem atual:", err);
-      }
+
+  //preciso de calcular o preço da viagem com base nas coordenadas
+  calcularPrecoViagem(){
+    if (!this.selectedViagem || !this.selectedViagem.inicio_viagem || !this.selectedViagem.fim_viagem) {
+      console.warn('Viagem selecionada ou datas de início/fim em falta.');
+      return ;
+    }
+
+    const begin = new Date(this.selectedViagem.inicio_viagem);
+    const end = new Date(this.selectedViagem.fim_viagem);
+    if (!begin || !end) {
+      console.warn('Datas de início ou fim em falta.');
+      return;
+    }
+    console.log("viagem:", this.selectedViagem);
+    this.turnoService.getTurnoById(this.selectedViagem.turno_id).subscribe(turno => {
+      if (!turno) return;
+      console.log("Turno obtido:", turno);
+
+      this.taxiService.getTaxi(turno.taxi_id).subscribe(taxi => {
+        if (!taxi) return;
+        console.log("Taxi obtido:", taxi);
+
+        const conforto = taxi.nivel_de_conforto;
+
+        this.transpPriceService.getPrices().subscribe(price => {
+          const startMin = begin.getHours() * 60 + begin.getMinutes();
+          let endMin = end.getHours() * 60 + end.getMinutes();
+
+          if (end <= begin) endMin += 24 * 60;
+
+          const pricePerMinute = conforto === 'basic'
+            ? parseFloat(price.basic_price)
+            : parseFloat(price.luxurious_price);
+
+          const taxRate = parseFloat(price.nocturne_tax) / 100;
+          let total = 0;
+
+          for (let i = startMin; i < endMin; i++) {
+            const hour = Math.floor(i % 1440 / 60);
+            const isNight = hour >= 21 || hour < 6;
+            total += pricePerMinute * (isNight ? 1 + taxRate : 1);
+          }
+
+          const custo_estimado = Math.round(total * 100) / 100;
+          this.precoViagemSelecionada = custo_estimado;
+          console.log(`Custo estimado: €${custo_estimado}`);
+          // aqui podes guardar ou apresentar o custo_estimado
+        });
+      });
     });
   }
-
-  selecionarViagem(viagem: Viagem): void {
-    this.viagemAtual = viagem;
-  } 
-
-  comecarViagem(): void {
-  if (!this.viagemAtual) return;
-
-  // Aqui vai o que me vais dizer para fazer quando começa a viagem
-  console.log("Iniciar viagem:", this.viagemAtual);
-}
-
-getDestino(coordenadas: Coordenadas): void {
-  this.localizationService.getMoradaPorCoordenadas(coordenadas.lat, coordenadas.lon)
-    .subscribe({
-      next: (morada) => {
-        if (morada) {
-          console.log("Morada obtida:", morada);
-        } else {
-          console.log("Não foi possível obter a morada.");
-        }
-      },
-      error: (err) => {
-        console.error("Erro ao obter a morada:", err);
-      }
-    });
-}
-
-
 
 }

@@ -4,10 +4,10 @@ import { Coordenadas } from './coordenadas';
 
 
 export interface Viagem { 
-    _id?: String;   
-    motorista_id: String;
+    _id?: string;   
+    motorista_id: string;
     sequencia: number;
-    turno_id: String;
+    turno_id: string;
     nif_cliente: number;
     inicio_viagem?: Date | null;
     fim_viagem?: Date | null;
