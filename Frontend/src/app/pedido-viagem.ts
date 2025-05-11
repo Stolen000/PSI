@@ -8,8 +8,8 @@ export interface Pedido_Viagem {
   cliente_genero: string;
   morada_origem: Morada;
   morada_destino: Morada;
-  coordenadas_origem: Coordenadas;  // coordenadas geográficas da origem
-  coordenadas_destino: Coordenadas; // coordenadas geográficas do destino
+  coordenadas_origem: Coordenadas;  
+  coordenadas_destino: Coordenadas; 
   nivel_conforto: string;
   numero_pessoas: string;
   estado: string;
