@@ -1,15 +1,17 @@
 import { Morada } from "./morada";
 import { Turno } from "./turno";
+import { Coordenadas } from './coordenadas';
+
 
 export interface Viagem { 
-    _id: String;   
+    _id?: String;   
     motorista_id: String;
     sequencia: number;
     turno_id: String;
     nif_cliente: number;
-    inicio_viagem: Date;
-    fim_viagem: Date;
+    inicio_viagem?: Date | null;
+    fim_viagem?: Date | null;
     num_pessoas: number;
-    local_partida: Morada;
-    local_chegada: Morada;
+    coordenadas_origem: Coordenadas;
+    coordenadas_destino: Coordenadas;
   }

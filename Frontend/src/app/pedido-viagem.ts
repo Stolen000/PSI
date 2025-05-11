@@ -4,7 +4,7 @@ import { Coordenadas } from './coordenadas';
 export interface Pedido_Viagem {
   _id?: string;
   cliente_nome: string;
-  cliente_nif: string;
+  cliente_nif: number;
   cliente_genero: string;
   morada_origem: Morada;
   morada_destino: Morada;

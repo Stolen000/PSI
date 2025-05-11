@@ -4,9 +4,11 @@ import { PedidosViagemService } from '../services/pedidos-viagem.service';
 import { CodigoPostalService } from '../services/codigo-postal.service';
 import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
+import { ViagemService } from '../services/viagem.service';
+import { TurnoService } from '../services/turno.service';
 
 import { Morada } from '../morada';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 
 
 
@@ -35,6 +37,7 @@ export class RequisitarViagemComponent implements OnInit {
   codigoPostalDestinoNaoEncontrado: boolean = false;
   usarLocalizacao: boolean = false;
   coordenadasOrigem: { lat: number; lon: number } | null = null;
+  turnoSelecionado: any;
   moradaOrigem: Morada = {
     rua: '',
     numero_porta: 0,
@@ -49,7 +52,9 @@ export class RequisitarViagemComponent implements OnInit {
     private pedidosViagemService: PedidosViagemService,
     private codigoPostalService: CodigoPostalService,
     private localizationService: LocalizationService,
-    private transpPriceService : TransportPricesService
+    private transpPriceService : TransportPricesService,
+    private viagemService: ViagemService,
+    private turnoService: TurnoService
   ) {}
 
   ngOnInit(): void {
@@ -144,6 +149,37 @@ criarAutoMoradaOrigem(): void {
       motorista id 
       taxi id
     */
+
+    //sacar turno pelo turno id
+    //atualizar numero de viagens do turno
+    this.turnoService.incrementaTurno(pedido.turno_id)
+      .subscribe({
+        next: (turno) => {  
+          this.turnoSelecionado = turno;
+        }
+      });
+    
+    //atualizar o numero de viagens do turno
+    const viagem = {
+      nif_cliente: pedido.cliente_nif,
+      coordenadas_origem: pedido.coordenadas_origem,
+      coordenadas_destino: pedido.coordenadas_destino,
+      numero_pessoas: pedido.numero_pessoas,
+      motorista_id: pedido.motorista_id,
+      taxi_id: pedido.taxi_id,
+      turno_id: pedido.turno_id,
+      num_pessoas: pedido.numero_pessoas,
+      sequencia: this.turnoSelecionado.numero_viagens,
+      inicio_viagem: null,
+      fim_viagem: null
+    };
+
+    //utilizar esse para o numero de sequencia desta viagem
+    this.viagemService.criarViagem(viagem)
+      .subscribe(response => {
+        console.log("Pedido de viagem recebido do backend:", response);});
+
+    //apagar o pedido a seguir
   }
 
 
@@ -201,7 +237,7 @@ criarAutoMoradaOrigem(): void {
       //e sacar as coordenadas dai
     createPedidoViagem(
       nome: string,
-      numeroIF: string,
+      numeroIF: number,
       genero: string,
       ruaDestino: string,
       numeroPortaDestino: number,
