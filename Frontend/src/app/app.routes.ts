@@ -8,6 +8,7 @@ import { RequisitarViagemComponent } from './requisitar-viagem/requisitar-viagem
 import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.component';
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
 import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
+import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
     { path: "motorista-perfil/:id", component: MotoristaPerfilComponent},
     { path: "motorista-perfil/:motorista_id/pedido-taxi", component: RequisicaoTaxiComponent},
     {  path: "motorista-perfil/:id/aceitar-pedido", component: PedidosMotoristaComponent},
+    { path: "motorista-perfil/:id/registo-viagem", component: RegistarViagemComponent},
     { path: '**', redirectTo: '/dashboard' },
 
 ]; 

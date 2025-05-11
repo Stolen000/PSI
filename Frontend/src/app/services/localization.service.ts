@@ -34,6 +34,30 @@ export class LocalizationService {
     );
   }
 
+  getMoradaPorCoordenadas(lat: number, lon: number): Observable<{
+  rua: string;
+  numero_porta: number;
+  codigo_postal: string;
+  localidade: string;
+} | null> {
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+  return this.http.get<any>(url).pipe(
+    map(result => {
+      const address = result.address;
+      if (!address) return null;
+
+      return {
+        rua: address.road || 'Desconhecida',
+        numero_porta: parseInt(address.house_number) || 0,
+        codigo_postal: address.postcode || '0000-000',
+        localidade: address.city || address.town || address.village || address.hamlet || 'Desconhecida'
+      };
+    })
+  );
+}
+  
+
 
   getLocalizacaoAtual(): Promise<Coordenadas> {
     return new Promise((resolve, reject) => {

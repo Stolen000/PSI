@@ -11,7 +11,7 @@ export interface Pedido_Viagem {
   coordenadas_origem: Coordenadas;  
   coordenadas_destino: Coordenadas; 
   nivel_conforto: string;
-  numero_pessoas: string;
+  numero_pessoas: number;
   estado: string;
   taxi_id: string;
   distancia_motorista: number;

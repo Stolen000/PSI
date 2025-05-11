@@ -1,4 +1,4 @@
-/* Form Styles */
+/* Form Styles for Registering Driver */
 form {
   background-color: #ffffff;
   padding: 1.5rem;
@@ -13,12 +13,21 @@ form {
   padding-left: 1.5rem;
 }
 
-form label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-}
+  button.delete {
+    position: absolute;
+    left: 210px;
+    top: 5px;
+    background-color: white;
+    color:  #525252;
+    font-size: 1.1rem;
+    margin: 0;
+    padding: 1px 10px 3px 10px;
+  }
+  
+  button.delete:hover {
+    background-color: #525252;
+    color: white;
+  }
 
 form input,
 form select {
@@ -33,11 +42,53 @@ form select {
   box-sizing: border-box;
 }
 
-form input:focus,
-form select:focus {
-  border-color: #4b5563;
-  outline: none;
-}
+  .lista-taxis li {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .lista-taxis li:hover {
+    left: .1em;
+  }
+  
+  .lista-taxis a {
+    color: #333;
+    text-decoration: none;
+    background-color: #EEE;
+    margin: .5em;
+    padding: .3em 0;
+    height: 1.6em;
+    border-radius: 4px;
+    display: block;
+    width: 100%;
+  }
+  
+  .lista-taxis a:hover {
+    color: #2c3a41;
+    background-color: #e6e6e6;
+  }
+  
+  .lista-taxis a:active {
+    background-color: #525252;
+    color: #fafafa;
+  }
+  
+  .lista-taxis .badge {
+    display: inline-block;
+    font-size: small;
+    color: white;
+    padding: 0.8em 0.7em 0 0.7em;
+    background-color: #405061;
+    line-height: 1em;
+    position: relative;
+    left: -1px;
+    top: -4px;
+    height: 1.8em;
+    min-width: 16px;
+    text-align: right;
+    margin-right: .8em;
+    border-radius: 4px 0 0 4px;
+  }
 
 /* Inline inputs for matrícula */
 form .matricula-inputs {
