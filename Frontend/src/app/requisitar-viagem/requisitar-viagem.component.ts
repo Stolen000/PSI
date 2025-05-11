@@ -6,7 +6,6 @@ import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
 import { ViagemService } from '../services/viagem.service';
 import { TurnoService } from '../services/turno.service';
-import { Viagem } from '../viagem';
 
 import { Morada } from '../morada';
 import { forkJoin, Observable } from 'rxjs';
@@ -136,46 +135,60 @@ criarAutoMoradaOrigem(): void {
       });
   }
 
-aceitarPedido(pedido: Pedido_Viagem): void {
-  // Atualizar o número de viagens do turno
-  this.turnoService.incrementaTurno(pedido.turno_id).subscribe({
-    next: (turno) => {
-      this.turnoSelecionado = turno;
-      console.log("Turno atualizado:", turno);
+  aceitarPedido(pedido: Pedido_Viagem): void {
+    //criar a viagem com estes dados
+    //manda la para a bd
 
-      // Criar a viagem com os dados do pedido
+    //criar viagem com os atributos do pedido
+
+
+    /*
+      nif do cliente
+      coordenadas de origem
+      coordenadas de destino
+      numero de pessoas
+      motorista id 
+      taxi id
+    */
+
+    //sacar turno pelo turno id
+    //atualizar numero de viagens do turno
+// sacar turno pelo turno id e atualizar numero de viagens do turno
+this.turnoService.incrementaTurno(pedido.turno_id)
+  .subscribe({
+    next: (turno) => {  
+      this.turnoSelecionado = turno;
+      console.log(turno);
+
+      if (!this.turnoSelecionado) {
+        console.log("Entrei aqui");
+        return;
+      }
+      console.log(pedido)
+      // atualizar o numero de viagens do turno
       const viagem = {
+        motorista_id: this.turnoSelecionado.motorista_id,
+        sequencia: this.turnoSelecionado.viagens_realizadas,
+        turno_id: pedido.turno_id,
         nif_cliente: pedido.cliente_nif,
         coordenadas_origem: pedido.coordenadas_origem,
-        coordenadas_destino: pedido.coordenadas_destino,
-        numero_pessoas: pedido.numero_pessoas,
-        motorista_id: pedido.motorista_id,
-        taxi_id: pedido.taxi_id,
-        turno_id: pedido.turno_id,
-        num_pessoas: pedido.numero_pessoas,
-        sequencia: turno.viagens_realizadas,
+        coordenadas_destino: pedido.coordenadas_destino,   
         inicio_viagem: null,
-        fim_viagem: null
+        fim_viagem: null,
+        num_pessoas: pedido.numero_pessoas,
       };
 
+      // utilizar esse para o numero de sequencia desta viagem
+      this.viagemService.criarViagem(viagem)
+        .subscribe(response => {
+          console.log("Pedido de viagem recebido do backend:", response);
+        });
 
-      // Enviar a viagem para o backend
-      this.viagemService.criarViagem(viagem).subscribe({
-        next: (response) => {
-          console.log("Viagem criada com sucesso:", response);
-          // Aqui podes apagar o pedido ou atualizar a lista
-        },
-        error: (err) => {
-          console.error("Erro ao criar viagem:", err);
-        }
-      });
-    },
-    error: (err) => {
-      console.error("Erro ao atualizar turno:", err);
+      // apagar o pedido a seguir (coloque aqui se tiver lógica específica)
     }
   });
-}
 
+  }
 
 
   recusarPedido(pedido: Pedido_Viagem): void {

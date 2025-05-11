@@ -10,29 +10,35 @@ exports.get_viagens_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.viagem_create = asyncHandler(async (req, res, next) => {
-  const { turno_id, motorista_id, sequencia, inicio_viagem, fim_viagem, num_pessoas, coordenadas_origem, coordenadas_destino, } = req.body;
-  try{
-    if(!turno_id || !motorista_id ||  !sequencia || !num_pessoas || !coordenadas_origem || !coordenadas_destino || !inicio_viagem || !fim_viagem){
+  const { motorista_id, sequencia, turno_id, num_pessoas, coordenadas_origem, coordenadas_destino } = req.body;
+
+  try {
+    console.log("Dados recebidos no backend:", req.body); // log full request body
+
+    if (!turno_id || !motorista_id || !sequencia || !num_pessoas || !coordenadas_origem || !coordenadas_destino) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
 
     const viagem = new Viagem({
-      turno_id : turno_id,
-      motorista_id :motorista_id,
-      sequencia : sequencia,
-      inicio_viagem : inicio_viagem,
-      fim_viagem :  fim_viagem,
-      num_pessoas : num_pessoas,
-      coordenadas_origem : coordenadas_origem,
-      coordenadas_destino : coordenadas_destino
+      turno_id,
+      motorista_id,
+      sequencia,
+      num_pessoas,
+      coordenadas_origem,
+      coordenadas_destino,
     });
+
+    console.log("Viagem criada para guardar na base de dados:", viagem); // log Mongoose object
+
     await viagem.save();
 
-    res.status(201).json( viagem );}
-
-  catch(err) {
+    res.status(201).json(viagem);
+  } catch (err) {
+    console.error("Erro ao criar viagem:", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
+
 
 exports.get_viagem_by_id = asyncHandler(async (req, res, next) => {
   const viagem = await Viagem.findById(req.params.id);
@@ -101,44 +107,6 @@ exports.viagem_atual_by_motorista = asyncHandler(async (req, res, next) => {
     next(err);
   }
 });
-
-  //funcao que recebe um Date que eh suposto ser a atualizaçao do inicioTime da viagem com base no id
-exports.viagem_update_inicio = asyncHandler(async (req, res, next) => { 
-    const viagem = await Viagem.findById(req.params.id);
-    if (!viagem) {
-        const err = new Error("Viagem não encontrada");
-        err.status = 404;
-        return next(err);
-    }
-    const { inicio_viagem } = req.body;
-    if (!inicio_viagem) {
-        const err = new Error("Inicio da viagem não pode ser nulo");
-        err.status = 400;
-        return next(err);
-    }
-    viagem.inicio_viagem = inicio_viagem;
-    await viagem.save();
-    res.status(200).json(viagem);
-});
-
-exports.viagem_update_fim = asyncHandler(async (req, res, next) => {
-    const viagem = await Viagem.findById(req.params.id);
-    if (!viagem) {
-        const err = new Error("Viagem não encontrada");
-        err.status = 404;
-        return next(err);
-    }
-    const { fim_viagem } = req.body;
-    if (!fim_viagem) {
-        const err = new Error("Fim da viagem não pode ser nulo");
-        err.status = 400;
-        return next(err);
-    }
-    viagem.fim_viagem = fim_viagem; 
-    await viagem.save();
-    res.status(200).json(viagem);
-});
-
 
 
 
