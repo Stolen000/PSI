@@ -37,8 +37,11 @@ export class ViagemService {
     return this.http.delete(`${this.viagemUrl}/${id}`);
   }
 
-  getViagemAtual(motoristaId: string) {
-    return this.http.get<{ turno: any, viagem: any }>(`${this.viagemUrl}/viagem-atual/${motoristaId}`);
-  }
+
+  getViagemAtualDoMotorista(motorista_id: string): Observable<Viagem | null> {
+  const url = `${this.viagemUrl}/${motorista_id}`;
+  return this.http.get<Viagem | null>(url);
+}
+
   
 }
