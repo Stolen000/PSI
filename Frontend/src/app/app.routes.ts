@@ -21,7 +21,7 @@ export const routes: Routes = [
     { path: "pedidos", component: RequisitarViagemComponent},
     { path: "motorista-perfil/:id", component: MotoristaPerfilComponent},
     { path: "motorista-perfil/:motorista_id/pedido-taxi", component: RequisicaoTaxiComponent},
-    {  path: "motorista-perfil/:motorista._id/aceitar-pedido", component: PedidosMotoristaComponent},
+    {  path: "motorista-perfil/:id/aceitar-pedido", component: PedidosMotoristaComponent},
     { path: '**', redirectTo: '/dashboard' },
 
 ]; 
