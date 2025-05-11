@@ -70,6 +70,9 @@ router.post("/viagens", viagens_controller.viagem_create);
 
 router.get("/viagens/viagem-atual/:motorista_id", viagens_controller.viagem_atual_by_motorista);
 
+router.get("/viagens/:motorista_id", viagens_controller.viagens_by_motorista);
+
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
