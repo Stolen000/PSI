@@ -27,14 +27,14 @@ exports.patch_turno_mais_um = asyncHandler(async (req, res, next) => {
 
 
 exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
-  const turno = await Turno.findById(req.params.id);
-  if(!turno){
-    const err = new Error("Taxi não encontrado");
-    err.status = 404;
-    return next(err); 
+    const turno = await Turno.findById(req.params.id);
+    if(!turno){
+      const err = new Error("turno não encontrado");
+      err.status = 404;
+      return next(err); 
+    }
+    res.json(turno);
   }
-  res.json(turno);
-}
 );
 
 exports.get_turnos_by_motorista = asyncHandler(async (req, res, next) => {
