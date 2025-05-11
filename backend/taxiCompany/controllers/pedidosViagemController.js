@@ -102,6 +102,7 @@ exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
     pedido.taxi = taxiId;
     pedido.distancia_motorista = distanciaMotorista;
     pedido.turno_id = turno_id;
+    //console.log(pedido.turno_id)
     
     // Salva a atualização do pedido no banco de dados
     await pedido.save();
