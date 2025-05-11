@@ -1,16 +1,41 @@
-<div *ngIf="viagens.length > 0; else semViagens">
-  <h2>Viagens do Motorista</h2>
+<!-- Viagens Por Começar -->
+<div *ngIf="viagensPorComecar.length > 0; else semPorComecar">
+  <h2>Viagens por Começar</h2>
   <ul class="lista-viagens">
-    <li *ngFor="let viagem of viagens">
+    <li *ngFor="let viagem of viagensPorComecar" (click)="selecionarViagem(viagem)" style="cursor: pointer;">
       <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
-      <strong>Sequencia:</strong> {{ viagem.sequencia }}<br>
-      <strong>Data Inicio:</strong> {{ viagem.inicio_viagem| date:'short' }}<br>
-      <strong>Data Fim:</strong> {{ viagem.fim_viagem| date:'short' }}<br>
+      <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
+      <strong>Data Início:</strong> {{ viagem.inicio_viagem || 'Não iniciada' }}<br>
     </li>
   </ul>
 </div>
 
-<ng-template #semViagens>
-  <p>Este motorista ainda não tem viagens registadas.</p>
+<ng-template #semPorComecar>
+  <p>Sem viagens por começar.</p>
 </ng-template>
 
+<!-- Mostrar Viagem Atual Selecionada -->
+<div *ngIf="viagemAtual">
+  <h3>Viagem Selecionada</h3>
+  <p><strong>Sequência:</strong> {{ viagemAtual.sequencia }}</p>
+  <p><strong>Destino:</strong> {{ viagemAtual.coordenadas_destino }}</p>
+  <button (click)="comecarViagem()">Começar Viagem</button>
+</div>
+
+
+<!-- Viagens Terminadas -->
+<div *ngIf="viagensTerminadas.length > 0; else semTerminadas">
+  <h2>Viagens Terminadas</h2>
+  <ul class="lista-viagens">
+    <li *ngFor="let viagem of viagensTerminadas">
+      <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
+      <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
+      <strong>Data Início:</strong> {{ viagem.inicio_viagem | date:'short' }}<br>
+      <strong>Data Fim:</strong> {{ viagem.fim_viagem | date:'short' }}<br>
+    </li>
+  </ul>
+</div>
+
+<ng-template #semTerminadas>
+  <p>Sem viagens terminadas.</p>
+</ng-template>
