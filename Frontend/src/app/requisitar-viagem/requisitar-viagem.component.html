@@ -1,9 +1,9 @@
 <h1>Marcar uma Viagem</h1>
 <p>Preencha o formulário abaixo para solicitar uma viagem de táxi.</p>
 
+
 <form #pedidoForm="ngForm" (ngSubmit)="createPedidoViagem(
   nome.value, nif.value, genero.value,
-  ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem,
   ruaDestino.value, numeroPortaDestino.value, codigoPostalDestino.value, localidadeDestino,
   conforto.value, numPessoas.value
 )">
@@ -27,6 +27,8 @@
     </select>
   </div>
 
+
+<div *ngIf="!usarLocalizacao">
   <h3>Morada de Origem</h3>
   <div>
     <label for="ruaOrigem">Rua:</label>
@@ -49,6 +51,11 @@
     <label for="localidadeOrigem">Localidade:</label>
     <input id="localidadeOrigem" type="text" name="localidadeOrigem" [(ngModel)]="localidadeOrigem" required>
   </div>
+
+  <!-- Chama a função criarMoradaOrigemManual quando o formulário for preenchido e o botão for clicado -->
+  <button (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">Confirmar Localização Atual</button>
+</div>
+
 
   <h3>Morada de Destino</h3>
   <div>
