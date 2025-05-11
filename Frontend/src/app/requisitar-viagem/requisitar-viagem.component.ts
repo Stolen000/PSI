@@ -5,8 +5,6 @@ import { CodigoPostalService } from '../services/codigo-postal.service';
 import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
 
-import { Price } from '../price';
-import { NgForm } from '@angular/forms';
 import { Morada } from '../morada';
 import { forkJoin } from 'rxjs';
 
@@ -115,7 +113,7 @@ export class RequisitarViagemComponent implements OnInit {
       codigoPostalDestino: string,
       localidadeDestino: string,
       conforto: string,
-      numPessoas: string
+      numPessoas: number
     ): void {
       if (
         !nome || !numeroIF || !genero ||

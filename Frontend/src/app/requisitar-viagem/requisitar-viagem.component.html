@@ -93,22 +93,19 @@
 
 
 <h2>Lista de Pedidos de Viagem</h2>
-<ul class="pedidos">
+<ul class="lista-pedidos">
   <!-- Mostra pedidos mais recentes primeiro -->
   <li *ngFor="let pedido of pedidos.slice().reverse()">
     <button [class.selected]="pedido === selectedPedido" (click)="onSelect(pedido)">
       <span class="cliente">Cliente: {{ pedido.cliente_nome }} (NIF: {{ pedido.cliente_nif }})</span><br />
-      <span class="genero">Género: {{ pedido.cliente_genero }}</span><br />
       <span class="origem">
-        Origem: {{ pedido.morada_origem.rua }}, Nº {{ pedido.morada_origem.numero_porta }},
-        {{ pedido.morada_origem.codigo_postal }} {{ pedido.morada_origem.localidade }}
+        Origem: {{ pedido.morada_origem.codigo_postal }} {{ pedido.morada_origem.localidade }}
       </span><br />
       <span class="destino">
-        Destino: {{ pedido.morada_destino.rua }}, Nº {{ pedido.morada_destino.numero_porta }},
-        {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
+        Destino: {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
       </span><br />
       <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span><br />
-      <span class="pessoas">Pessoas: {{ pedido.numero_pessoas }}</span><br />
+      <span class="pessoas">Número de Pessoas: {{ pedido.numero_pessoas }}</span><br />
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
       <span class="distancia">Distância: {{ pedido.distancia_motorista }} km</span><br />
       <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
