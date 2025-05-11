@@ -1,9 +1,11 @@
 import { Morada } from "./morada";
 import { Turno } from "./turno";
 
-export interface Viagem {    
+export interface Viagem { 
+    _id: String;   
+    motorista_id: String;
     sequencia: number;
-    turno: Turno;
+    turno_id: String;
     nif_cliente: number;
     inicio_viagem: Date;
     fim_viagem: Date;

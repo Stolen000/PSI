@@ -14,7 +14,22 @@
             <h3>Selecionado</h3>
 
             <ng-container *ngIf="pedidoSelecionado; else nenhumSelecionado">
+            <p><strong>Pessoas:</strong> {{ pedidoSelecionado.numero_pessoas | number:'1.0-0' }}</p>
+
+            <p *ngIf="pedidoSelecionado.morada_origem">
+            <strong>Localização:</strong>
+            {{ pedidoSelecionado.morada_origem.rua }} {{ pedidoSelecionado.morada_origem.numero_porta }},
+            {{ pedidoSelecionado.morada_origem.codigo_postal }} {{ pedidoSelecionado.morada_origem.localidade }}
+            </p>
+
+            <p *ngIf="pedidoSelecionado.morada_destino">
+            <strong>Destino:</strong>
+            {{ pedidoSelecionado.morada_destino.rua }} {{ pedidoSelecionado.morada_destino.numero_porta }},
+            {{ pedidoSelecionado.morada_destino.codigo_postal }} {{ pedidoSelecionado.morada_destino.localidade }}
+            </p>
+
             <p><strong>Distância:</strong> {{ pedidoSelecionado.distancia_motorista | number:'1.2-2' }} km</p>
+
             <button (click)="aceitarPedido()">Aceitar Pedido</button>
             </ng-container>
 
@@ -43,6 +58,22 @@
         </ng-template>
 
         <hr />
+
+        <div *ngIf="pedidos_aceite.length > 0; else semPedidosAceites">
+    <h3>Lista de Pedidos Aceites</h3>
+    <ul class="lista-pedidos">
+        <li 
+            *ngFor="let pedido of pedidos_aceite" 
+        >
+            Pedido Distância: {{ pedido.distancia_motorista | number:'1.2-2' }} km
+        </li>
+    </ul>
+</div>
+
+<ng-template #semPedidosAceites>
+    <p>Não há pedidos aceites disponíveis neste momento.</p>
+</ng-template>
+
 
     </div>
 </div>

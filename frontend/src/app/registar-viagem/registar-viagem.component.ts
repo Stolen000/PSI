@@ -17,11 +17,8 @@ export class RegistarViagemComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.motoristaId = this.route.snapshot.paramMap.get('motoristaId')!;
-    this.viagemService.getViagemAtual(this.motoristaId).subscribe((res) => {
-      this.viagemAtual = res.viagem;
-      this.turnoAtual = res.turno;
-    });
+
+
   }
 
   

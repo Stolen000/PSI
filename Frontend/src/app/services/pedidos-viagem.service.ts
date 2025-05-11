@@ -76,8 +76,34 @@ export class PedidosViagemService {
     };
   }
 
+aceitarPedido(id: string, motoristaId: string, taxiId: string, distanciaMotorista: number): Observable<Pedido_Viagem> {
+  const url = `${this.pedidosUrl}/${id}/aceitar-pedido`;  // URL do PUT para aceitar o pedido
+
+  // Corpo da requisição com os dados adicionais
+  const body = { 
+    id, 
+    motoristaId, 
+    taxiId, 
+    distanciaMotorista 
+  };
+
+  return this.http.put<Pedido_Viagem>(url, body, this.httpOptions)
+    .pipe(
+      tap(_ => this.log(`Pedido aceito com id=${id}`)),
+      catchError(this.handleError<Pedido_Viagem>('aceitarPedido'))
+    );
+}
+
+
+
+
+
   /** Log a MotoristaService message with the MessageService */
   private log(message: string) {
     
   }
+
+
+
+
 }

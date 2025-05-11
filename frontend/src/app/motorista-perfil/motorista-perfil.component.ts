@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Motorista } from '../motorista';
 import { MotoristaService } from '../services/motorista.service';
 import { ActivatedRoute } from '@angular/router';
+import { TurnoService } from '../services/turno.service';
 
 @Component({
   selector: 'app-motorista-perfil',
@@ -10,16 +11,28 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MotoristaPerfilComponent {
   motorista: Motorista | undefined;
+  turnoAtivo: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private motoristaService: MotoristaService,
+    private turnoService: TurnoService
   ) {}
 
-  ngOnInit(){
-    this.getMotorista();
-  }
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.motoristaService.getMotoristaById(id).subscribe(motorista => {
+        this.motorista = motorista;
 
+        // Verifica se há turno ativo
+        this.turnoService.getTurnoAtual(id).subscribe(turno => {
+          this.turnoAtivo = !!turno;
+        });
+      });
+    }
+  }
+  
   getMotorista(){
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);

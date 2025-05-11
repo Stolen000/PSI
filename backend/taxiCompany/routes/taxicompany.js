@@ -59,6 +59,7 @@ router.post("/pedidos",pedidos_controller.pedido_create);
 
 router.delete("/pedidos/:id",pedidos_controller.pedido_delete);
 
+router.put("/pedidos/:id/aceitar-pedido", pedidos_controller.aceitar_pedido);
 router.put("/pedidos/:id",pedidos_controller.pedido_update);
 
 /* GET users listing. */
