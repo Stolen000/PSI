@@ -16,7 +16,7 @@ import { TaxiService } from '../services/taxi.service';
 })
 export class PedidosMotoristaComponent implements OnInit {
   pedidos: Pedido_Viagem[] = [];
-  pedidos_aceite: Pedido_Viagem[] = [];
+  pedidos_aceite: Pedido_Viagem[] = []
   latitude: number = 38.756734;
   longitude: number = -9.155412;
   turnoAtivo: boolean = false;
@@ -83,14 +83,21 @@ ngOnInit(): void {
 
 
 getPedidos(): void {
-
   const agora = new Date();
 
   this.pedidoService.getPedidos().subscribe(pedidos => {
+    // Filtra e processa os pedidos
     this.pedidos = pedidos
       .filter(pedido => {
-        if (pedido.estado !== 'pendente' || pedido.nivel_conforto !== this.taxi?.nivel_de_conforto) {
+        if (pedido.nivel_conforto !== this.taxi?.nivel_de_conforto) {
           return false;
+        }
+
+        // Verifica se o pedido está aceito
+        if (pedido.estado === 'aceite' && !this.pedidos_aceite.some(p => p._id === pedido._id)) {
+          // Se o pedido não estiver na lista de aceites, adiciona
+          this.pedidos_aceite.push(pedido);
+          return false;  // Exclui da lista de pendentes
         }
 
         const distancia = this.localizationService.calcularDistanciaKm(
@@ -108,7 +115,6 @@ getPedidos(): void {
 
         if (!this.fim_de_turno) return false;
         return fimPrevisto <= this.fim_de_turno;
-
       })
       .map(pedido => {
         const distancia = this.localizationService.calcularDistanciaKm(
@@ -122,6 +128,7 @@ getPedidos(): void {
       .sort((a, b) => a.distancia_motorista - b.distancia_motorista);
   });
 }
+
 
 
 
@@ -148,17 +155,33 @@ aceitarPedido(): void {
       .subscribe(
         (response) => {
           console.log('Pedido aceito com sucesso:', response);
-          this.getPedidos();
+          
+          // Remove da lista de pedidos pendentes
+          this.pedidos = this.pedidos.filter(pedido => pedido._id !== pedidoId);
+          
+          // Adiciona à lista de pedidos aceites
+          if (this.pedidoSelecionado) {
+            this.pedidos_aceite.push(this.pedidoSelecionado);
+            
+            // Ordena a lista de pedidos aceites pela distância de forma crescente
+            this.pedidos_aceite.sort((a, b) => a.distancia_motorista - b.distancia_motorista);
+          }
+          
+          // Limpa a seleção do pedido
+          this.pedidoSelecionado = null;
         },
         (error) => {
           console.error('Erro ao aceitar o pedido:', error);
-          this.getPedidos();
+          this.getPedidos();  // Atualiza a lista de pedidos
         }
       );
   } else {
     console.log('Nenhum pedido selecionado, ID do motorista ou ID do taxi inválido');
-    this.getPedidos();
+    this.getPedidos();  // Atualiza a lista de pedidos
   }
 }
+
+
+
 
 }

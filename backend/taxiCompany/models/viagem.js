@@ -5,12 +5,19 @@ const MoradaSchema = require("./morada");
 
 const ViagemSchema = new Schema({
   turno_id: { type: String, required: true },
+  motorista_id: {type: String, required: true},
   sequencia: { type: Number, required: true },
-  inicio_viagem: { type: Date, required: true },
-  fim_viagem: { type: Date, required: true },
+  inicio_viagem: { type: Date},
+  fim_viagem: { type: Date  },
   num_pessoas: { type: Number, required: true },
-  local_partida: { type: MoradaSchema, required: true },
-  local_chegada: { type: MoradaSchema, required: true },
+  coordenadas_origem: {
+    lat: { type: Number, required: true },
+    lon: { type: Number, required: true },
+  },
+  coordenadas_destino: {
+    lat: { type: Number, required: true },
+    lon: { type: Number, required: true },
+  },
 });
 
 module.exports = mongoose.model("Viagem", ViagemSchema);

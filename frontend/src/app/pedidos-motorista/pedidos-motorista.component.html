@@ -59,5 +59,21 @@
 
         <hr />
 
+        <div *ngIf="pedidos_aceite.length > 0; else semPedidosAceites">
+    <h3>Lista de Pedidos Aceites</h3>
+    <ul class="lista-pedidos">
+        <li 
+            *ngFor="let pedido of pedidos_aceite" 
+        >
+            Pedido Distância: {{ pedido.distancia_motorista | number:'1.2-2' }} km
+        </li>
+    </ul>
+</div>
+
+<ng-template #semPedidosAceites>
+    <p>Não há pedidos aceites disponíveis neste momento.</p>
+</ng-template>
+
+
     </div>
 </div>
