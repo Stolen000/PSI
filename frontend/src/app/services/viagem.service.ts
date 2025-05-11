@@ -29,6 +29,20 @@ export class ViagemService {
     );
   }
 
+  //metodo para enviar o inicio date para o backend
+  atualizarViagemInicio(inicio: Date, viagem: Viagem): Observable<Viagem> {
+    const body = { inicio_viagem: inicio };
+    return this.http.put<Viagem>(`${this.viagemUrl}/${viagem._id}/inicio`, body);
+  }
+
+
+  //metodo para enviar o fim date para o backend
+  atualizarViagemFim(fim: Date, viagem: Viagem): Observable<Viagem> {
+    const body = { fim_viagem: fim };
+    return this.http.put<Viagem>(`${this.viagemUrl}/${viagem._id}/fim`, body);
+  }
+
+
   atualizarViagem(id: string, viagem: Viagem): Observable<Viagem> {
     return this.http.put<Viagem>(`${this.viagemUrl}/${id}`, viagem);
   }
