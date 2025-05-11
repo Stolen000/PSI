@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Turno } from '../turno';
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, first, map, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +44,31 @@ export class TurnoService {
       })
     );
   }
+
+  getTurnoAtual(motorista_id: string): Observable<Turno | undefined> {
+    const dateAtual = new Date();
+    return this.getTurnosByMotorista(motorista_id).pipe(
+      map(turnos => {
+        // Sort by start time
+        turnos.sort((a, b) => new Date(a.periodo.inicio).getTime() - new Date(b.periodo.inicio).getTime());
+
+        // Filter those that haven't ended yet
+        const upcomingTurnos = turnos.filter(turno => new Date(turno.periodo.fim) > dateAtual);
+
+        // Check only the first turno
+        const firstTurno = upcomingTurnos[0];
+        if (!firstTurno) return undefined;
+
+        const inicio = firstTurno.periodo.inicio;
+        const fim = firstTurno.periodo.fim;
+        if (dateAtual >= inicio && dateAtual <= fim) {
+          return firstTurno;
+        }
+        return undefined;
+      })
+    );
+  }
+
 
 
   deleteTurno(turno: Turno): Observable<Turno>{

@@ -27,7 +27,7 @@ export class RequisicaoTaxiComponent {
   validTimeFormat: boolean = true;
   showError: boolean = false;
   showErrorOverlap: boolean = false;
-  taxiRequisitado: boolean = false; //Should be false, its just true to debug
+  taxiRequisitado: boolean = true; //Should be false, its just true to debug
   turnos_motorista: TurnoWithTaxi[] = [];
   motorista_nome: string = "";
   turno_ativo: boolean = false;
@@ -46,6 +46,7 @@ export class RequisicaoTaxiComponent {
     this.getMotorista(this.motorista_id);
     this.getTurnos();
     this.buscarTaxisDisponiveis();
+    this.getTurnosDoMotorista(this.motorista_id);
   }
 
   getMotoristaId(){
@@ -189,7 +190,7 @@ export class RequisicaoTaxiComponent {
     this.turnoService.addTurno(turno as Turno).subscribe({
       next: (createdTurno) => {
         console.log("Turno criado com sucesso:", createdTurno);
-        this.getTurnosDoMotorista(this.motorista_id);
+        this.getTurnosDoMotorista(this.motorista_id); //Como estamos a ignorar fazemos onInit
         this.resetForm(); 
       },
       error: (err) => {
