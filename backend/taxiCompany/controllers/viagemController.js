@@ -146,7 +146,10 @@ exports.viagem_update_fim = asyncHandler(async (req, res, next) => {
 });
 
 
-
+exports.viagem_delete_by_id = asyncHandler(async (req, res, next)=> {
+    const viagem = await Viagem.findByIdAndDelete(req.params.id);
+    res.status(200).json(viagem);
+});
 
 
 
