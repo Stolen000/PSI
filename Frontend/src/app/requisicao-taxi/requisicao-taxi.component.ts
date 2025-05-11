@@ -7,7 +7,7 @@ import { TurnoService } from '../services/turno.service';
 import { Periodo } from '../periodo';
 import { forkJoin, map } from 'rxjs';
 import { MotoristaService } from '../services/motorista.service';
-type TurnoWithTaxi = Turno & { taxi?: Taxi };
+type TurnoWithTaxi = Turno & { taxi?: Taxi, ativo?: boolean };
 @Component({
   selector: 'app-requisicao-taxi',
   templateUrl: './requisicao-taxi.component.html',
@@ -27,9 +27,11 @@ export class RequisicaoTaxiComponent {
   validTimeFormat: boolean = true;
   showError: boolean = false;
   showErrorOverlap: boolean = false;
-  taxiRequisitado: boolean = false; //Should be false, its just true to debug
+  taxiRequisitado: boolean = true; //Should be false, its just true to debug
   turnos_motorista: TurnoWithTaxi[] = [];
   motorista_nome: string = "";
+  turno_ativo: boolean = false;
+  
   constructor(
     private route: ActivatedRoute,
     private taxiService: TaxiService,
@@ -45,6 +47,7 @@ export class RequisicaoTaxiComponent {
     this.getMotorista(this.motorista_id);
     this.getTurnos();
     this.buscarTaxisDisponiveis();
+    this.getTurnosDoMotorista(this.motorista_id);
   }
 
   getMotoristaId(){
@@ -72,6 +75,19 @@ export class RequisicaoTaxiComponent {
 
       turnos.sort((a, b) => new Date(a.periodo.inicio).getTime() - new Date(b.periodo.inicio).getTime());
       let upcomingTurnos = turnos.filter(turno => new Date(turno.periodo.fim) > dateAtual);
+
+      // Check if the first turno is currently active
+      const firstTurno = upcomingTurnos[0];
+      this.turno_ativo = false;
+
+      if (firstTurno) {
+        const inicio = new Date(firstTurno.periodo.inicio);
+        const fim = new Date(firstTurno.periodo.fim);
+        if (dateAtual >= inicio && dateAtual <= fim) {
+          this.turno_ativo = true;
+        }
+      }
+
       // Create an array of observables for taxi fetches
       const taxiRequests = upcomingTurnos.map(turno =>
         this.taxiService.getTaxi(turno.taxi_id).pipe(
@@ -81,10 +97,15 @@ export class RequisicaoTaxiComponent {
 
       // Wait for all taxi requests to complete
       forkJoin(taxiRequests).subscribe((enrichedTurnos: TurnoWithTaxi[]) => {
+        // If the first is active, mark it
+        if (this.turno_ativo && enrichedTurnos.length > 0) {
+          enrichedTurnos[0] = { ...enrichedTurnos[0], ativo: true };
+        }
         this.turnos_motorista = enrichedTurnos;
       }, error => {
         console.error('Erro ao obter dados dos táxis:', error);
       });
+
     });
     this.taxiRequisitado = true;
   }
@@ -164,19 +185,28 @@ export class RequisicaoTaxiComponent {
       viagens_realizadas: 0
     }
     //Chamar service para fazer post
-    console.log("Turno a criar: " + JSON.stringify(turno, null, 2));
+    //console.log("Turno a criar: " + JSON.stringify(turno, null, 2));
 
 
     this.turnoService.addTurno(turno as Turno).subscribe({
       next: (createdTurno) => {
-        console.log("Turno criado com sucesso:", createdTurno);
+        //console.log("Turno criado com sucesso:", createdTurno);
+        //this.getTurnosDoMotorista(this.motorista_id); //Como estamos a ignorar fazemos onInit
+          this.taxiService.getTaxi(createdTurno.taxi_id).subscribe(taxi => {
+          let enrichedTurno = { ...createdTurno, taxi };
+          //Em vez da linha de cima fazer push para o 1 lugar?
+          this.turnos_motorista.push(enrichedTurno as Turno);
+          this.turnos_motorista.sort((a, b) =>
+              new Date(a.periodo.inicio).getTime() - new Date (b.periodo.inicio).getTime());
+
+          this.resetForm(); 
+        });
       },
       error: (err) => {
         console.error("Erro ao criar turno:", err);
       }
     });
-    this.getTurnosDoMotorista(this.motorista_id);
-    this.resetForm(); 
+   
   }
 
   checkTurnosMotorista(motorista_id: string, newStart: Date, newEnd: Date){
@@ -197,7 +227,7 @@ export class RequisicaoTaxiComponent {
         return true; // Retorna verdadeiro se houver sobreposição
       } else {
         // Não há sobreposição
-        console.log('O motorista pode ser agendado para o novo turno.');
+        //console.log('O motorista pode ser agendado para o novo turno.');
         return false; // Retorna falso se não houver sobreposição
       }
   }
@@ -211,5 +241,33 @@ export class RequisicaoTaxiComponent {
     return diffHours <= 8;  
   }
 
+  deleteTurno(turno: Turno): void {
+    this.turnoService.deleteTurno(turno).subscribe({
+      next: () => {
+        // Update UI by removing the deleted turno
+        this.turnos_motorista = this.turnos_motorista.filter(t => t._id !== turno._id);
+        //console.log(`Turno com ID ${turno._id} foi removido.`);
+      },
+      error: (err) => {
+        console.error('Erro ao deletar turno:', err);
+      }
+    });
+  }
+  getTurnoAtualAtivo(): Turno | undefined {
+    let turnoToReturn = undefined;
+    this.turnoService.getTurnoAtual(this.motorista_id).subscribe(turno => {
+      if (turno) {
+        //console.log("Existe turno ativo:");
+        turnoToReturn = turno;
+      } else {
+        console.log("Não existe turno ativo");
+      }
+    });
+    return turnoToReturn;
+  }
 
 }
+
+
+
+  
