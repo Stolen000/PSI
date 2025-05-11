@@ -120,10 +120,10 @@
       <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
     </button>
 
-    <div *ngIf="pedido === selectedPedido" class="acoes">
+    <ng-container *ngIf="pedido.estado === 'aceite'">
       <button type="button" (click)="aceitarPedido(pedido)">Aceitar</button>
       <button type="button" (click)="recusarPedido(pedido)">Recusar</button>
-    </div>
+    </ng-container>
 
     <button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button>
   </li>
