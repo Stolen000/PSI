@@ -72,4 +72,9 @@ export class LocalizationService {
   private toRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
   }
+
+  calcularTempoEstimado(distanciaKm: number): number {
+    const minutosPorKm = 4;
+    return Math.round(distanciaKm * minutosPorKm);
+  }
 }

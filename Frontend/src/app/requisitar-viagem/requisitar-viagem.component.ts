@@ -3,6 +3,9 @@ import { Pedido_Viagem } from '../pedido-viagem';
 import { PedidosViagemService } from '../services/pedidos-viagem.service';
 import { CodigoPostalService } from '../services/codigo-postal.service';
 import { LocalizationService } from '../services/localization.service';
+import { TransportPricesService } from '../services/transport-prices.service';
+
+import { Price } from '../price';
 import { NgForm } from '@angular/forms';
 import { Morada } from '../morada';
 import { forkJoin } from 'rxjs';
@@ -18,6 +21,12 @@ import { forkJoin } from 'rxjs';
 })
 
 
+//ver alguns tipos
+//tentar aceder ah localizacao de cliente e se sim guardar a coordenadas e retirar de la a morada
+//e fazer o resto igual
+
+//senao, ja estah a ser feito...
+
 export class RequisitarViagemComponent implements OnInit {
 
   pedidos: Pedido_Viagem[] = [];
@@ -32,12 +41,12 @@ export class RequisitarViagemComponent implements OnInit {
   constructor(
     private pedidosViagemService: PedidosViagemService,
     private codigoPostalService: CodigoPostalService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private transpPriceService : TransportPricesService
   ) {}
 
   ngOnInit(): void {
     this.getPedidos();
-
     this.codigoPostalService.getCodigosPostais().subscribe(data => {
       this.codigosPostais = data;
     });
@@ -93,76 +102,113 @@ export class RequisitarViagemComponent implements OnInit {
     //se sim criar a morada com elas
     //se nao eh suposto preencher os campos da morada
       //e sacar as coordenadas dai
-  createPedidoViagem(
-    nome: string,
-    numeroIF: string,
-    genero: string,
-    ruaOrigem: string,
-    numeroPortaOrigem: number,
-    codigoPostalOrigem: string,
-    localidadeOrigem: string,
-    ruaDestino: string,
-    numeroPortaDestino: number,
-    codigoPostalDestino: string,
-    localidadeDestino: string,
-    conforto: string,
-    numPessoas: string
-  ): void {
-    if (
-      !nome || !numeroIF || !genero ||
-      !ruaOrigem || !numeroPortaOrigem || !codigoPostalOrigem || !localidadeOrigem ||
-      !ruaDestino || !numeroPortaDestino || !codigoPostalDestino || !localidadeDestino ||
-      !conforto || !numPessoas ||
-      this.codigoPostalOrigemNaoEncontrado || this.codigoPostalDestinoNaoEncontrado
-    ) {
-      alert('Por favor preencha todos os campos corretamente e valide os códigos postais.');
-      return;
-    }
-  
-    const morada_origem: Morada = {
-    rua: ruaOrigem,
-    numero_porta: numeroPortaOrigem,
-    codigo_postal: codigoPostalOrigem,
-    localidade: localidadeOrigem
-    };
+    createPedidoViagem(
+      nome: string,
+      numeroIF: string,
+      genero: string,
+      ruaOrigem: string,
+      numeroPortaOrigem: number,
+      codigoPostalOrigem: string,
+      localidadeOrigem: string,
+      ruaDestino: string,
+      numeroPortaDestino: number,
+      codigoPostalDestino: string,
+      localidadeDestino: string,
+      conforto: string,
+      numPessoas: string
+    ): void {
+      if (
+        !nome || !numeroIF || !genero ||
+        !ruaOrigem || !numeroPortaOrigem || !codigoPostalOrigem || !localidadeOrigem ||
+        !ruaDestino || !numeroPortaDestino || !codigoPostalDestino || !localidadeDestino ||
+        !conforto || !numPessoas ||
+        this.codigoPostalOrigemNaoEncontrado || this.codigoPostalDestinoNaoEncontrado
+      ) {
+        alert('Por favor preencha todos os campos corretamente e valide os códigos postais.');
+        return;
+      }
 
-    const morada_destino: Morada = {
-      rua: ruaDestino,
-      numero_porta: numeroPortaDestino,
-      codigo_postal: codigoPostalDestino,
-      localidade: localidadeDestino
-    };
+      const morada_origem: Morada = {
+        rua: ruaOrigem,
+        numero_porta: numeroPortaOrigem,
+        codigo_postal: codigoPostalOrigem,
+        localidade: localidadeOrigem
+      };
 
-  forkJoin({
-    origem: this.localizationService.getCoordenadasDaMorada(morada_origem),
-    destino: this.localizationService.getCoordenadasDaMorada(morada_destino)
-  }).subscribe(({ origem, destino }) => {
-    if (!origem || !destino) {
-      console.error('Erro ao obter coordenadas.');
-      return;
-    }
+      const morada_destino: Morada = {
+        rua: ruaDestino,
+        numero_porta: numeroPortaDestino,
+        codigo_postal: codigoPostalDestino,
+        localidade: localidadeDestino
+      };
 
-    const pedidoViagem = {
-      cliente_nome: nome,
-      cliente_nif: numeroIF,
-      cliente_genero: genero,
-      morada_origem,
-      coordenadas_origem: origem,
-      morada_destino,
-      coordenadas_destino: destino,
-      nivel_conforto: conforto,
-      numero_pessoas: numPessoas,
-      estado: 'pendente'
-    };
+      forkJoin({
+        coords_origem: this.localizationService.getCoordenadasDaMorada(morada_origem),
+        coords_destino: this.localizationService.getCoordenadasDaMorada(morada_destino)
+      }).subscribe(({ coords_origem, coords_destino }) => {
+        if (!coords_origem || !coords_destino) {
+          console.error('Erro ao obter coordenadas.');
+          return;
+        }
 
-    console.log('Pedido de viagem:', pedidoViagem);
+        const distancia_viagem = this.localizationService.calcularDistanciaKm(
+          coords_origem.lat, coords_origem.lon,
+          coords_destino.lat, coords_destino.lon
+        );
 
-    this.pedidosViagemService.addPedido(pedidoViagem as Pedido_Viagem)
-      .subscribe(response => {
-        console.log("Pedido de viagem recebido do backend:", response);
-        this.pedidos = response.pedidos;
+        const tempo_viagem = this.localizationService.calcularTempoEstimado(distancia_viagem);
+
+        const now = new Date();
+        const end = new Date(now.getTime() + tempo_viagem * 60 * 1000);
+
+        this.transpPriceService.getPrices().subscribe(price => {
+          const startMin = now.getHours() * 60 + now.getMinutes();
+          let endMin = end.getHours() * 60 + end.getMinutes();
+
+          if (end <= now) endMin += 24 * 60;
+
+          const pricePerMinute = conforto === 'basic'
+            ? parseFloat(price.basic_price)
+            : parseFloat(price.luxurious_price);
+
+          const taxRate = parseFloat(price.nocturne_tax) / 100;
+          let total = 0;
+
+          for (let i = startMin; i < endMin; i++) {
+            const hour = Math.floor(i % 1440 / 60);
+            const isNight = hour >= 21 || hour < 6;
+            total += pricePerMinute * (isNight ? 1 + taxRate : 1);
+          }
+
+          const custo_estimado = Math.round(total * 100) / 100;
+
+          const pedidoViagem = {
+            cliente_nome: nome,
+            cliente_nif: numeroIF,
+            cliente_genero: genero,
+            morada_origem: morada_origem,
+            coordenadas_origem: coords_origem,
+            morada_destino: morada_destino,
+            coordenadas_destino: coords_destino,
+            nivel_conforto: conforto,
+            numero_pessoas: numPessoas,
+            estado: 'pendente',
+            distancia_motorista: distancia_viagem,
+            tempo_estimado: tempo_viagem,
+            custo_estimado: custo_estimado,
+          };
+
+          console.log('Pedido de viagem:', pedidoViagem);
+
+          this.pedidosViagemService.addPedido(pedidoViagem as Pedido_Viagem)
+            .subscribe(response => {
+              console.log("Pedido de viagem recebido do backend:", response);
+              this.pedidos = response.pedidos;
+            });
+        });
       });
-  });
-  }
+    }
+
 }
+
 

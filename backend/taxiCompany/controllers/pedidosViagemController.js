@@ -26,7 +26,10 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
           coordenadas_destino,
           nivel_conforto, 
           numero_pessoas, 
-          estado} = req.body;
+          estado,
+          tempo_estimado,
+          custo_estimado} = req.body;
+
       // Criar o objeto Pedido
       const pedido = new Pedido({
           cliente_nome : cliente_nome,
@@ -38,7 +41,9 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
           coordenadas_destino : coordenadas_destino,
           nivel_conforto : nivel_conforto,
           numero_pessoas : numero_pessoas,
-          estado : estado
+          estado : estado,
+          tempo_estimado : tempo_estimado,
+          custo_estimado : custo_estimado
       });
   
       // Salvar o pedido no banco de dados
