@@ -1,47 +1,48 @@
 <div class="container">
-  <h2>Pedidos de Táxi Próximos</h2>
 
-  <!--
-  <div *ngIf="latitude !== null && longitude !== null">
-    <p><strong>Localização atual:</strong></p>
-    <p>Latitude: {{ latitude }}</p>
-    <p>Longitude: {{ longitude }}</p>
-  </div>
--->
-  <hr />
-
-    <div>
-    <h3>Selecionado</h3>
-
-    <ng-container *ngIf="pedidoSelecionado; else nenhumSelecionado">
-        <p><strong>ID:</strong> {{ pedidoSelecionado._id }}</p>
-        <button (click)="aceitarPedido()">Aceitar Pedido</button>
-    </ng-container>
-
-    <ng-template #nenhumSelecionado>
-        <p>Nenhum pedido selecionado</p>
-    </ng-template>
+    <div *ngIf="!turnoAtivo">
+        <p><strong>Não pode aceitar pedidos fora de um turno.</strong></p>
     </div>
-  <hr />
 
-  <div *ngIf="pedidos.length > 0; else semPedidos">
-    <h3>Lista de Pedidos</h3>
-    <ul class="lista-pedidos">
-      <li 
-        *ngFor="let pedido of pedidos" 
-        (click)="selecionarPedido(pedido)" 
-        [class.selecionado]="pedido === pedidoSelecionado"
-      >
-        Pedido ID: {{ pedido._id }}
-      </li>
-    </ul>
-  </div>
+    <div *ngIf="turnoAtivo">
 
-  <ng-template #semPedidos>
-    <p>Não há pedidos disponíveis neste momento.</p>
-  </ng-template>
+        <h2>Pedidos de Táxi Próximos</h2>
 
-  <hr />
+        <hr />
 
+        <div>
+            <h3>Selecionado</h3>
 
+            <ng-container *ngIf="pedidoSelecionado; else nenhumSelecionado">
+            <p><strong>Distância:</strong> {{ pedidoSelecionado.distancia_motorista | number:'1.2-2' }} km</p>
+            <button (click)="aceitarPedido()">Aceitar Pedido</button>
+            </ng-container>
+
+            <ng-template #nenhumSelecionado>
+            <p>Nenhum pedido selecionado</p>
+            </ng-template>
+        </div>
+
+        <hr />
+
+        <div *ngIf="pedidos.length > 0; else semPedidos">
+            <h3>Lista de Pedidos</h3>
+            <ul class="lista-pedidos">
+            <li 
+                *ngFor="let pedido of pedidos" 
+                (click)="selecionarPedido(pedido)" 
+                [class.selecionado]="pedido === pedidoSelecionado"
+            >
+                Pedido Distância: {{ pedido.distancia_motorista | number:'1.2-2' }} km
+            </li>
+            </ul>
+        </div>
+
+        <ng-template #semPedidos>
+            <p>Não há pedidos disponíveis neste momento.</p>
+        </ng-template>
+
+        <hr />
+
+    </div>
 </div>
