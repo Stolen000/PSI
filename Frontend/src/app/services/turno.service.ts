@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Turno } from '../turno';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +46,22 @@ export class TurnoService {
   }
 
 
+  deleteTurno(turno: Turno): Observable<Turno>{
+    const url = `${this.turnosUrl}/${turno._id}`;
+    return this.http.delete<Turno>(url, this.httpOptions).pipe(
+    );
+  }
+  private log(message: string): void {
+    console.log(`TurnoService: ${message}`);
+  }
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`);
+      // Optional: log to remote logging infrastructure
+      this.log(`${operation} failed: ${error.message}`);
+      // Let the app keep running by returning an empty result
+      return of(result as T);
+    };
+  }
 }
 

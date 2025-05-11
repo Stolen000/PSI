@@ -30,7 +30,7 @@
   
   <br>
 
-  <button type="submit" [disabled]="showError || !validTimeFormat || selectedTaxiId === ''">Submeter Turno</button>
+  <button type="submit" [disabled]="showError || !validTimeFormat || selectedTaxiId === ''">Submeter novo Turno</button>
 
 </form>
 <div *ngIf="showError" style="color: red;">
@@ -44,10 +44,15 @@
 
 <div *ngIf="taxiRequisitado">
   <h3>Turnos do Motorista: {{motorista_nome}}</h3>
-  <div *ngFor="let turno of turnos_motorista">
-    <p>Início: {{ turno.periodo.inicio | date:'HH:mm | dd/MM/yyyy' }}</p>
-    <p>Fim: {{ turno.periodo.fim | date:'HH:mm | dd/MM/yyyy' }}</p>
-    <p *ngIf="turno.taxi">Táxi: {{ turno.taxi.matricula }} - {{ turno.taxi.modelo }}</p>
-    <hr>
+  <div>
+    <li *ngFor="let turno of turnos_motorista; let i = index" [ngClass]="{'turno_ativo': i === 0 && turno.ativo}">
+      <p *ngIf="i === 0 && turno.ativo">Turno atual:</p>
+      <p>Início: {{ turno.periodo.inicio | date:'HH:mm | dd/MM/yyyy' }}</p>
+      <p>Fim: {{ turno.periodo.fim | date:'HH:mm | dd/MM/yyyy' }}</p>
+      <p *ngIf="turno.taxi">Táxi: {{ turno.taxi.matricula }} - {{ turno.taxi.modelo }}</p>
+      <hr>
+        <button type="button" class="delete" title="delete turno"
+      (click)="deleteTurno(turno)">x</button>
+    </li>
   </div>
 </div>
