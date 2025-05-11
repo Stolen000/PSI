@@ -10,7 +10,9 @@ import { Viagem } from '../viagem';
 export class RegistarViagemComponent implements OnInit {
   viagens: Viagem[] = [];
   motorista_id: string = "";
-  viagemAtual: Viagem | null = null;
+  viagemAtual?: Viagem;
+  selectedViagem?: Viagem;
+  viagemEmCurso: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,8 +25,44 @@ export class RegistarViagemComponent implements OnInit {
       this.motorista_id = id;
       console.log("Motorista ID obtido do path:", this.motorista_id);
       this.getViagens();
-      this.getViagemAtual();
     }
+  }
+
+  ngOnSelect(): void {
+  }
+  
+  onSelect(viagem: Viagem): void {
+    this.selectedViagem = viagem;
+  }
+
+  //funcao quando clico no botao começar viagem
+  //coloca o tempo Agora
+  //no atributo inicioViagem
+  //dar um update da viagem no backend
+  iniciarViagem(): void {
+    this.viagemEmCurso = true;
+    if (this.selectedViagem) {
+      const inicio_viagem = new Date();
+      this.viagemService
+        .atualizarViagemInicio(inicio_viagem, this.selectedViagem)
+        .subscribe(() => {
+          console.log("Viagem atualizada com sucesso:", this.selectedViagem);
+          this.getViagens();
+        });
+    }
+  }
+
+  finalizarViagem(): void {
+    if (this.selectedViagem) {
+      const fim_viagem = new Date();
+      this.viagemService
+        .atualizarViagemFim(fim_viagem, this.selectedViagem)
+        .subscribe(() => {
+          console.log("Viagem atualizada com sucesso:", this.selectedViagem);
+          this.getViagens();
+        });
+    }
+    this.viagemEmCurso = false;
   }
 
   getViagens(): void {
@@ -35,20 +73,4 @@ export class RegistarViagemComponent implements OnInit {
     });
   }
 
-  getViagemAtual(): void{
-    this.viagemService.getViagemAtualDoMotorista(this.motorista_id).subscribe({
-      next: (viagem) => {
-        if (viagem) {
-          console.log("Viagem atual do motorista:", viagem);
-          this.viagemAtual = viagem; // Podes guardar se quiseres mostrar no HTML
-        } else {
-          console.log("Nenhuma viagem atual encontrada.");
-        }
-      },
-      error: (err) => {
-        console.error("Erro ao obter viagem atual:", err);
-      }
-    });
-
-  }
 }

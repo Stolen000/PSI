@@ -2,13 +2,28 @@
   <h2>Viagens do Motorista</h2>
   <ul class="lista-viagens">
     <li *ngFor="let viagem of viagens">
-      <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
-      <strong>Sequencia:</strong> {{ viagem.sequencia }}<br>
-      <strong>Data Inicio:</strong> {{ viagem.inicio_viagem| date:'short' }}<br>
-      <strong>Data Fim:</strong> {{ viagem.fim_viagem| date:'short' }}<br>
+      <button [class.selected]="viagem === selectedViagem" (click)="onSelect(viagem)">
+        <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
+        <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
+        <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'short' }}<br>
+        <strong>Data Fim:</strong> {{ viagem.fim_viagem | date: 'short' }}<br>
+      </button>
+
+      <!-- Mostrar botões só se esta viagem estiver selecionada -->
+      <div *ngIf="viagem === selectedViagem && !viagem.inicio_viagem">
+        <!-- Mostrar botão "Iniciar" apenas se ainda não há viagem em curso -->
+        <button *ngIf="!viagemEmCurso" (click)="iniciarViagem()">Iniciar Viagem</button>
+
+        <!-- Mostrar botão "Terminar" apenas se esta viagem for a iniciada -->
+        <button *ngIf="viagemEmCurso && selectedViagem?.inicio_viagem && !selectedViagem?.fim_viagem" 
+                (click)="finalizarViagem()">
+          Terminar Viagem
+        </button>
+      </div>
     </li>
   </ul>
 </div>
+
 
 <ng-template #semViagens>
   <p>Este motorista ainda não tem viagens registadas.</p>

@@ -68,6 +68,11 @@ router.get("/viagens", viagens_controller.get_viagens_list);
 
 router.post("/viagens", viagens_controller.viagem_create);
 
+router.put("/viagens/:id/inicio", viagens_controller.viagem_update_inicio);
+
+router.put("/viagens/:id/fim", viagens_controller.viagem_update_fim);
+
+
 //router.get("/viagens/viagem-atual/:motorista_id", viagens_controller.viagem_atual_by_motorista);
 
 router.get("/viagens/:motorista_id", viagens_controller.viagens_by_motorista);
