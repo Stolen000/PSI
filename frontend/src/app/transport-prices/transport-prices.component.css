@@ -1,177 +1,109 @@
-/* General Container */
+* {
+  box-sizing: border-box;
+}
+
 .pricing-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 1rem 2rem;
-    max-width: 100%;
-  }
-  
-  /* Section Card Base */
-  .section-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 1.5rem;
-    background-color: #f9f9f9;
-    margin-bottom: 2rem;
-  }
-  
-  .section-card h2,
-  .section-card h4 {
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Current Prices Section */
-  .current-prices {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-  }
-  
-  .current-prices h4 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-  
-  .current-prices ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .current-prices li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .current-prices strong {
-    font-weight: 600;
-  }
-  
-  /* Toggle Button */
-  .toggle-button {
-    margin-bottom: 1.5rem;
-    text-align: left;
-  }
-  
-  .toggle-button button {
-    background-color: #374151;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .toggle-button button:hover {
-    background-color: #1f2937;
-  }
-  
-  /* Define Prices Form */
-  .price-form-section form {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 0; /* Align left */
-  }
-  
-  .price-form-section label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-  }
-  
-  .price-form-section input,
-  .price-form-section select {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1.25rem;
-    font-size: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    background-color: #ffffff;
-  }
-  
-  .price-form-section input:focus,
-  .price-form-section select:focus {
-    border-color: #4b5563;
-    outline: none;
-  }
-  
-  .form-actions {
-    margin-top: 1rem;
-    text-align: left;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-  }
-  
-  /* Trip Calculator Section */
-  .trip-calculator-section form {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 0; /* Align left */
-  }
-  
-  .trip-calculator-section label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  .trip-calculator-section input,
-  .trip-calculator-section select {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1.25rem;
-    font-size: 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    background-color: #ffffff;
-  }
-  
-  .trip-calculator-section input:focus,
-  .trip-calculator-section select:focus {
-    border-color: #4b5563;
-    outline: none;
-  }
-  
-  .trip-calculator-section button {
-    background-color: #374151;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 100%;
-    margin-top: 1rem;
-  }
-  
-  .trip-calculator-section button:hover {
-    background-color: #1f2937;
-  }
-  
-  #tripCostResult {
-    margin-top: 1rem;
-    font-size: 1.25rem;
-    color: #374151;
-  }
-  
-  /* Shared Form Elements */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem clamp(1rem, 5vw, 2rem);
+  max-width: 100%;
+}
+
+/* Section Card Base */
+.section-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 600px;
+  overflow-wrap: break-word;
+}
+
+.section-card h2,
+.section-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+.section-card {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.section-card ul {
+  padding-left: 0; /* remove bullet indentation if list-style is removed */
+  list-style: none; /* optional, removes bullets */
+  margin: 0;
+}
+
+.section-card li {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal; /* ensures wrapping */
+  max-width: 100%;
+}
+
+.toggle-button {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.toggle-button button {
+  background-color: #374151;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-button button:hover {
+  background-color: #1f2937;
+}
+
+.price-form-section form,
+.trip-calculator-section form {
+  width: 100%;
+}
+
+.price-form-section label,
+.trip-calculator-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+input,
+select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+input:focus,
+select:focus {
+  border-color: #4b5563;
+  outline: none;
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.input-with-unit input {
+  flex: 1;
+}

@@ -10,4 +10,10 @@ import { TaxisComponent } from "./taxis/taxis.component";
 })
 export class AppComponent {
   title = 'taxiCompany';
+  sidenavCollapsed = false;
+
+  toggleSidenav() {
+    this.sidenavCollapsed = !this.sidenavCollapsed;
+  }
+
 }

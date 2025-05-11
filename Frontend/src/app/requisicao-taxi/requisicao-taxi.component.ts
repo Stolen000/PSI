@@ -48,6 +48,7 @@ export class RequisicaoTaxiComponent {
     this.getTurnos();
     this.buscarTaxisDisponiveis();
     this.getTurnosDoMotorista(this.motorista_id);
+    //this.getTurnoAtualAtivo();
   }
 
   getMotoristaId(){
@@ -265,7 +266,6 @@ export class RequisicaoTaxiComponent {
     });
     return turnoToReturn;
   }
-
 }
 
 
