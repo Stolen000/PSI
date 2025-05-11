@@ -189,6 +189,7 @@ this.turnoService.incrementaTurno(pedido.turno_id)
         });
 
       // apagar o pedido a seguir (coloque aqui se tiver lógica específica)
+      this.deletePedido(pedido);
     }
   });
 
