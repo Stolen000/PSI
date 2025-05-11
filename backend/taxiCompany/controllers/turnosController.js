@@ -43,7 +43,7 @@ exports.get_turnos_by_motorista = asyncHandler(async (req, res, next) => {
       const motoristaId = req.params.motorista_id;
       const motorista = await Motorista.findById(motoristaId).exec();
       if (!motorista) {
-      return res.status(404).json({ message: 'Motorista não encontrado' });
+        return res.status(404).json({ message: 'Motorista não encontrado' });
       }
       // Query the Turno model directly by motorista_id
       const turnos = await Turno.find({ motorista_id: motoristaId }).exec();
@@ -85,7 +85,6 @@ exports.turno_create = asyncHandler(async (req, res, next) => {
   });
 
 exports.turno_delete = asyncHandler(async (req, res, next) => {
-
   let turno = await Turno.findByIdAndDelete(req.params.id);
   if(!turno){
     const err = new Error("Turno não encontrado");
@@ -105,7 +104,6 @@ exports.turno_delete_by_motorista = asyncHandler(async (req, res, next) => {
       err.status = 404;
       return next(err);
     }
-
     res.json({message: "Turnos deletados com sucesso", deletedCount: result.deletedCount});
 });
 

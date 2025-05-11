@@ -129,13 +129,6 @@ getPedidos(): void {
   });
 }
 
-
-
-
-
-
-  
-
   pedidoSelecionado: Pedido_Viagem | null = null;
 
   selecionarPedido(pedido: Pedido_Viagem): void {
@@ -180,8 +173,4 @@ aceitarPedido(): void {
     this.getPedidos();  // Atualiza a lista de pedidos
   }
 }
-
-
-
-
 }
