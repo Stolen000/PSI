@@ -4,16 +4,25 @@
   </header>
   
   <div class="layout">
-    <nav class="sidenav">
+    <nav class="sidenav" [class.collapsed]="sidenavCollapsed">
      <!-- /*<a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>*/container-->
-      <a routerLink="/taxis" routerLinkActive="active">Taxis</a>
-      <a routerLink="/motorista" routerLinkActive="active">Motoristas</a>
-      <a routerLink="/prices" routerLinkActive="active">Prices and Trips</a>
-      
+    <a routerLink="/taxis" routerLinkActive="active" class="link_taxis">
+      <span class="link-text">Taxis</span>
+    </a>
+    <a routerLink="/motorista" routerLinkActive="active" class="link_motoristas">
+      <span class="link-text">Motoristas</span>
+    </a>
+    <a routerLink="/prices" routerLinkActive="active" class="link_calculadora">
+      <span class="link-text">Preços de Viagem</span>
+    </a>
     </nav>
-  
-    <main class="content">
+    <!-- Toggle button placed right next to the sidenav -->
+  <button (click)="toggleSidenav()" class="toggle-btn" [class.collapsed]="sidenavCollapsed">
+    {{ sidenavCollapsed ? '☰' : '«' }}
+  </button>
+    
+  <main class="content" [class.expanded]="sidenavCollapsed">
       <router-outlet></router-outlet>
-    </main>
+  </main>
   </div>
   

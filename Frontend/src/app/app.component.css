@@ -49,6 +49,7 @@ html, body {
   
   .sidenav {
     width: 240px;
+    transition: width 0.3s; /* <-- add this line */
     background-color: #1f2937;
     padding: 1rem 0;
     display: flex;
@@ -89,4 +90,78 @@ html, body {
     background-color: #f3f4f6;
     overflow-y: auto;
   }
-  
+  .toggle-btn {
+  position: absolute;
+  top: 100px; /* match header height */
+  left: 240px;
+  width: 24px;
+  height: 40px;
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  transition: left 0.3s;
+}
+
+.toggle-btn.collapsed {
+  left: 60px;
+}
+
+/* Adjust sidenav width when collapsed */
+.sidenav.collapsed {
+  width: 60px;
+}
+
+.sidenav.collapsed a {
+  text-align: center;
+  font-size: 0; /* hide text visually */
+  padding: 1rem 0;
+}
+
+/* Base icon box */
+.sidenav.collapsed a::before {
+  content: "";
+  display: inline-block;
+  width: 44px; /* Total size including padding */
+  height: 44px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px 30px; /* Shrinks the image inside the box */
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 0; /* Remove padding, already accounted in size */
+  border-radius: 20px;
+}
+
+/* Individual icons */
+.sidenav.collapsed .link_taxis::before {
+  background-image: url('/assets/icons/taxi.png');
+}
+.sidenav.collapsed .link_motoristas::before {
+  background-image: url('/assets/icons/driver.png');
+}
+.sidenav.collapsed .link_calculadora::before {
+  background-image: url('/assets/icons/calcuator.png');
+}
+
+.content.expanded {
+  margin-left: 60px;
+}
+
+/* Normal text style */
+.sidenav a .link-text {
+  margin-left: 10px;
+  opacity: 1;
+  transition: opacity 0.3s, margin 0.3s;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Hide text in collapsed state */
+.sidenav.collapsed a .link-text {
+  opacity: 0;
+  margin-left: 0;
+  width: 0;
+  overflow: hidden;
+}
+
