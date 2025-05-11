@@ -62,11 +62,11 @@ router.put("/pedidos/:id/aceitar-pedido", pedidos_controller.aceitar_pedido);
 router.put("/pedidos/:id",pedidos_controller.pedido_update);
 
 //Viagens 
-//router.get("/viagens", viagens_controller.get_viagens_list);
+router.get("/viagens", viagens_controller.get_viagens_list);
 
 //router.get("/viagens/:id", viagens_controller.get_viagem_by_id);
 
-//router.post("/viagens", viagens_controller.viagem_create);
+router.post("/viagens", viagens_controller.viagem_create);
 
 //router.get("/viagens/viagem-atual/:motorista_id", viagens_controller.viagem_atual_by_motorista);
 

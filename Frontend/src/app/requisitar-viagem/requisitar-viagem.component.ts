@@ -6,6 +6,7 @@ import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
 import { ViagemService } from '../services/viagem.service';
 import { TurnoService } from '../services/turno.service';
+import { Viagem } from '../viagem';
 
 import { Morada } from '../morada';
 import { forkJoin, Observable } from 'rxjs';
@@ -182,7 +183,7 @@ criarAutoMoradaOrigem(): void {
     };
 
     //utilizar esse para o numero de sequencia desta viagem
-    this.viagemService.criarViagem(viagem)
+    this.viagemService.criarViagem(viagem as Viagem)
       .subscribe(response => {
         console.log("Pedido de viagem recebido do backend:", response);});
 

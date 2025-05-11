@@ -17,14 +17,14 @@ exports.viagem_create = asyncHandler(async (req, res, next) => {
     }
 
     const viagem = new Viagem({
-      turno_id,
-      motorista_id,
-      sequencia,
-      inicio_viagem,
-      fim_viagem,
-      num_pessoas,
-      coordenadas_origem,
-      coordenadas_destino
+      turno_id : turno_id,
+      motorista_id :motorista_id,
+      sequencia : sequencia,
+      inicio_viagem : inicio_viagem,
+      fim_viagem :  fim_viagem,
+      num_pessoas : num_pessoas,
+      coordenadas_origem : coordenadas_origem,
+      coordenadas_destino : coordenadas_destino
     });
     await viagem.save();
 
