@@ -207,7 +207,7 @@ export class RequisicaoTaxiComponent {
           const existingEnd = new Date(turno.periodo.fim);
 
           // Verifica se há sobreposição de horários
-          return newStart < existingEnd && newEnd > existingStart;
+          return (newStart < existingEnd && newStart > existingStart) || (newEnd > existingStart && newEnd < existingEnd);
         }
         return false;
       });

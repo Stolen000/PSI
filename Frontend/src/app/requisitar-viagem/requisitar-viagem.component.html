@@ -53,7 +53,10 @@
   </div>
 
   <!-- Chama a função criarMoradaOrigemManual quando o formulário for preenchido e o botão for clicado -->
-  <button (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">Confirmar Localização Atual</button>
+  <button type="button"
+        (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">
+  Confirmar Localização Atual
+</button>
 </div>
 
 

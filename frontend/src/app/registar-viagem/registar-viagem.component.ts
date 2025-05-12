@@ -5,6 +5,7 @@ import { Viagem } from '../viagem';
 import { TransportPricesService } from '../services/transport-prices.service';
 import { TurnoService } from '../services/turno.service';
 import { TaxiService } from '../services/taxi.service';
+import { LocalizationService } from '../services/localization.service';
 
 @Component({
   selector: 'app-registar-viagem',
@@ -18,6 +19,8 @@ export class RegistarViagemComponent implements OnInit {
   selectedViagem?: Viagem;
   viagemEmCurso: boolean = false;
   precoViagemSelecionada?: number;
+  distanciaViagemSelecionada?: number;
+math: any;
 
 
   constructor(
@@ -25,7 +28,8 @@ export class RegistarViagemComponent implements OnInit {
     private viagemService: ViagemService,
     private transpPriceService: TransportPricesService,
     private turnoService: TurnoService,
-    private taxiService: TaxiService
+    private taxiService: TaxiService,
+    private localizationService: LocalizationService
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +49,7 @@ export class RegistarViagemComponent implements OnInit {
 
     if (viagem.inicio_viagem && viagem.fim_viagem) {
       this.calcularPrecoViagem();
+      this.calcularDistancia();
     }
   }
 
@@ -90,6 +95,15 @@ export class RegistarViagemComponent implements OnInit {
         viagem => viagem.inicio_viagem && !viagem.fim_viagem
       );
     });
+  }
+
+  calcularDistancia(){
+        if (!this.selectedViagem ) {
+      console.warn('Viagem selecionada ou datas de início/fim em falta.');
+      return ;
+    }
+    this.distanciaViagemSelecionada = (this.localizationService.calcularDistanciaKm(this.selectedViagem?.coordenadas_origem.lat, this.selectedViagem?.coordenadas_origem.lon,
+                                                                  this.selectedViagem?.coordenadas_destino.lat, this.selectedViagem?.coordenadas_destino.lon));
   }
 
 

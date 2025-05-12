@@ -23,7 +23,8 @@
 
         <!-- Mostrar custo se a viagem tiver início e fim definidos -->
         <div *ngIf="viagem.inicio_viagem && viagem.fim_viagem">
-          <strong>Custo Estimado:</strong> €{{ precoViagemSelecionada }}
+          <strong>Custo total:</strong> €{{ precoViagemSelecionada }}
+        <strong>Distância:</strong> {{ distanciaViagemSelecionada }} km
         </div>
       </div>
 
