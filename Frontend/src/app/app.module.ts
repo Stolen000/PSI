@@ -17,6 +17,7 @@ import { RegistarViagemComponent } from './registar-viagem/registar-viagem.compo
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
 import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 import { AreaGestorComponent } from './area-gestor/area-gestor.component';
+import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AreaGestorComponent } from './area-gestor/area-gestor.component';
     RegistarViagemComponent,
     RequisicaoTaxiComponent,
     PedidosMotoristaComponent,
-    AreaGestorComponent 
+    AreaGestorComponent,
+    AreaMotoristaComponent 
   ],
   imports: [
     BrowserModule,

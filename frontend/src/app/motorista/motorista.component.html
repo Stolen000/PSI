@@ -131,7 +131,7 @@
   <p>Nenhum motorista registado ainda.</p>
 </div>
 
-<label for="nif">LOGIN:</label>
+<label for="nif">NIF:</label>
 <input type="number" [(ngModel)]="nifProcurado" placeholder="Introduza o NIF">
 <br>
 <button (click)="procurarMotorista()">Procurar Motorista</button>
@@ -139,7 +139,6 @@
 <!-- Mensagem de erro, se não encontrado -->
 <p *ngIf="motoristaNaoEncontrado" style="color: red;">Motorista não encontrado.</p>
 
- 
 
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
@@ -161,3 +160,7 @@
 
   </li>
 </ul>
+
+ 
+
+

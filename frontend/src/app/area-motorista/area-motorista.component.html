@@ -1,0 +1,38 @@
+<h1>Login de Motoristas</h1>
+<p>Faça o seu login através da lista ou procure o seu nif</p>
+
+<h2>LOGIN</h2>
+
+<div *ngIf="motoristas.length === 0">
+  <p>Nenhum motorista registado ainda.</p>
+</div>
+
+<label for="nif">NIF:</label>
+<input type="number" [(ngModel)]="nifProcurado" placeholder="Introduza o NIF">
+<br>
+<button (click)="procurarMotorista()">Procurar Motorista</button>
+
+<!-- Mensagem de erro, se não encontrado -->
+<p *ngIf="motoristaNaoEncontrado" style="color: red;">Motorista não encontrado.</p>
+
+
+<ul class="lista-motoristas" *ngIf="motoristas.length > 0">
+  <li *ngFor="let motorista of motoristas" class="cartao-motorista">
+    <a routerLink="/motorista-perfil/{{motorista._id}}">
+      <span class="badge">&nbsp;</span>{{ motorista.name }}
+    </a>
+    <button type="button" class="delete" title="delete motorista"
+    (click)="delete(motorista)">x</button>
+
+    <!--
+        <p><strong>NIF:</strong> {{ motorista.nif }}</p>
+    <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>
+    <p><strong>Ano de Nascimento:</strong> {{ motorista.ano_nascimento }}</p>
+    <p><strong>Género:</strong> {{ motorista.genero }}</p>
+    <p><strong>Morada:</strong> {{ motorista.morada.rua }}, Nº {{ motorista.morada.numero_porta }}</p>
+    <p><strong>Código Postal:</strong> {{ motorista.morada.codigo_postal }}</p>
+    <p><strong>Localidade:</strong> {{ motorista.morada.localidade }}</p>
+    -->
+
+  </li>
+</ul>

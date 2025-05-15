@@ -10,6 +10,7 @@ import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.compo
 import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 import { AreaGestorComponent } from './area-gestor/area-gestor.component';
+import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
 
 
 export const routes: Routes = [
@@ -19,7 +20,8 @@ export const routes: Routes = [
     { path: "prices" , component: TransportPricesComponent },
     { path: "dashboard", component: DashboardComponent},
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-    { path: "motorista", component: MotoristaComponent},
+    { path: "motorista", component: AreaMotoristaComponent},
+    { path: "motoristas", component: MotoristaComponent},
     { path: "dashboard", component: DashboardComponent},
     { path: "pedidos", component: RequisitarViagemComponent},
     { path: "motorista-perfil/:id", component: MotoristaPerfilComponent},
