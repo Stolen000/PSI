@@ -3,7 +3,7 @@
   <ul class="lista-viagens">
     <li *ngFor="let viagem of viagens">
       <button [class.selected]="viagem === selectedViagem" (click)="onSelect(viagem)">
-        <strong>Motorista Id:</strong> {{ viagem.motorista_id }}<br>
+        <strong>Motorista:</strong> {{ this.nome_motorista }}<br>
         <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
         <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
         <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'short' }}<br>

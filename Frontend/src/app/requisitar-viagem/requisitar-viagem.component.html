@@ -94,7 +94,7 @@
 
 <div>
     <label for="numPessoas">Número de Pessoas:</label>
-    <input type="number" id="numPessoas" name="numPessoas" ngModel required min="1" max="6" #numPessoas="ngModel">
+    <input type="number" id="numPessoas" name="numPessoas" ngModel required min="1" max="99" #numPessoas="ngModel">
   </div>
 
   <button type="submit" [disabled]="!pedidoForm.valid">Criar Pedido de Viagem</button>
@@ -115,7 +115,7 @@
 
       <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
       <ng-container *ngIf="pedido.estado === 'aceite'">
-        <span class="nome_motorista">Motorista: {{ pedido.motorista }} </span><br />
+        <span class="nome_motorista">Motorista: {{ this.getMotoristaNome(pedido.motorista)}} </span><br />
 
         <span class="distancia">Distância ao Motorista: {{ pedido.distancia_motorista }} km</span><br />
       </ng-container>

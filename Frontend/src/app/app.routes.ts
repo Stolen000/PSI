@@ -9,10 +9,12 @@ import { MotoristaPerfilComponent } from './motorista-perfil/motorista-perfil.co
 import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.component';
 import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
+import { AreaGestorComponent } from './area-gestor/area-gestor.component';
 
 
 export const routes: Routes = [
     
+    { path: "gestor" , component:AreaGestorComponent},
     { path: "taxis" , component: TaxisComponent },
     { path: "prices" , component: TransportPricesComponent },
     { path: "dashboard", component: DashboardComponent},

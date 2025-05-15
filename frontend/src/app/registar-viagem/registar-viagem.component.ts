@@ -6,6 +6,8 @@ import { TransportPricesService } from '../services/transport-prices.service';
 import { TurnoService } from '../services/turno.service';
 import { TaxiService } from '../services/taxi.service';
 import { LocalizationService } from '../services/localization.service';
+import { MotoristaService } from '../services/motorista.service';
+import { Motorista } from '../motorista';
 
 @Component({
   selector: 'app-registar-viagem',
@@ -20,7 +22,8 @@ export class RegistarViagemComponent implements OnInit {
   viagemEmCurso: boolean = false;
   precoViagemSelecionada?: number;
   distanciaViagemSelecionada?: number;
-math: any;
+  math: any;
+  nome_motorista : String = "";
 
 
   constructor(
@@ -29,7 +32,8 @@ math: any;
     private transpPriceService: TransportPricesService,
     private turnoService: TurnoService,
     private taxiService: TaxiService,
-    private localizationService: LocalizationService
+    private localizationService: LocalizationService,
+    private motoristaService: MotoristaService
   ) {}
 
   ngOnInit(): void {
@@ -37,8 +41,12 @@ math: any;
     if (id) {
       this.motorista_id = id;
       console.log("Motorista ID obtido do path:", this.motorista_id);
+      this.getNomeMotorista(this.motorista_id);
       this.getViagens();
     }
+  }
+  getNomeMotorista(motorista_id: string): void {
+    this.motoristaService.getMotoristaById(motorista_id).subscribe(motorista => this.nome_motorista = motorista.name);
   }
 
   ngOnSelect(): void {
@@ -102,8 +110,8 @@ math: any;
       console.warn('Viagem selecionada ou datas de início/fim em falta.');
       return ;
     }
-    this.distanciaViagemSelecionada = (this.localizationService.calcularDistanciaKm(this.selectedViagem?.coordenadas_origem.lat, this.selectedViagem?.coordenadas_origem.lon,
-                                                                  this.selectedViagem?.coordenadas_destino.lat, this.selectedViagem?.coordenadas_destino.lon));
+    this.distanciaViagemSelecionada = (Math.round((this.localizationService.calcularDistanciaKm(this.selectedViagem?.coordenadas_origem.lat, this.selectedViagem?.coordenadas_origem.lon,
+                                                                  this.selectedViagem?.coordenadas_destino.lat, this.selectedViagem?.coordenadas_destino.lon)) * 100) / 100);
   }
 
 

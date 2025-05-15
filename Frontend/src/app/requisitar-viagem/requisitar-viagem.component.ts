@@ -47,6 +47,8 @@ export class RequisitarViagemComponent implements OnInit {
     codigo_postal: '',
     localidade: ''
   };
+  motoristas: Motorista[] = [];
+
 
 
   selectedPedido?: Pedido_Viagem;
@@ -127,10 +129,26 @@ criarAutoMoradaOrigem(): void {
     this.selectedPedido = pedido;
   }
 
-  getPedidos(): void {
-    this.pedidosViagemService.getPedidos()
-      .subscribe(pedidos => this.pedidos = pedidos);
-  }
+getPedidos(): void {
+  this.pedidosViagemService.getPedidos().subscribe(pedidos => {
+    this.pedidos = pedidos;
+    
+    this.pedidos.forEach(element => {
+      if(element.estado === 'aceite'){      
+        this.motoristaService.getMotoristaById(element.motorista)
+        .subscribe(motorista => this.motoristas.push(motorista));}
+
+    });
+  });
+}
+
+getMotoristaNome(id: string): string | undefined {
+  console.log(this.motoristas);
+  const motorista = this.motoristas.find(element => element._id === id);
+  return motorista?.name;
+}
+
+
 
   deletePedido(pedido: Pedido_Viagem): void {
     this.pedidosViagemService.deletePedido(pedido._id!)
@@ -287,6 +305,11 @@ this.turnoService.incrementaTurno(pedido.turno_id)
         codigo_postal: codigoPostalDestino,
         localidade: localidadeDestino
       };
+
+      if(numPessoas < 1){
+        console.log("Numero de Pessoas inválido");
+        return;
+      }
 
       forkJoin({
         coords_origem: this.localizationService.getCoordenadasDaMorada(this.moradaOrigem),
