@@ -35,11 +35,25 @@
 </form>
 <div *ngIf="showError" style="color: red;">
   Por favor, insira datas e horas válidas. <br>
-  Devem ser posteriores á data atual e menor ou igual a 8 horas.
 </div>
+
+<div *ngIf="showErrorEndBeforeBeggining" style="color: red;">
+  Um turno não pode começar ao mesmo tempo ou após o seu fim.
+</div>
+
+<div *ngIf="showError8Hours" style="color: red;">
+  Um turno não pode ter uma duração superior a 8 horas.
+</div>
+
+<div *ngIf="showErrorBeforeNow" style="color: red;">
+  As datas e horas devem ser posteriores á data atual.
+</div>
+
 <div *ngIf="showErrorOverlap" style="color: red;">
-  Um turno já existe nesse período de tempo.
+  Um turno do motorista já existe nesse período de tempo.
 </div>
+
+
 
 
 <div *ngIf="taxiRequisitado">

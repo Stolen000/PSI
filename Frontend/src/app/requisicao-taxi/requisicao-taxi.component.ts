@@ -25,8 +25,13 @@ export class RequisicaoTaxiComponent {
   endDate!: string;    // Store the selected end date
   selectedTaxiId: string = "";
   validTimeFormat: boolean = true;
+
   showError: boolean = false;
   showErrorOverlap: boolean = false;
+  showError8Hours: boolean = false;
+  showErrorBeforeNow: boolean = false;
+  showErrorEndBeforeBeggining: boolean = false;
+
   taxiRequisitado: boolean = true; //Should be false, its just true to debug
   turnos_motorista: TurnoWithTaxi[] = [];
   motorista_nome: string = "";
@@ -135,19 +140,40 @@ export class RequisicaoTaxiComponent {
     const startDateTime = new Date(`${this.startDate}T${this.inicio}:00`);
     const endDateTime = new Date(`${this.endDate}T${this.fim}:00`);
     const currentDate = new Date();  // Get current date and time
-    if(startDateTime >= endDateTime || currentDate >= startDateTime || currentDate >= endDateTime ||
-      !this.checkTurnoMenorQue8Horas(startDateTime,endDateTime)){
+
+    //Dar reset aos erros?
+    this.showError = false;
+    this.showErrorEndBeforeBeggining = false;
+    this.showError8Hours = false;
+    this.showErrorBeforeNow = false;
+    this.showErrorOverlap = false;
+
+    //Erros - Testar Inicio depois de Fim
+    if(startDateTime >= endDateTime){
+      this.showErrorEndBeforeBeggining = true;
       this.showError = true;
+    }
+    //Erros - Duracao Superior a 8 horas
+    if(!this.checkTurnoMenorIgualQue8Horas(startDateTime,endDateTime)){
+      this.showError8Hours = true;
+      this.showError = true;
+    }
+    //Erros - Criar turno antes da hora atual
+    if(currentDate > startDateTime){
+      this.showErrorBeforeNow = true;
+      this.showError = true;
+    }
+    //Erros - Nao pode intercetar outro turno dele
+    if(this.existeOverlapNosTurnosDoMotorista(this.motorista_id,startDateTime,endDateTime)){
+      this.showErrorOverlap = true;
+      this.showError = true;
+    }
+    if(this.showError){
       this.selectedTaxiId = "";
+      this.filtered_taxis = [];
       return;
     }
-    if(this.checkTurnosMotorista(this.motorista_id,startDateTime,endDateTime)){
-      this.selectedTaxiId = "";
-      this.showErrorOverlap = true;
-      return
-    }
-    this.showErrorOverlap = false;
-    this.showError = false;
+
     //Por cada taxi, checka se existe algum que interceta o turno novo
     this.filtered_taxis = this.taxis.filter(taxi => {
       return !this.hasOverlappingTurnosTaxi(taxi._id, startDateTime, endDateTime);
@@ -190,40 +216,31 @@ export class RequisicaoTaxiComponent {
     this.turnoService.addTurno(turno as Turno).subscribe({
       next: (createdTurno) => {
         console.log("Turno criado com sucesso:", createdTurno);
-        this.getTurnosDoMotorista(this.motorista_id); //Como estamos a ignorar fazemos onInit
         this.resetForm(); 
+        this.turnos_all.push(turno as Turno); //Atualizar o turnos_all (para os taxis)
+        this.getTurnosDoMotorista(this.motorista_id);  //Atualizar o turnos_do_motorista
       },
       error: (err) => {
         console.error("Erro ao criar turno:", err);
       }
     });
-   
+    
   }
 
-  checkTurnosMotorista(motorista_id: string, newStart: Date, newEnd: Date){
-    const overlappingTurno = this.turnos_all.some(turno => {
+  existeOverlapNosTurnosDoMotorista(motorista_id: string, newStart: Date, newEnd: Date){
+    const overlappingTurno = this.turnos_motorista.some(turno => {
         if (turno.motorista_id === motorista_id) {
           const existingStart = new Date(turno.periodo.inicio);
           const existingEnd = new Date(turno.periodo.fim);
-
           // Verifica se há sobreposição de horários
-          return (newStart < existingEnd && newStart > existingStart) || (newEnd > existingStart && newEnd < existingEnd);
+          return newStart < existingEnd && newEnd > existingStart;
         }
         return false;
       });
-
-      if (overlappingTurno) {
-        // O motorista já tem um turno sobrepondo o novo turno
-        console.log('Erro: O motorista já tem um turno que interceta com o novo turno.');
-        return true; // Retorna verdadeiro se houver sobreposição
-      } else {
-        // Não há sobreposição
-        console.log('O motorista pode ser agendado para o novo turno.');
-        return false; // Retorna falso se não houver sobreposição
-      }
+      return overlappingTurno;
   }
 
-  checkTurnoMenorQue8Horas(turno_start:Date, turno_end: Date){
+  checkTurnoMenorIgualQue8Horas(turno_start:Date, turno_end: Date){
     const start = new Date(turno_start).getTime();  
     const end = new Date(turno_end).getTime();      
     const diffMilliseconds = end - start;
