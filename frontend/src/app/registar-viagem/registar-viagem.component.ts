@@ -96,7 +96,13 @@ export class RegistarViagemComponent implements OnInit {
     this.viagemService.getViagens().subscribe(todasViagens => {
       this.viagens = todasViagens.filter(
         viagem => viagem.motorista_id === this.motorista_id
-      );
+      ).sort((a, b) => {
+        let timeA = a.inicio_viagem ? new Date(a.inicio_viagem).getTime() : 0;
+        let timeB = b.inicio_viagem ? new Date(b.inicio_viagem).getTime() : 0;
+        console.log("Time A " + timeA);
+        console.log("Time B " + timeB);
+        return timeB - timeA;
+      });
 
       // Atualiza estado da viagem em curso
       this.viagemEmCurso = this.viagens.some(
