@@ -18,6 +18,7 @@ const ViagemSchema = new Schema({
     lat: { type: Number, required: true },
     lon: { type: Number, required: true },
   },
+  pedido_id: {type: String}
 });
 
 module.exports = mongoose.model("Viagem", ViagemSchema);

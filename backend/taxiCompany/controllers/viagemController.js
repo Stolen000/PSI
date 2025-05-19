@@ -10,8 +10,8 @@ exports.get_viagens_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.viagem_create = asyncHandler(async (req, res, next) => {
-  const { motorista_id, sequencia, turno_id, num_pessoas, coordenadas_origem, coordenadas_destino } = req.body;
-
+  const { motorista_id, sequencia, turno_id, num_pessoas, coordenadas_origem, coordenadas_destino, pedido_id} = req.body;
+  console.log("Dentro do create viagem do backend", pedido_id);
   try {
     console.log("Dados recebidos no backend:", req.body); // log full request body
 
@@ -26,10 +26,11 @@ exports.viagem_create = asyncHandler(async (req, res, next) => {
       num_pessoas,
       coordenadas_origem,
       coordenadas_destino,
+      pedido_id
     });
 
     console.log("Viagem criada para guardar na base de dados:", viagem); // log Mongoose object
-
+    console.log(viagem.pedido_id);
     await viagem.save();
 
     res.status(201).json(viagem);
@@ -252,3 +253,18 @@ exports.viagem_mais_recente_turno_atual = asyncHandler(async (req, res) => {
       viagem: ultimaViagem || null
   });
 });
+
+
+exports.viagens_delete_all = asyncHandler(async (req, res, next) => {
+  //console.log("Estou aqui");
+    try {
+      //console.log("Estou aqui 2");
+        const result = await Viagem.deleteMany();
+        //console.log("Estou aqui 3");
+        res.status(200).json({ message: `Todas as viagens foram apagadas (${result.deletedCount} removidas).` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Erro ao apagar viagens' });
+    }
+});
+

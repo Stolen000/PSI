@@ -143,7 +143,7 @@ getPedidos(): void {
 }
 
 getMotoristaNome(id: string): string | undefined {
-  console.log(this.motoristas);
+  //console.log(this.motoristas);
   const motorista = this.motoristas.find(element => element._id === id);
   return motorista?.name;
 }
@@ -176,43 +176,54 @@ getMotoristaNome(id: string): string | undefined {
     //sacar turno pelo turno id
     //atualizar numero de viagens do turno
 // sacar turno pelo turno id e atualizar numero de viagens do turno
-this.turnoService.incrementaTurno(pedido.turno_id)
-  .subscribe({
-    next: (turno) => {  
-      this.turnoSelecionado = turno;
-      console.log(turno);
+    this.turnoService.incrementaTurno(pedido.turno_id)
+      .subscribe({
+        next: (turno) => {  
+          this.turnoSelecionado = turno;
+          console.log(turno);
 
-      if (!this.turnoSelecionado) {
-        console.log("Entrei aqui");
-        return;
-      }
-      console.log(pedido)
-      // atualizar o numero de viagens do turno
-      const viagem = {
-        motorista_id: this.turnoSelecionado.motorista_id,
-        sequencia: this.turnoSelecionado.viagens_realizadas,
-        turno_id: pedido.turno_id,
-        nif_cliente: pedido.cliente_nif,
-        coordenadas_origem: pedido.coordenadas_origem,
-        coordenadas_destino: pedido.coordenadas_destino,   
-        inicio_viagem: null,
-        fim_viagem: null,
-        num_pessoas: pedido.numero_pessoas,
-      };
+          if (!this.turnoSelecionado) {
+            console.log("Entrei aqui");
+            return;
+          }
+          console.log(pedido)
+          // atualizar o numero de viagens do turno
+          const viagem = {
+            motorista_id: this.turnoSelecionado.motorista_id,
+            sequencia: this.turnoSelecionado.viagens_realizadas,
+            turno_id: pedido.turno_id,
+            nif_cliente: pedido.cliente_nif,
+            coordenadas_origem: pedido.coordenadas_origem,
+            coordenadas_destino: pedido.coordenadas_destino,   
+            inicio_viagem: null,
+            fim_viagem: null,
+            num_pessoas: pedido.numero_pessoas,
+            pedido_id: pedido._id
+          };
+          console.log("Dentro do requisitar viagem a ver a viagem criada:", viagem.nif_cliente);
+          console.log("Dentro do requisitar viagem a ver a viagem criada 2:", pedido.cliente_nif);
+          // utilizar esse para o numero de sequencia desta viagem
+          this.viagemService.criarViagem(viagem)
+            .subscribe(response => {
+              console.log("Pedido de viagem recebido do backend:", response);
+            });
 
-      // utilizar esse para o numero de sequencia desta viagem
-      this.viagemService.criarViagem(viagem)
-        .subscribe(response => {
-          console.log("Pedido de viagem recebido do backend:", response);
-        });
+          // apagar o pedido a seguir (coloque aqui se tiver lógica específica)
+          this.aguadarMotorista(pedido);
 
-      // apagar o pedido a seguir (coloque aqui se tiver lógica específica)
-      this.deletePedido(pedido);
-    }
-  });
-
+        }
+      });
   }
 
+  aguadarMotorista(pedido: Pedido_Viagem): void{
+        console.log("Pedido no aguardar motorista: ",pedido)
+        this.pedidosViagemService.aguardarMotorista(pedido._id!)
+      .subscribe(() => {
+        this.getPedidos();
+
+        //this.pedidos = this.pedidos.filter(p => p !== pedido);
+      });
+  }
 
   recusarPedido(pedido: Pedido_Viagem): void {
     //alterar os campos para

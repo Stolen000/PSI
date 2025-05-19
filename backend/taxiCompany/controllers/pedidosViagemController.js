@@ -113,9 +113,10 @@ exports.aceitar_pedido = asyncHandler(async (req, res, next) => {
 
 
 
-exports.pedido_update = asyncHandler(async (req, res, next) => {  
+exports.pedido_update = asyncHandler(async (req, res, next) => { 
+
     const pedidoId = req.params.id;
-  
+       
     // Verifica se o pedido existe
     const pedido = await Pedido.findById(pedidoId);
     if (!pedido) {
@@ -132,3 +133,58 @@ exports.pedido_update = asyncHandler(async (req, res, next) => {
     res.status(200).json({ message: "Pedido atualizado com sucesso", pedido });
   } 
 );
+
+exports.aguardar_motorista = asyncHandler(async (req, res, next) => {  
+  const pedidoId = req.params.id;
+  console.log("Dentro do aguardar motorista",pedidoId);
+
+
+
+  const pedido = await Pedido.findById(pedidoId);
+  if (!pedido) {
+    return res.status(404).json({ message: "Pedido não encontrado" });
+  }
+
+
+  console.log("Dentro do aguardar motorista", pedido);
+  console.log("Dentro do aguardar motorista",pedido.estado);
+
+  pedido.estado = "aguardar motorista";
+  await pedido.save();
+
+  res.status(200).json({ message: "Pedido iniciado com sucesso", pedido });
+});
+
+exports.iniciar_pedido_viagem = asyncHandler(async (req, res, next) => {  
+  const pedidoId = req.params.id;
+
+
+
+
+  const pedido = await Pedido.findById(pedidoId);
+  if (!pedido) {
+    return res.status(404).json({ message: "Pedido não encontrado" });
+  }
+
+  pedido.estado = "em curso";
+  await pedido.save();
+
+  res.status(200).json({ message: "Pedido iniciado com sucesso", pedido });
+});
+ 
+exports.terminar_pedido_viagem = asyncHandler(async (req, res, next) => {  
+  console
+  const pedidoId = req.params.id;
+
+
+
+  const pedido = await Pedido.findById(pedidoId);
+  if (!pedido) {
+    return res.status(404).json({ message: "Pedido não encontrado" });
+  }
+
+  pedido.estado = "terminada";
+  await pedido.save();
+
+  res.status(200).json({ message: "Pedido iniciado com sucesso", pedido });
+});

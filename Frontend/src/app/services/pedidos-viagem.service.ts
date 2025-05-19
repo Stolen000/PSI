@@ -101,12 +101,40 @@ aceitarPedido(id: string, motoristaId: string, taxiId: string, distanciaMotorist
 
 
 
-  /** Log a MotoristaService message with the MessageService */
-  private log(message: string) {
-    
+
+   aguardarMotorista(id: string): Observable<Pedido_Viagem> {
+    const url = `${this.pedidosUrl}/${id}/aguardar`;
+    console.log("Id no service dos pedidos",id)
+    return this.http.put<Pedido_Viagem>(url, {}, this.httpOptions)
+      .pipe(
+        tap(_ => this.log(`Pedido ${id} atualizado para 'aguardar motorista'`)),
+        catchError(this.handleError<Pedido_Viagem>('aguardarMotorista'))
+      );
   }
 
+  iniciarPedidoViagem(id: string): Observable<Pedido_Viagem> {
+    const url = `${this.pedidosUrl}/${id}/iniciar`;
+    return this.http.put<Pedido_Viagem>(url, {}, this.httpOptions)
+      .pipe(
+        tap(_ => this.log(`Pedido ${id} atualizado para 'em curso'`)),
+        catchError(this.handleError<Pedido_Viagem>('iniciarPedidoViagem'))
+      );
+  }
 
+  terminarPedido(id: string): Observable<Pedido_Viagem> {
+  const url = `${this.pedidosUrl}/${id}/terminar`;
+  return this.http.put<Pedido_Viagem>(url, {}, this.httpOptions).pipe(
+    tap(_ => this.log(`Pedido terminado com id=${id}`)),
+    catchError(this.handleError<Pedido_Viagem>('terminarPedido'))
+  );
+}
+
+
+
+  /** Log a MotoristaService message with the MessageService */
+  private log(message: string) {
+    console.log(message);
+  }
 
 
 }

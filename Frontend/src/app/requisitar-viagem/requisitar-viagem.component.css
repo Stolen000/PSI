@@ -51,18 +51,23 @@ form select {
   }
   /* pedidos and Táxis List */
 .pedidos {
-    list-style: none;
-    padding: 0;
-  }
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
   
-  .motoristas li, .pedidos li {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    background-color: #ffffff;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
+.pedidos li, .motoristas li {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* <- adicionado */
+}
+
   
   .pedidos li .badge {
     background-color: #374151;
@@ -116,8 +121,10 @@ form select {
     margin: 0 0 2em 0;
     list-style-type: none;
     padding: 0;
-    width: 15em;
+    width: 100%;
   }
+
+  
 
   .lista-pedidos li {
     position: relative;
@@ -166,6 +173,21 @@ form select {
     margin-right: .8em;
     border-radius: 4px 0 0 4px;
   }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   .info-msg {
     margin-top: 0.5rem;

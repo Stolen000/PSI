@@ -8,6 +8,8 @@ import { TaxiService } from '../services/taxi.service';
 import { LocalizationService } from '../services/localization.service';
 import { MotoristaService } from '../services/motorista.service';
 import { Motorista } from '../motorista';
+import { Pedido_Viagem } from '../pedido-viagem';
+import { PedidosViagemService } from '../services/pedidos-viagem.service';
 
 @Component({
   selector: 'app-registar-viagem',
@@ -24,6 +26,7 @@ export class RegistarViagemComponent implements OnInit {
   distanciaViagemSelecionada?: number;
   math: any;
   nome_motorista : String = "";
+  pedidos: Pedido_Viagem[] = [];
 
 
   constructor(
@@ -33,7 +36,8 @@ export class RegistarViagemComponent implements OnInit {
     private turnoService: TurnoService,
     private taxiService: TaxiService,
     private localizationService: LocalizationService,
-    private motoristaService: MotoristaService
+    private motoristaService: MotoristaService,
+    private pedidosService: PedidosViagemService
   ) {}
 
   ngOnInit(): void {
@@ -43,11 +47,28 @@ export class RegistarViagemComponent implements OnInit {
       console.log("Motorista ID obtido do path:", this.motorista_id);
       this.getNomeMotorista(this.motorista_id);
       this.getViagens();
+      
+
     }
   }
   getNomeMotorista(motorista_id: string): void {
     this.motoristaService.getMotoristaById(motorista_id).subscribe(motorista => this.nome_motorista = motorista.name);
   }
+
+getNomeCliente(pedido_id: string): string {
+  const pedido = this.pedidos.find(p => p._id === pedido_id);
+  return pedido ? pedido.cliente_nome : 'Cliente não encontrado';
+}
+
+
+  getPedidos(): void {
+    this.pedidosService.getPedidos().subscribe(todosPedidos => {
+      const idsViagens = this.viagens.map(v => v.pedido_id);
+      this.pedidos = todosPedidos.filter(p => idsViagens.includes(p._id));
+      //console.log(this.pedidos);
+    });
+  }
+
 
   ngOnSelect(): void {
   }
@@ -65,32 +86,53 @@ export class RegistarViagemComponent implements OnInit {
   //coloca o tempo Agora
   //no atributo inicioViagem
   //dar um update da viagem no backend
-  iniciarViagem(): void {
-    this.viagemEmCurso = true;
-    if (this.selectedViagem) {
-      const inicio_viagem = new Date();
-      this.viagemService
-        .atualizarViagemInicio(inicio_viagem, this.selectedViagem)
-        .subscribe(() => {
-          console.log("Viagem atualizada com sucesso:", this.selectedViagem);
-          this.getViagens();
-        });
-    }
-  }
+iniciarViagem(): void {
+  this.viagemEmCurso = true;
 
-  finalizarViagem(): void {
-    if (this.selectedViagem) {
-      const fim_viagem = new Date();
-      this.viagemService
-        .atualizarViagemFim(fim_viagem, this.selectedViagem)
-        .subscribe(() => {
-          console.log("Viagem atualizada com sucesso:", this.selectedViagem);
-          this.getViagens();
-        });
-    }
-    this.calcularPrecoViagem();
-    this.viagemEmCurso = false;
+  if (this.selectedViagem) {
+    const inicio_viagem = new Date();
+    const pedidoId = this.selectedViagem.pedido_id;
+    // Atualizar início da viagem
+    this.viagemService.atualizarViagemInicio(inicio_viagem, this.selectedViagem)
+      .subscribe(() => {
+        console.log("Viagem atualizada com sucesso:", this.selectedViagem);
+        this.getViagens();
+
+        // Iniciar o pedido associado à viagem
+        // ou .pedido_id, conforme o nome correto
+        if (pedidoId) {
+          this.pedidosService.iniciarPedidoViagem(pedidoId).subscribe(() => {
+            console.log(`Pedido ${pedidoId} iniciado com sucesso`);
+          });
+        }
+      });
   }
+}
+
+
+finalizarViagem(): void {
+  if (this.selectedViagem) {
+    const fim_viagem = new Date();
+
+    // Atualizar o fim da viagem
+    this.viagemService.atualizarViagemFim(fim_viagem, this.selectedViagem)
+      .subscribe(() => {
+        console.log("Viagem atualizada com sucesso:", this.selectedViagem);
+        this.getViagens();
+
+        // Terminar o pedido associado à viagem
+        const pedidoId = this.selectedViagem?.pedido_id; // ou .pedido_id conforme o campo certo
+        if (pedidoId) {
+          this.pedidosService.terminarPedido(pedidoId).subscribe(() => {
+            console.log(`Pedido ${pedidoId} terminado com sucesso`);
+          });
+        }
+      });
+  }
+  this.calcularPrecoViagem();
+  this.viagemEmCurso = false;
+}
+
 
   getViagens(): void {
     this.viagemService.getViagens().subscribe(todasViagens => {
@@ -108,6 +150,8 @@ export class RegistarViagemComponent implements OnInit {
       this.viagemEmCurso = this.viagens.some(
         viagem => viagem.inicio_viagem && !viagem.fim_viagem
       );
+      this.getPedidos();
+      console.log(this.pedidos);
     });
   }
 

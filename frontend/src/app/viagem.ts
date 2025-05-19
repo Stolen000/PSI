@@ -14,4 +14,5 @@ export interface Viagem {
     num_pessoas: number;
     coordenadas_origem: Coordenadas;
     coordenadas_destino: Coordenadas;
+    pedido_id: string;
   }

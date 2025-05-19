@@ -21,6 +21,7 @@ export class ViagemService {
   }
 
   criarViagem(viagem: Viagem): Observable<Viagem> {
+    console.log(viagem.pedido_id);
     return this.http.post<Viagem>(this.viagemUrl, viagem).pipe(
       catchError(err => {
         console.error('Error occurred:', err);

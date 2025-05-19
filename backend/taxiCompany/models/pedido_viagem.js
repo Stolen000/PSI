@@ -28,7 +28,7 @@ const PedidoViagemSchema = new Schema({
     },
     nivel_conforto: { type: String, enum: ["basico", "luxuoso"], required: true },
     numero_pessoas: { type: Number, required: true },
-    estado: { type: String, enum: ["pendente", "aceite", "recusada"], required: true },
+    estado: { type: String, enum: ["pendente", "aceite", "aguardar motorista", "em curso", "terminada"], required: true },
     taxi: { type: String, default: null },
     distancia_motorista: { type: Number, default: null },
     tempo_estimado: { type: Number, default: null },

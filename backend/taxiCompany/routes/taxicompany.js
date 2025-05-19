@@ -62,6 +62,12 @@ router.put("/pedidos/:id/aceitar-pedido", pedidos_controller.aceitar_pedido);
 
 router.put("/pedidos/:id",pedidos_controller.pedido_update);
 
+router.put("/pedidos/:id/aguardar", pedidos_controller.aguardar_motorista);
+
+router.put("/pedidos/:id/iniciar", pedidos_controller.iniciar_pedido_viagem);
+
+router.put("/pedidos/:id/terminar", pedidos_controller.terminar_pedido_viagem);
+
 //Viagens 
 router.get("/viagens", viagens_controller.get_viagens_list);
 
@@ -78,6 +84,10 @@ router.put("/viagens/:id/inicio", viagens_controller.viagem_update_inicio);
 router.put("/viagens/:id/fim", viagens_controller.viagem_update_fim);
 
 router.delete("/viagens/:id", viagens_controller.viagem_delete_by_id);
+
+router.delete('/delete-all', viagens_controller.viagens_delete_all);
+
+
 
 
 /* GET users listing. */

@@ -114,7 +114,7 @@
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
 
       <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
-      <ng-container *ngIf="pedido.estado === 'aceite'">
+      <ng-container *ngIf="pedido.estado === 'aceite' || pedido.estado === 'em curso'">
         <span class="nome_motorista">Motorista: {{ this.getMotoristaNome(pedido.motorista)}} </span><br />
 
         <span class="distancia">Distância ao Motorista: {{ pedido.distancia_motorista }} km</span><br />
@@ -130,9 +130,12 @@
       <button type="button" (click)="aceitarPedido(pedido)">Aceitar</button>
       <button type="button" (click)="recusarPedido(pedido)">Recusar</button>
     </ng-container>
+      <ng-container *ngIf="pedido.estado === 'aceite' || pedido.estado === 'pendente'">
+        <button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button>
 
-    <button type="button" class="delete" title="Apagar Pedido" (click)="deletePedido(pedido)">x</button>
-  </li>
+      </ng-container>
+    </li>
+    
 </ul>
 
 

@@ -5,7 +5,7 @@
   <ul class="lista-viagens">
     <li *ngFor="let viagem of viagens">
       <button [class.selected]="viagem === selectedViagem" (click)="onSelect(viagem)">
-        <strong>Motorista:</strong> {{ this.nome_motorista }}<br>
+        <strong>Cliente:</strong> {{ this.getNomeCliente(viagem.pedido_id) }}<br>
         <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
         <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
         <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
