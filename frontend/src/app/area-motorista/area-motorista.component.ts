@@ -13,7 +13,7 @@ export class AreaMotoristaComponent {
   codigosPostais: any[] = [];
   localidade: string = ''; 
   codigoPostalNaoEncontrado: boolean = false;
-  nifProcurado: number = 0;
+nifProcurado: string = '';
   motoristaNaoEncontrado: boolean = false;
   mensagemSucesso: string = '';
 
@@ -50,14 +50,16 @@ export class AreaMotoristaComponent {
 
 
   
-  procurarMotorista() {
-    const motorista = this.motoristas.find(m => m.nif === this.nifProcurado);
-    if (motorista) {
-      this.motoristaNaoEncontrado = false;
-      // Navegar para a página do motorista
-      window.location.href = `/motorista-perfil/${motorista._id}`;
-    } else {
-      this.motoristaNaoEncontrado = true;
-    }
+procurarMotorista() {
+  const nifNumber = Number(this.nifProcurado);
+  const motorista = this.motoristas.find(m => m.nif === nifNumber);
+  if (motorista) {
+    this.motoristaNaoEncontrado = false;
+    this.nifProcurado = "";
+    window.location.href = `/motorista-perfil/${motorista._id}`;
+  } else {
+    this.motoristaNaoEncontrado = true;
   }
+}
+
 }

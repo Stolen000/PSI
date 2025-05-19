@@ -10,3 +10,9 @@ form select {
   background-color: #ffffff;
   box-sizing: border-box;
 }
+.lista-viagens {
+  list-style: none;  /* tira os pontos */
+  padding: 0;
+  margin: 0;
+}
+

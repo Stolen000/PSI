@@ -1,5 +1,5 @@
 <h1>Login de Motoristas</h1>
-<p>Faça o seu login através da lista ou procure o seu nif</p>
+<p>Faça o seu login através da lista ou procure atrvés do seu nif</p>
 
 <h2>LOGIN</h2>
 
@@ -8,14 +8,20 @@
 </div>
 
 <label for="nif">NIF:</label>
-<input type="number" [(ngModel)]="nifProcurado" placeholder="Introduza o NIF">
-<br>
-<button (click)="procurarMotorista()">Procurar Motorista</button>
+<input
+  type="number"
+  [(ngModel)]="nifProcurado"
+  placeholder="Exemplo: 123456789"
+>
+
+
+<button class="btn-procurar" (click)="procurarMotorista()">Procurar Motorista</button>
+
 
 <!-- Mensagem de erro, se não encontrado -->
 <p *ngIf="motoristaNaoEncontrado" style="color: red;">Motorista não encontrado.</p>
 
-
+<h2>SELECIONE O SEU PERFIL</h2>
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
     <a routerLink="/motorista-perfil/{{motorista._id}}">
