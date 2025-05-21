@@ -1,0 +1,104 @@
+<div>
+  <label for="inicio">Início do período:</label>
+  <input id="inicio" type="date" #inicioInput />
+
+  <label for="fim">Fim do período:</label>
+  <input id="fim" type="date" #fimInput [value]="hoje" />
+
+  <button (click)="setPeriodo(inicioInput.value, fimInput.value)">Definir Período</button>
+</div>
+
+<div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
+  <div (click)="mostrarDetalhesViagens = !mostrarDetalhesViagens"
+       style="cursor:pointer; background:#eee; padding:10px; border-radius:5px;">
+    <strong>Total de viagens no período: {{ totalViagens }}</strong>
+    <span *ngIf="!mostrarDetalhesViagens">[+]</span>
+    <span *ngIf="mostrarDetalhesViagens">[-]</span>
+  </div>
+
+  <div *ngIf="mostrarDetalhesViagens" style="margin-left: 20px; margin-top:10px;">
+    <div *ngFor="let item of totalViagensPorTaxi">
+      <div (click)="alternarExpandido(item.taxiId)" style="cursor:pointer; padding:5px; border-bottom:1px solid #ccc;">
+        🚕 <strong>{{ item.matricula }}</strong> – {{ item.total }} viagens
+        <span *ngIf="!taxisExpandido.includes(item.taxiId)">[+]</span>
+        <span *ngIf="taxisExpandido.includes(item.taxiId)">[-]</span>
+      </div>
+
+      <ul *ngIf="taxisExpandido.includes(item.taxiId)" style="margin-left: 20px;">
+        <li *ngFor="let v of viagensPorTaxi[item.taxiId]">
+          {{ v.inicio_viagem | date:'short' }} 
+        </li>
+        <li *ngIf="!viagensPorTaxi[item.taxiId]?.length">
+          <em>Sem viagens.</em>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
+  <div (click)="mostrarDetalhesTempos = !mostrarDetalhesTempos"
+       style="cursor:pointer; background:#eef; padding:10px; border-radius:5px;">
+    <strong>Total de minutos no período: {{ totalMinutos }}</strong>
+    <span *ngIf="!mostrarDetalhesTempos">[+]</span>
+    <span *ngIf="mostrarDetalhesTempos">[-]</span>
+  </div>
+
+  <div *ngIf="mostrarDetalhesTempos" style="margin-left: 20px; margin-top:10px;">
+    <div *ngFor="let item of temposPorTaxi">
+      <div (click)="alternarTemposExpandido(item.taxiId)"
+           style="cursor:pointer; padding:5px; border-bottom:1px solid #ccc;">
+        🚖 <strong>{{ item.matricula }}</strong> – {{ item.totalMin }} minutos
+        <span *ngIf="!temposExpandido.includes(item.taxiId)">[+]</span>
+        <span *ngIf="temposExpandido.includes(item.taxiId)">[-]</span>
+      </div>
+
+      <ul *ngIf="temposExpandido.includes(item.taxiId)" style="margin-left: 20px;">
+        <li *ngFor="let v of viagensComDuracaoPorTaxi[item.taxiId]">
+          {{ v.inicio | date:'short' }} → {{ v.fim | date:'short' }} = {{ v.duracaoMin }} min
+        </li>
+        <li *ngIf="!viagensComDuracaoPorTaxi[item.taxiId]?.length">
+          <em>Sem viagens.</em>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
+  <div (click)="mostrarDetalhesKms = !mostrarDetalhesKms"
+       style="cursor:pointer; background:#efe; padding:10px; border-radius:5px;">
+    <strong>Total de quilômetros no período: {{ totalKms.toFixed(2) }} km</strong>
+    <span *ngIf="!mostrarDetalhesKms">[+]</span>
+    <span *ngIf="mostrarDetalhesKms">[-]</span>
+  </div>
+
+  <div *ngIf="mostrarDetalhesKms" style="margin-left: 20px; margin-top:10px;">
+    <div *ngFor="let item of kmsPorTaxi">
+      <div (click)="alternarKmsExpandido(item.taxiId)"
+           style="cursor:pointer; padding:5px; border-bottom:1px solid #ccc;">
+        🚖 <strong>{{ item.matricula }}</strong> – {{ item.totalKm.toFixed(2) }} km
+        <span *ngIf="!kmsExpandido.includes(item.taxiId)">[+]</span>
+        <span *ngIf="kmsExpandido.includes(item.taxiId)">[-]</span>
+      </div>
+
+      <ul *ngIf="kmsExpandido.includes(item.taxiId)" style="margin-left: 20px;">
+        <li *ngFor="let v of viagensComDistanciaPorTaxi[item.taxiId]">
+          {{ v.inicio | date:'short' }} → {{ v.fim | date:'short' }} = {{ v.distanciaKm.toFixed(2) }} km
+        </li>
+        <li *ngIf="!viagensComDistanciaPorTaxi[item.taxiId]?.length">
+          <em>Sem viagens.</em>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+</div>
+
+
+

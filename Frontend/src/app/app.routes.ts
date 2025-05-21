@@ -12,12 +12,14 @@ import { RegistarViagemComponent } from './registar-viagem/registar-viagem.compo
 import { AreaGestorComponent } from './area-gestor/area-gestor.component';
 import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
 import { RelatorioMotoristasComponent } from './relatorio-motoristas/relatorio-motoristas.component';
+import { RelatorioTaxisComponent } from './relatorio-taxis/relatorio-taxis.component';
 
 
 export const routes: Routes = [
     
     { path: "gestor" , component:AreaGestorComponent},
     { path: "gestor/relatorio-motoristas", component:RelatorioMotoristasComponent},
+    { path: "gestor/relatorio-taxis", component:RelatorioTaxisComponent},
     { path: "taxis" , component: TaxisComponent },
     { path: "prices" , component: TransportPricesComponent },
     { path: "dashboard", component: DashboardComponent},
