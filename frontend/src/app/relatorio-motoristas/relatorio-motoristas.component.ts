@@ -19,6 +19,11 @@ export class RelatorioMotoristasComponent {
   inicio_periodo?: Date;
   fim_periodo?: Date = new Date();
 
+  //
+  periodo_vazio: Boolean = false;
+  perido_invalido: Boolean = false;
+  //
+
   //CALCULO DE TOTAL DE VIAGENS
   totalViagens: number = 0;
   viagensPorMotorista: { motorista: string, total: number }[] = [];
@@ -55,16 +60,22 @@ export class RelatorioMotoristasComponent {
 
   setPeriodo(inicio: string, fim: string): void {
     if (!inicio || !fim) {
-      alert("Preencha o período");
+      //alert("Preencha o período");
+      this.periodo_vazio = true;
       return;
+    } else {
+      this.periodo_vazio = false;
     }
 
     const inicioDate = new Date(inicio);
     const fimDate = new Date(fim);
 
     if (inicioDate > fimDate) {
-      alert("O início do período não pode ser posterior ao fim");
+      //alert("O início do período não pode ser posterior ao fim");
+      this.perido_invalido = true;
       return;
+    } else {
+      this.perido_invalido = false;
     }
 
     this.inicio_periodo = inicioDate;

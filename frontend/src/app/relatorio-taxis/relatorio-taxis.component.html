@@ -1,4 +1,8 @@
-<div>
+
+<h2>Relatório de Estatísticas de Taxis</h2>
+<h3>Selecione o período de tempo para poder observar as estatísticas</h3>
+
+<div class="periodo-container">
   <label for="inicio">Início do período:</label>
   <input id="inicio" type="date" #inicioInput />
 
@@ -7,6 +11,13 @@
 
   <button (click)="setPeriodo(inicioInput.value, fimInput.value)">Definir Período</button>
 </div>
+    <div *ngIf="periodo_vazio" class="error">
+        Por favor, preencha o período antes de continuar.
+    </div>
+
+    <div *ngIf="perido_invalido" class="error">
+        O início do período não pode ser posterior ao fim.
+    </div>
 
 <div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
   <div (click)="mostrarDetalhesViagens = !mostrarDetalhesViagens"

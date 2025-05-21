@@ -19,6 +19,10 @@ export class RelatorioTaxisComponent {
   inicio_periodo?: Date;
   fim_periodo?: Date = new Date();
   turnos: Turno[] = [];
+    //
+  periodo_vazio: Boolean = false;
+  perido_invalido: Boolean = false;
+  //
 
 
 
@@ -64,16 +68,22 @@ viagensComDistanciaPorTaxi: { [taxiId: string]: { inicio: string, fim: string, d
 
   setPeriodo(inicio: string, fim: string): void {
     if (!inicio || !fim) {
-      alert("Preencha o período");
+      //alert("Preencha o período");
+      this.periodo_vazio = true;
       return;
+    } else {
+      this.periodo_vazio = false;
     }
 
     const inicioDate = new Date(inicio);
     const fimDate = new Date(fim);
 
     if (inicioDate > fimDate) {
-      alert("O início do período não pode ser posterior ao fim");
+      //alert("O início do período não pode ser posterior ao fim");
+      this.perido_invalido = true;
       return;
+    } else {
+      this.perido_invalido = false;
     }
 
     this.inicio_periodo = inicioDate;
