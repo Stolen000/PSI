@@ -11,11 +11,13 @@ import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista
 import { RegistarViagemComponent } from './registar-viagem/registar-viagem.component';
 import { AreaGestorComponent } from './area-gestor/area-gestor.component';
 import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
+import { RelatorioMotoristasComponent } from './relatorio-motoristas/relatorio-motoristas.component';
 
 
 export const routes: Routes = [
     
     { path: "gestor" , component:AreaGestorComponent},
+    { path: "gestor/relatorio-motoristas", component:RelatorioMotoristasComponent},
     { path: "taxis" , component: TaxisComponent },
     { path: "prices" , component: TransportPricesComponent },
     { path: "dashboard", component: DashboardComponent},

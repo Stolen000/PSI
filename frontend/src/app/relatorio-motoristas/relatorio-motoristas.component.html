@@ -1,0 +1,97 @@
+<div>
+  <label for="inicio">Início do período:</label>
+  <input id="inicio" type="date" #inicioInput />
+
+  <label for="fim">Fim do período:</label>
+  <input id="fim" type="date" #fimInput [value]="hoje" />
+
+  <button (click)="setPeriodo(inicioInput.value, fimInput.value)">Definir Período</button>
+</div>
+
+<!-- Relatorio de motoristas-->
+<div *ngIf="inicio_periodo && fim_periodo">
+
+    <div (click)="mostrarDetalhesViagens = !mostrarDetalhesViagens" 
+        style="cursor:pointer; border:1px solid #ccc; padding:10px; width:200px;">
+        Total de viagens: {{ totalViagens }}
+    </div>
+
+    <div *ngIf="mostrarDetalhesViagens" style="margin-top:10px; border:1px solid #aaa; padding:10px; width:500px;">
+    <h4>Viagens por Motorista</h4>
+    <ul>
+        <li *ngFor="let item of viagensPorMotorista" (click)="selecionarMotorista(item)" style="cursor:pointer;">
+        Motorista: {{ item.motorista }} - Total Viagens: {{ item.total }}
+        </li>
+    </ul>
+
+    <!-- Mostrar viagens do motorista selecionado -->
+    <div *ngIf="motoristaSelecionado" style="margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px;">
+        <h5>Viagens de {{ motoristaSelecionado.motorista }}</h5>
+        <ul>
+        <li *ngFor="let v of viagensDoMotoristaSelecionado">
+            Início: {{ v.inicio_viagem | date:'short' }} - Fim: {{ v.fim_viagem ? (v.fim_viagem | date:'short') : 'Em curso' }}
+        </li>
+        </ul>
+    </div>
+    </div>
+
+
+    <div (click)="mostrarDetalhesTempos = !mostrarDetalhesTempos" 
+        style="cursor:pointer; border:1px solid #ccc; padding:10px; width:200px;">
+        Total de tempo (min): {{ totalTempoMin }}
+    </div>
+
+
+
+<div *ngIf="mostrarDetalhesTempos" style="margin-top:10px; border:1px solid #aaa; padding:10px; width:500px;">
+  <h4>Tempos por Motorista</h4>
+  <ul>
+    <li *ngFor="let item of temposPorMotorista" style="margin-bottom: 10px;">
+      <div (click)="alternarExpandido(item.motorista)" style="cursor:pointer;">
+        Motorista: {{ getNomeMotorista(item.motorista) }} - Tempo Total: {{ item.tempoTotalMin }} minutos
+      </div>
+
+      <!-- Lista de viagens detalhadas -->
+      <ul *ngIf="motoristasComTemposExpandido.includes(item.motorista)" style="margin-top:5px; margin-left: 15px;">
+        <li *ngFor="let v of viagensComDuracaoPorMotorista[item.motorista]; let i = index">
+          Viagem {{ i + 1 }}: Início: {{ v.inicio | date:'short' }} - Fim: {{ v.fim | date:'short' }} - Duração: {{ v.duracaoMin }} min
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+
+
+    <!-- Total de KM -->
+    <div (click)="mostrarDetalhesKms = !mostrarDetalhesKms"
+        style="cursor:pointer; border:1px solid #ccc; padding:10px; width:200px; margin-top:10px;">
+    Total de quilómetros: {{ totalKm | number: '1.0-2' }} km
+    </div>
+
+    <!-- Lista de kms por motorista -->
+    <div *ngIf="mostrarDetalhesKms" style="margin-top:10px; border:1px solid #aaa; padding:10px; width:500px;">
+    <h4>Quilómetros por Motorista</h4>
+    <ul>
+        <li *ngFor="let item of kmsPorMotorista" style="margin-bottom: 10px;">
+        <div (click)="alternarExpandidoKms(item.motorista)" style="cursor:pointer;">
+            Motorista: {{ getNomeMotorista(item.motorista) }} - Total: {{ item.kmTotal | number: '1.0-2' }} km
+        </div>
+
+        <!-- Viagens detalhadas -->
+        <ul *ngIf="motoristasComKmsExpandido.includes(item.motorista)" style="margin-top:5px; margin-left: 15px;">
+            <li *ngFor="let v of viagensComKmPorMotorista[item.motorista]; let i = index">
+            Viagem {{ i + 1 }}: Início: {{ v.inicio | date:'short' }} - Fim: {{ v.fim | date:'short' }} - Distância: {{ v.km | number: '1.0-2' }} km
+            </li>
+        </ul>
+        </li>
+    </ul>
+    </div>
+
+
+
+
+
+</div>
+
+

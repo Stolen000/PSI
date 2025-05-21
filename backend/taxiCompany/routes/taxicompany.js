@@ -73,6 +73,8 @@ router.get("/viagens", viagens_controller.get_viagens_list);
 
 router.get("/viagens/:id", viagens_controller.get_viagem_by_id);
 
+router.get("/viagens/motorista/:id_motorista/total", viagens_controller.get_viagens_motorista);
+
 router.post("/viagens", viagens_controller.viagem_create);
 
 router.get("/viagens/viagem-atual/:motorista_id", viagens_controller.viagem_atual_by_motorista);
