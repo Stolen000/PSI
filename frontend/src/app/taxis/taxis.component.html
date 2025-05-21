@@ -1,4 +1,5 @@
 <h1>Taxis</h1>
+<div *ngIf="!selectedTaxi">
 <p>Adicione um taxi novo ou aceda apenas à lista</p>
 <form id="taxiForm" (ngSubmit)="createTaxi(number.value, marca.value, modelo.value, anoCompra.value, conforto.value)">
   <div>
@@ -6,7 +7,7 @@
     <input type="text" id="number" name="number" required #number placeholder="LL-NN-LL ou NN-LL-NN">
   </div>  
   <div *ngIf="!validPlate" style="color: red; margin-top: 10px;">
-    A matricula deve conter ser do formato LL-NN-LL ou NN-LL-NN.
+    A matrícula deve ser do tipo XX-XX-XX, possuir tanto letras como números.
   </div>
 
   <div>
@@ -57,6 +58,59 @@
     </div>
   </li>
 </ul>
+
+</div>
+
+<div *ngIf="selectedTaxi" class="edit-form">
+  <h3>Editar Táxi</h3>
+  <form (ngSubmit)="updateTaxi()">
+    <label>
+      Matrícula:
+      <input [(ngModel)]="selectedTaxi.matricula" name="matricula" required />
+    </label>
+    <div *ngIf="!validPlate" style="color: red; margin-top: 10px;">
+    A matrícula deve ser do tipo XX-XX-XX, possuir tanto letras como números.
+    </div>
+    <br />
+
+    <label>
+      Marca:
+      <select [(ngModel)]="selectedTaxi.marca" name="marca" (change)="onMarcaChange(selectedTaxi.marca)">
+        <option *ngFor="let marca of marcas" [value]="marca">{{ marca }}</option>
+      </select>
+    </label>
+    <br />
+
+    <label>
+      Modelo:
+      <select [(ngModel)]="selectedTaxi.modelo" name="modelo">
+        <option *ngFor="let modelo of modelosFiltrados" [value]="modelo">{{ modelo }}</option>
+      </select>
+    </label>
+    <br />
+
+    <label>
+      Ano de Compra:
+      <select [(ngModel)]="selectedTaxi.ano_de_compra" name="ano">
+        <option *ngFor="let ano of anosDisponiveis" [value]="ano">{{ ano }}</option>
+      </select>
+    </label>
+    <br />
+    <label>
+      Nível de Conforto:
+      <select [(ngModel)]="selectedTaxi.nivel_de_conforto" name="conforto">
+        <option value="basico">Básico</option>
+        <option value="luxuoso">Luxuoso</option>
+      </select>
+    </label>
+
+    <br />
+
+    <button type="submit">Atualizar Táxi</button>
+    <button type="button" (click)="selectedTaxi = undefined">Cancelar</button>
+  </form>
+</div>
+
 
 
 

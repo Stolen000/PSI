@@ -18,6 +18,8 @@ router.get("/taxis/:id", taxi_controller.taxi_get);
 
 router.delete("/taxis/:id", taxi_controller.taxi_delete_post);
 
+router.put("/taxis/:id", taxi_controller.taxi_update_post);
+
 //PRICES
 router.get("/prices", prices_controller.price_get);
 

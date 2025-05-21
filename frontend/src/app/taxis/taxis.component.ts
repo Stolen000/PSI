@@ -45,7 +45,8 @@ export class TaxisComponent {
   selectedTaxi?: Taxi;
 
   onSelect(taxi: Taxi): void {
-  this.selectedTaxi = taxi;
+    this.selectedTaxi = taxi;
+    this.onMarcaChange(taxi.marca); // atualiza os modelos para a marca selecionada
   }
 
   getTaxis(): void {
@@ -55,11 +56,11 @@ export class TaxisComponent {
 
   createTaxi(matricula: string, marca : string, modelo : string, anoCompra : string, conforto : string){
 
-    const formato1 = /^[A-Z]{2}-\d{2}-[A-Z]{2}$/; //LL-NN-LL
-    const formato2 = /^\d{2}-[A-Z]{2}-\d{2}$/;    //NN-LL-NN
-    
+    //a verificacao da matricula deve ser apenas se possui 6 caracteres, com - pelo meio e que possua tanto letras como numero
+    const formato1 = /^[A-Z]{2}-\d{2}-[A-Z]{2}$/; // LL-NN-LL
+    const formato2 = /^\d{2}-[A-Z]{2}-\d{2}$/;    // NN-LL-NN
     if (!formato1.test(matricula) && !formato2.test(matricula)) {
-      console.error("A matrícula deve ser do formato LL-NN-LL ou NN-LL-NN.");
+      console.error("A matrícula deve ser possuir 6 caracteres, e que possua tanto letras como número.");
       this.validPlate = false;
       return;
     }
@@ -81,6 +82,30 @@ export class TaxisComponent {
         this.taxis.unshift(taxi);
       });
   }
+
+  updateTaxi() {
+    if (!this.selectedTaxi) return;
+
+    const formato1 = /^[A-Z]{2}-\d{2}-[A-Z]{2}$/;
+    const formato2 = /^\d{2}-[A-Z]{2}-\d{2}$/;
+
+    if (!formato1.test(this.selectedTaxi.matricula) && !formato2.test(this.selectedTaxi.matricula)) {
+      console.error("A matrícula deve ser possuir 6 caracteres, e que possua tanto letras como número.");
+      this.validPlate = false;
+      return;
+    }
+
+    this.validPlate = true;
+
+    this.taxiService.updateTaxi(this.selectedTaxi, this.selectedTaxi._id).subscribe(updatedTaxi => {
+      const index = this.taxis.findIndex(t => t._id === updatedTaxi._id);
+      if (index !== -1) {
+        this.taxis[index] = updatedTaxi;
+      }
+      this.selectedTaxi = undefined;
+    });
+  }
+
   
   //esta funcao estah aqui pq sem ela no subscribe em cima apos criar um novo taxi
   //quando a lista de taxis eh atualizada este novo elemento aparece com as properties em branco e so apos um refresh ah pagina

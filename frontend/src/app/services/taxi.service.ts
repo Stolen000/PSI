@@ -46,6 +46,15 @@ export class TaxiService {
       );
   }
 
+  updateTaxi(taxi: Taxi, id: string): Observable<Taxi> {
+    //quero que esta funcao envie o taxi no body e o id na url
+    const url = `${this.taxiUrl}/${id}`;
+    return this.http.put<Taxi>(url, taxi, this.httpOptions).pipe(
+      tap(_ => this.log(`updated taxi id=${id}`)),
+      catchError(this.handleError<Taxi>('updateTaxi'))
+    );
+  }
+
   deleteTaxi(id: string): Observable<Taxi> {
     console.log("delete no taxiService.ts")
     const url = `${this.taxiUrl}/${id}`;
