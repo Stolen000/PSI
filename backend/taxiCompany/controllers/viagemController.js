@@ -154,7 +154,17 @@ exports.viagem_delete_by_id = asyncHandler(async (req, res, next)=> {
 
 
 
-
+exports.get_viagens_motorista = async (req, res) => {
+  const id_motorista = req.params.id_motorista;
+  console.log("Estou aqui");
+  try {
+    const viagens = await Viagem.find({ motorista_id: id_motorista });
+    res.json(viagens);
+  } catch (err) {
+    console.error("Erro ao obter viagens do motorista:", err);
+    res.status(500).json({ error: "Erro ao obter viagens do motorista" });
+  }
+};
 
 
 

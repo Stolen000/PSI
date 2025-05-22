@@ -1,0 +1,42 @@
+/* Estilo para o container da seleção de período */
+.periodo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Estilo dos rótulos */
+.periodo-container label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Estilo dos inputs de data */
+.periodo-container input[type="date"] {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Estilo do botão */
+.periodo-container button {
+  padding: 6px 15px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.periodo-container button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+}
