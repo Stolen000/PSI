@@ -67,8 +67,9 @@ export class RequisitarViagemComponent implements OnInit {
     this.getPedidos();
     this.codigoPostalService.getCodigosPostais().subscribe(data => {
       this.codigosPostais = data;
+      this.criarAutoMoradaOrigem();
     });
-    this.criarAutoMoradaOrigem(); // Chama a função automaticamente no início
+     // Chama a função automaticamente no início
 
   }
 
@@ -93,6 +94,13 @@ criarAutoMoradaOrigem(): void {
           if (morada) {
             this.moradaOrigem = morada;
             console.log('Morada obtida:', morada);
+            if (this.moradaOrigem?.codigo_postal && this.moradaOrigem.codigo_postal.length === 8) {
+              setTimeout(() => {
+                this.buscarLocalidadeOrigem(this.moradaOrigem.codigo_postal);
+              });
+            }
+
+
           } else {
             console.error('Erro ao obter morada de origem.');
           }
@@ -119,6 +127,7 @@ criarAutoMoradaOrigem(): void {
         localidade: localidadeOrigem
       };
       this.moradaOrigem = morada_origem;
+      console.log(morada_origem)
   }
 
   
@@ -245,17 +254,24 @@ getMotoristaNome(id: string): string | undefined {
 
 
 
+verificarCodigoPostal(valor: string) {
+  if (valor && valor.length === 8) {
+    this.buscarLocalidadeOrigem(valor);
+  }
+}
 
 
 
     
 
   buscarLocalidadeOrigem(codigoPostal: string): void {
+    console.log('A procurar localidade para:', `"${codigoPostal}"`);
     const resultado = this.codigosPostais.find(
       c => c.codigo_postal === codigoPostal
     );
-
+      console.log("Localidade Encontrada:",resultado)
     if (resultado) {
+
       this.localidadeOrigem = resultado.localidade;
       this.codigoPostalOrigemNaoEncontrado = false;
     } else {

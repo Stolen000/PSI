@@ -28,22 +28,25 @@
   </div>
 
 
-<div *ngIf="!usarLocalizacao">
+
   <h3>Morada de Origem</h3>
   <div>
     <label for="ruaOrigem">Rua:</label>
-    <input id="ruaOrigem" type="text" name="ruaOrigem" ngModel required #ruaOrigem="ngModel">
+    <input id="ruaOrigem" type="text" name="ruaOrigem" [(ngModel)]="moradaOrigem.rua" required #ruaOrigem="ngModel">
   </div>
 
   <div>
     <label for="numeroPortaOrigem">Número da Porta:</label>
-    <input id="numeroPortaOrigem" type="number" name="numeroPortaOrigem" ngModel required #numeroPortaOrigem="ngModel">
+    <input id="numeroPortaOrigem" type="number" name="numeroPortaOrigem" [(ngModel)]="moradaOrigem.numero_porta" required #numeroPortaOrigem="ngModel">
   </div>
 
   <div>
     <label for="codigoPostalOrigem">Código Postal:</label>
-    <input id="codigoPostalOrigem" type="text" name="codigoPostalOrigem" ngModel required #codigoPostalOrigem="ngModel"
-      (blur)="buscarLocalidadeOrigem(pedidoForm.value.codigoPostalOrigem)">
+<input id="codigoPostalOrigem" type="text" name="codigoPostalOrigem"
+       [(ngModel)]="moradaOrigem.codigo_postal"
+       required #codigoPostalOrigem="ngModel"
+       (ngModelChange)="verificarCodigoPostal($event)">
+
     <div *ngIf="codigoPostalOrigemNaoEncontrado" class="info-msg">Código postal de origem não encontrado.</div>
   </div>
 
@@ -57,7 +60,7 @@
         (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">
   Confirmar Localização Atual
 </button>
-</div>
+
 
 
   <h3>Morada de Destino</h3>
