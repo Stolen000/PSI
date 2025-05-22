@@ -20,6 +20,7 @@ import { AreaGestorComponent } from './area-gestor/area-gestor.component';
 import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
 import { RelatorioMotoristasComponent } from './relatorio-motoristas/relatorio-motoristas.component';
 import { RelatorioTaxisComponent } from './relatorio-taxis/relatorio-taxis.component';
+import { MapaComponent } from './mapa/mapa.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { RelatorioTaxisComponent } from './relatorio-taxis/relatorio-taxis.compo
     AreaGestorComponent,
     AreaMotoristaComponent,
     RelatorioMotoristasComponent,
-    RelatorioTaxisComponent 
+    RelatorioTaxisComponent,
+    MapaComponent 
   ],
   imports: [
     BrowserModule,

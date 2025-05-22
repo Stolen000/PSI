@@ -7,6 +7,7 @@
   ruaDestino.value, numeroPortaDestino.value, codigoPostalDestino.value, localidadeDestino,
   conforto.value, numPessoas.value
 )">
+  <h2>Dados do Cliente</h2>
   <div>
     <label for="nome">Nome do Cliente:</label>
     <input type="text" id="nome" name="nome" ngModel required #nome="ngModel">
@@ -28,22 +29,25 @@
   </div>
 
 
-<div *ngIf="!usarLocalizacao">
-  <h3>Morada de Origem</h3>
+
+  <h2>Morada de Origem</h2>
   <div>
     <label for="ruaOrigem">Rua:</label>
-    <input id="ruaOrigem" type="text" name="ruaOrigem" ngModel required #ruaOrigem="ngModel">
+    <input id="ruaOrigem" type="text" name="ruaOrigem" [(ngModel)]="moradaOrigem.rua" required #ruaOrigem="ngModel">
   </div>
 
   <div>
     <label for="numeroPortaOrigem">Número da Porta:</label>
-    <input id="numeroPortaOrigem" type="number" name="numeroPortaOrigem" ngModel required #numeroPortaOrigem="ngModel">
+    <input id="numeroPortaOrigem" type="number" name="numeroPortaOrigem" [(ngModel)]="moradaOrigem.numero_porta" required #numeroPortaOrigem="ngModel">
   </div>
 
   <div>
     <label for="codigoPostalOrigem">Código Postal:</label>
-    <input id="codigoPostalOrigem" type="text" name="codigoPostalOrigem" ngModel required #codigoPostalOrigem="ngModel"
-      (blur)="buscarLocalidadeOrigem(pedidoForm.value.codigoPostalOrigem)">
+<input id="codigoPostalOrigem" type="text" name="codigoPostalOrigem"
+       [(ngModel)]="moradaOrigem.codigo_postal"
+       required #codigoPostalOrigem="ngModel"
+       (ngModelChange)="verificarCodigoPostal($event)">
+
     <div *ngIf="codigoPostalOrigemNaoEncontrado" class="info-msg">Código postal de origem não encontrado.</div>
   </div>
 
@@ -57,23 +61,35 @@
         (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">
   Confirmar Localização Atual
 </button>
-</div>
+  <div *ngIf="moradaConfirmada" class="mensagem-sucesso">
+    Morada Confirmada!
+  </div>
+  <div *ngIf="moradaNaoConfirmada" class="error">
+    Morada Inválida! 
+  </div>
 
 
-  <h3>Morada de Destino</h3>
+  <h2>Morada de Destino</h2>
+  <div id="mapa" style="height: 400px;">
+    <app-mapa (coordenadasClicadas)="guardarCoordenadas($event)"></app-mapa>
+  </div>
+
+
+<br>
+
   <div>
     <label for="ruaDestino">Rua:</label>
-    <input id="ruaDestino" type="text" name="ruaDestino" ngModel required #ruaDestino="ngModel">
+    <input id="ruaDestino" type="text" name="ruaDestino" ngModel [(ngModel)]="moradaDestino.rua" #ruaDestino="ngModel">
   </div>
 
   <div>
     <label for="numeroPortaDestino">Número da Porta:</label>
-    <input id="numeroPortaDestino" type="number" name="numeroPortaDestino" ngModel required #numeroPortaDestino="ngModel">
+    <input id="numeroPortaDestino" type="number" name="numeroPortaDestino" [(ngModel)]="moradaDestino.numero_porta" required #numeroPortaDestino="ngModel">
   </div>
 
   <div>
     <label for="codigoPostalDestino">Código Postal:</label>
-    <input id="codigoPostalDestino" type="text" name="codigoPostalDestino" ngModel required #codigoPostalDestino="ngModel"
+    <input id="codigoPostalDestino" type="text" name="codigoPostalDestino" [(ngModel)]="moradaDestino.codigo_postal" required #codigoPostalDestino="ngModel"
       (blur)="buscarLocalidadeDestino(pedidoForm.value.codigoPostalDestino)">
     <div *ngIf="codigoPostalDestinoNaoEncontrado" class="info-msg">Código postal de destino não encontrado.</div>
   </div>
