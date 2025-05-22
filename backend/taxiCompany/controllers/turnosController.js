@@ -25,6 +25,11 @@ exports.patch_turno_mais_um = asyncHandler(async (req, res, next) => {
   res.json(turno);  
 });
 
+exports.get_turnos_taxi = asyncHandler(async (req, res, next) => {
+  const taxiId = req.params.taxi_id;
+  const turnos = await Turno.find({ taxi_id: taxiId });
+  res.json({ turnos });
+});
 
 exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
   const turno = await Turno.findById(req.params.id);
