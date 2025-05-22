@@ -7,6 +7,7 @@
   ruaDestino.value, numeroPortaDestino.value, codigoPostalDestino.value, localidadeDestino,
   conforto.value, numPessoas.value
 )">
+  <h2>Dados do Cliente</h2>
   <div>
     <label for="nome">Nome do Cliente:</label>
     <input type="text" id="nome" name="nome" ngModel required #nome="ngModel">
@@ -29,7 +30,7 @@
 
 
 
-  <h3>Morada de Origem</h3>
+  <h2>Morada de Origem</h2>
   <div>
     <label for="ruaOrigem">Rua:</label>
     <input id="ruaOrigem" type="text" name="ruaOrigem" [(ngModel)]="moradaOrigem.rua" required #ruaOrigem="ngModel">
@@ -60,14 +61,21 @@
         (click)="criarMoradaOrigemManual(ruaOrigem.value, numeroPortaOrigem.value, codigoPostalOrigem.value, localidadeOrigem)">
   Confirmar Localização Atual
 </button>
-<div *ngIf="moradaConfirmada" class="mensagem-sucesso">
-  Morada Confirmada!
-</div>
+  <div *ngIf="moradaConfirmada" class="mensagem-sucesso">
+    Morada Confirmada!
+  </div>
+  <div *ngIf="moradaNaoConfirmada" class="error">
+    Morada Inválida! 
+  </div>
 
 
-  <h3>Morada de Destino</h3>
-<app-mapa (coordenadasClicadas)="guardarCoordenadas($event)"></app-mapa>
+  <h2>Morada de Destino</h2>
+  <div id="mapa" style="height: 400px;">
+    <app-mapa (coordenadasClicadas)="guardarCoordenadas($event)"></app-mapa>
+  </div>
 
+
+<br>
 
   <div>
     <label for="ruaDestino">Rua:</label>

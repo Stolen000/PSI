@@ -91,62 +91,82 @@ export class RequisitarViagemComponent implements OnInit {
     this.usarLocalizacao = false;
   }
 
-criarAutoMoradaOrigem(): void {
-  this.localizationService.getLocalizacaoAtual().then(
-    (coords) => {
-      this.coordenadasOrigem = coords;
-      this.usarLocalizacao = true; // <- aqui você define que o utilizador aceitou
-      console.log('Coordenadas de origem obtidas:', coords);
+  criarAutoMoradaOrigem(): void {
+    this.localizationService.getLocalizacaoAtual().then(
+      (coords) => {
+        this.coordenadasOrigem = coords;
+        this.usarLocalizacao = true; // <- aqui você define que o utilizador aceitou
+        console.log('Coordenadas de origem obtidas:', coords);
 
-      // Chamar o reverse geocoding com as coordenadas
-      this.localizationService.getMoradaPorCoordenadas(coords.lat, coords.lon)
-        .subscribe(morada => {
-          if (morada) {
-            this.moradaOrigem = morada;
-            console.log('Morada obtida:', morada);
-            if (this.moradaOrigem?.codigo_postal && this.moradaOrigem.codigo_postal.length === 8) {
-              setTimeout(() => {
-                this.buscarLocalidadeOrigem(this.moradaOrigem.codigo_postal);
-              });
+        // Chamar o reverse geocoding com as coordenadas
+        this.localizationService.getMoradaPorCoordenadas(coords.lat, coords.lon)
+          .subscribe(morada => {
+            if (morada) {
+              this.moradaOrigem = morada;
+              console.log('Morada obtida:', morada);
+              if (this.moradaOrigem?.codigo_postal && this.moradaOrigem.codigo_postal.length === 8) {
+                setTimeout(() => {
+                  this.buscarLocalidadeOrigem(this.moradaOrigem.codigo_postal);
+                });
+              }
+
+
+            } else {
+              console.error('Erro ao obter morada de origem.');
             }
+          });
 
-
-          } else {
-            console.error('Erro ao obter morada de origem.');
-          }
-        });
-
-    },
-    (error) => {
-      this.usarLocalizacao = false; // <- aqui define que o utilizador recusou
-      console.error('Erro ao obter localização:', error);
-      // Aqui você pode também mostrar uma mensagem ao utilizador, se quiser
-    }
-  );
-}
+      },
+      (error) => {
+        this.usarLocalizacao = false; // <- aqui define que o utilizador recusou
+        console.error('Erro ao obter localização:', error);
+        // Aqui você pode também mostrar uma mensagem ao utilizador, se quiser
+      }
+    );
+  }
 
   moradaConfirmada: Boolean = false;
-  criarMoradaOrigemManual(ruaOrigem: string,
-      numeroPortaOrigem: number,
-      codigoPostalOrigem: string,
-      localidadeOrigem: string): void{
-      const morada_origem: Morada = {
-        rua: ruaOrigem,
-        numero_porta: numeroPortaOrigem,
-        codigo_postal: codigoPostalOrigem,
-        localidade: localidadeOrigem
-      };
-      this.moradaOrigem = morada_origem;
-      console.log(morada_origem)
-      this.moradaConfirmada = true;
-
+  moradaNaoConfirmada: Boolean = false;
+  criarMoradaOrigemManual(
+    ruaOrigem: string,
+    numeroPortaOrigem: number,
+    codigoPostalOrigem: string,
+    localidadeOrigem: string
+  ): void {
+    if (
+      !ruaOrigem || ruaOrigem.trim() === '' ||
+      numeroPortaOrigem == null || numeroPortaOrigem < 0 ||
+      !codigoPostalOrigem || codigoPostalOrigem.trim() === '' ||
+      !localidadeOrigem || localidadeOrigem.trim() === ''
+    ) {
+      console.warn('Algum dos campos obrigatórios está vazio ou inválido.');
+      console.log("RUA",ruaOrigem,"PORTA",numeroPortaOrigem,"codigoPOSTAL",codigoPostalOrigem,"LOCALIDADE",localidadeOrigem)
+      this.moradaConfirmada = false;
+      this.moradaNaoConfirmada = true;
       setTimeout(() => {
-        this.moradaConfirmada =  false;
+        this.moradaNaoConfirmada = false;
         console.log('Timer disparado!');
-
       }, 5000);
+      return;
+    }
 
+    const morada_origem: Morada = {
+      rua: ruaOrigem,
+      numero_porta: numeroPortaOrigem,
+      codigo_postal: codigoPostalOrigem,
+      localidade: localidadeOrigem
+    };
+
+    this.moradaOrigem = morada_origem;
+    console.log(morada_origem);
+    this.moradaConfirmada = true;
+    this.moradaNaoConfirmada = false;
+    setTimeout(() => {
+      this.moradaConfirmada = false;
+      console.log('Timer disparado!');
+    }, 5000);
   }
+
 
   
 
@@ -156,24 +176,24 @@ criarAutoMoradaOrigem(): void {
     this.selectedPedido = pedido;
   }
 
-getPedidos(): void {
-  this.pedidosViagemService.getPedidos().subscribe(pedidos => {
-    this.pedidos = pedidos;
-    
-    this.pedidos.forEach(element => {
-      if(element.estado === 'aceite'){      
-        this.motoristaService.getMotoristaById(element.motorista)
-        .subscribe(motorista => this.motoristas.push(motorista));}
+  getPedidos(): void {
+    this.pedidosViagemService.getPedidos().subscribe(pedidos => {
+      this.pedidos = pedidos;
+      
+      this.pedidos.forEach(element => {
+        if(element.estado === 'aceite'){      
+          this.motoristaService.getMotoristaById(element.motorista)
+          .subscribe(motorista => this.motoristas.push(motorista));}
 
+      });
     });
-  });
-}
+  }
 
-getMotoristaNome(id: string): string | undefined {
-  //console.log(this.motoristas);
-  const motorista = this.motoristas.find(element => element._id === id);
-  return motorista?.name;
-}
+  getMotoristaNome(id: string): string | undefined {
+    //console.log(this.motoristas);
+    const motorista = this.motoristas.find(element => element._id === id);
+    return motorista?.name;
+  }
 
 
 
@@ -202,7 +222,7 @@ getMotoristaNome(id: string): string | undefined {
 
     //sacar turno pelo turno id
     //atualizar numero de viagens do turno
-// sacar turno pelo turno id e atualizar numero de viagens do turno
+    // sacar turno pelo turno id e atualizar numero de viagens do turno
     this.turnoService.incrementaTurno(pedido.turno_id)
       .subscribe({
         next: (turno) => {  
@@ -272,11 +292,11 @@ getMotoristaNome(id: string): string | undefined {
 
 
 
-verificarCodigoPostal(valor: string) {
-  if (valor && valor.length === 8) {
-    this.buscarLocalidadeOrigem(valor);
-  }
-}
+    verificarCodigoPostal(valor: string) {
+      if (valor && valor.length === 8) {
+        this.buscarLocalidadeOrigem(valor);
+      }
+    }
 
 
 
@@ -313,7 +333,7 @@ verificarCodigoPostal(valor: string) {
   }
 
 
-  //ver se pode sacar as coordenadas pela localizacao do dispositivo
+    //ver se pode sacar as coordenadas pela localizacao do dispositivo
     //se sim criar a morada com elas
     //se nao eh suposto preencher os campos da morada
       //e sacar as coordenadas dai
@@ -432,30 +452,30 @@ verificarCodigoPostal(valor: string) {
 
 
 
-guardarCoordenadas(coords: { lat: number; lon: number }) {
-  console.log('Recebido do mapa:', coords);
-  this.coordenadasSelecionadas = coords;
+  guardarCoordenadas(coords: { lat: number; lon: number }) {
+    console.log('Recebido do mapa:', coords);
+    this.coordenadasSelecionadas = coords;
 
-  // Exemplo: chamar reverse geocoding automaticamente
+    // Exemplo: chamar reverse geocoding automaticamente
 
-  this.localizationService.getMoradaPorCoordenadas(this.coordenadasSelecionadas.lat,this.coordenadasSelecionadas.lon)
-  .subscribe(morada => {
-    if (morada) {
-      this.moradaDestino = morada;
-      console.log('Morada Destino obtida:', morada);
-      if (this.moradaDestino?.codigo_postal && this.moradaDestino.codigo_postal.length === 8) {
-        setTimeout(() => {
-          this.buscarLocalidadeDestino(this.moradaDestino.codigo_postal);
-          console.log("Entrei aqui no guardar coordenadas")
-        });
+    this.localizationService.getMoradaPorCoordenadas(this.coordenadasSelecionadas.lat,this.coordenadasSelecionadas.lon)
+    .subscribe(morada => {
+      if (morada) {
+        this.moradaDestino = morada;
+        console.log('Morada Destino obtida:', morada);
+        if (this.moradaDestino?.codigo_postal && this.moradaDestino.codigo_postal.length === 8) {
+          setTimeout(() => {
+            this.buscarLocalidadeDestino(this.moradaDestino.codigo_postal);
+            console.log("Entrei aqui no guardar coordenadas")
+          });
+        }
+
+
+      } else {
+        console.error('Erro ao obter morada de origem.');
       }
-
-
-    } else {
-      console.error('Erro ao obter morada de origem.');
-    }
-  });
-}
+    });
+  }
 
 
 
