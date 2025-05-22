@@ -17,8 +17,10 @@ export class TurnoService {
   getTurnos(): Observable<Turno[]>{
     return this.http.get<Turno[]>(this.turnosUrl).pipe(
       catchError(err => {
-        console.error('Error occurred:', err);
-        return throwError(err); 
+        if (err.status === 404) {
+          return of([]);
+        }
+        return throwError(() => err);
       })
     );
   }
@@ -28,8 +30,10 @@ export class TurnoService {
     const url = `${this.turnosUrl}/${motorista_id}`;
     return this.http.get<Turno[]>(url).pipe(
       catchError(err => {
-        console.error('Error occurred:', err);
-        return throwError(err); 
+        if (err.status === 404) {
+          return of([]);
+        }
+        return throwError(() => err);
       })
     );
   }
