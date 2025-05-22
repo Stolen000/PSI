@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Viagem } from '../viagem';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, throwError, map } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -58,5 +59,11 @@ export class ViagemService {
   return this.http.get<Viagem | null>(url);
 }
 
+  doesTaxiHaveViagem(taxi_id: string): Observable<number> {
+    const url = `${this.viagemUrl}/taxi/${taxi_id}`;
+    return this.http.get<{ status: number }>(url).pipe(
+      map((response: { status: number }) => response.status)
+    );
+  }
   
 }

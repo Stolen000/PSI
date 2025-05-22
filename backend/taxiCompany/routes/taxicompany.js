@@ -39,6 +39,8 @@ router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
 //TURNOS
 router.get("/turnos",turnos_controller.get_turnos_list);
 
+router.get("/turnos/taxi/:taxi_id",turnos_controller.get_turnos_taxi);
+
 router.get("/turnos/:motorista_id",turnos_controller.get_turnos_by_motorista);
 //router.get("/turnos/motorista/:motorista_id",turnos_controller.get_turnos_by_motorista);
 
@@ -88,6 +90,8 @@ router.put("/viagens/:id/fim", viagens_controller.viagem_update_fim);
 router.delete("/viagens/:id", viagens_controller.viagem_delete_by_id);
 
 router.delete('/delete-all', viagens_controller.viagens_delete_all);
+
+router.get("/viagens/taxi/:taxi_id", viagens_controller.get_viagem_by_taxi);
 
 
 

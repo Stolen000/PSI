@@ -4,7 +4,7 @@
 <form id="taxiForm" (ngSubmit)="createTaxi(number.value, marca.value, modelo.value, anoCompra.value, conforto.value)">
   <div>
     <label for="matricula">Matricula do Táxi:</label>
-    <input type="text" id="number" name="number" required #number placeholder="LL-NN-LL ou NN-LL-NN">
+    <input type="text" id="number" name="number" required #number placeholder="XX-XX-XX">
   </div>  
   <div *ngIf="!validPlate" style="color: red; margin-top: 10px;">
     A matrícula deve ser do tipo XX-XX-XX, possuir tanto letras como números.
@@ -96,7 +96,7 @@
       </select>
     </label>
     <br />
-    <label>
+    <label *ngIf="editConforto">
       Nível de Conforto:
       <select [(ngModel)]="selectedTaxi.nivel_de_conforto" name="conforto">
         <option value="basico">Básico</option>

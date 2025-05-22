@@ -153,29 +153,6 @@ exports.viagem_delete_by_id = asyncHandler(async (req, res, next)=> {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 exports.viagem_post = asyncHandler(async (req, res, next) => {
   const { turno_id, inicio_viagem, fim_viagem, num_pessoas, local_partida, local_chegada } = req.body;
   
@@ -266,5 +243,34 @@ exports.viagens_delete_all = asyncHandler(async (req, res, next) => {
         console.error(err);
         res.status(500).json({ error: 'Erro ao apagar viagens' });
     }
+});
+
+
+exports.get_viagem_by_taxi = asyncHandler(async (req, res, next) => {
+  const taxiId = req.params.taxi_id;
+
+  try {
+    const turnos = await Turno.find({ taxi_id: taxiId });
+    console.log("Turnos encontrados:", turnos);
+    if (!turnos || turnos.length === 0) {
+      return res.status(200).json({ status: -1 }); // Nenhum turno encontrado para esse táxi
+    }
+
+    // 2. Extrair os _ids dos turnos
+    const turnoIds = turnos.map(turno => turno._id);
+
+    // 3. Buscar se existe ao menos uma viagem associada a qualquer um desses turnos
+    const viagem = await Viagem.findOne({ turno_id: { $in: turnoIds } });
+    console.log("Viagem encontrada:", viagem);
+    if (viagem) {
+      return res.status(200).json({ status: 0 }); // Existe viagem → táxi não pode ser alterado
+    } else {
+      return res.status(200).json({ status: -1 }); // Nenhuma viagem associada → táxi pode ser alterado
+    }
+
+  } catch (err) {
+    console.error("Erro ao buscar viagens do táxi:", err);
+    res.status(500).json({ error: 'Erro interno ao buscar viagens do táxi' });
+  }
 });
 
