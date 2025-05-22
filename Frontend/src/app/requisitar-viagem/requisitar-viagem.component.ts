@@ -35,7 +35,7 @@ export class RequisitarViagemComponent implements OnInit {
   pedidos: Pedido_Viagem[] = [];
   codigosPostais: any[] = [];
   localidadeOrigem: string = '';
-  localidadeDestino: string = '';
+
   codigoPostalOrigemNaoEncontrado: boolean = false;
   codigoPostalDestinoNaoEncontrado: boolean = false;
   usarLocalizacao: boolean = false;
@@ -52,6 +52,16 @@ export class RequisitarViagemComponent implements OnInit {
 
 
   selectedPedido?: Pedido_Viagem;
+
+
+  coordenadasSelecionadas: { lat: number; lon: number } | null = null;
+  moradaDestino: Morada = {
+    rua: '',
+    numero_porta: 0,
+    codigo_postal: '',
+    localidade: ''
+  };
+  localidadeDestino: string = '';
 
   constructor(
     private pedidosViagemService: PedidosViagemService,
@@ -115,7 +125,7 @@ criarAutoMoradaOrigem(): void {
   );
 }
 
-
+  moradaConfirmada: Boolean = false;
   criarMoradaOrigemManual(ruaOrigem: string,
       numeroPortaOrigem: number,
       codigoPostalOrigem: string,
@@ -128,6 +138,14 @@ criarAutoMoradaOrigem(): void {
       };
       this.moradaOrigem = morada_origem;
       console.log(morada_origem)
+      this.moradaConfirmada = true;
+
+      setTimeout(() => {
+        this.moradaConfirmada =  false;
+        console.log('Timer disparado!');
+
+      }, 5000);
+
   }
 
   
@@ -406,6 +424,40 @@ verificarCodigoPostal(valor: string) {
         });
       });
     }
+
+
+
+
+
+
+
+
+guardarCoordenadas(coords: { lat: number; lon: number }) {
+  console.log('Recebido do mapa:', coords);
+  this.coordenadasSelecionadas = coords;
+
+  // Exemplo: chamar reverse geocoding automaticamente
+
+  this.localizationService.getMoradaPorCoordenadas(this.coordenadasSelecionadas.lat,this.coordenadasSelecionadas.lon)
+  .subscribe(morada => {
+    if (morada) {
+      this.moradaDestino = morada;
+      console.log('Morada Destino obtida:', morada);
+      if (this.moradaDestino?.codigo_postal && this.moradaDestino.codigo_postal.length === 8) {
+        setTimeout(() => {
+          this.buscarLocalidadeDestino(this.moradaDestino.codigo_postal);
+          console.log("Entrei aqui no guardar coordenadas")
+        });
+      }
+
+
+    } else {
+      console.error('Erro ao obter morada de origem.');
+    }
+  });
+}
+
+
 
 }
 
