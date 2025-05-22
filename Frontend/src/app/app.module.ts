@@ -18,6 +18,8 @@ import { RequisicaoTaxiComponent } from './requisicao-taxi/requisicao-taxi.compo
 import { PedidosMotoristaComponent } from './pedidos-motorista/pedidos-motorista.component';
 import { AreaGestorComponent } from './area-gestor/area-gestor.component';
 import { AreaMotoristaComponent } from './area-motorista/area-motorista.component';
+import { RelatorioMotoristasComponent } from './relatorio-motoristas/relatorio-motoristas.component';
+import { RelatorioTaxisComponent } from './relatorio-taxis/relatorio-taxis.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { AreaMotoristaComponent } from './area-motorista/area-motorista.componen
     RequisicaoTaxiComponent,
     PedidosMotoristaComponent,
     AreaGestorComponent,
-    AreaMotoristaComponent 
+    AreaMotoristaComponent,
+    RelatorioMotoristasComponent,
+    RelatorioTaxisComponent 
   ],
   imports: [
     BrowserModule,

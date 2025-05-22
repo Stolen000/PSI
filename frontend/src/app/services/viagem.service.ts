@@ -17,6 +17,10 @@ export class ViagemService {
     return this.http.get<Viagem[]>(this.viagemUrl);
   }
 
+getViagensOfMotorista(id_motorista: string): Observable<Viagem[]> {
+  return this.http.get<Viagem[]>(`${this.viagemUrl}/motorista/${id_motorista}/total`);
+}
+
   getViagem(id: string): Observable<Viagem> {
     return this.http.get<Viagem>(`${this.viagemUrl}/${id}`);
   }
