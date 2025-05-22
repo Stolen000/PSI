@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 
 
 exports.motoristas_list = asyncHandler(async (req, res, next) => {
-  const allMotoristas = await Motorista.find().exec();
+  const allMotoristas = await Motorista.find().sort({ updatedAt: -1 }).exec();
   res.json(allMotoristas);
 });
 
@@ -51,7 +51,33 @@ exports.motorista_delete_post = asyncHandler(async (req, res, next) => {
 
 });
 
+exports.put_motorista_by_id = asyncHandler(async (req, res, next) => {
+  const motoristaId = req.params.id;
 
+  try {
+    const updatedMotorista = await Motorista.findByIdAndUpdate(
+      motoristaId,
+      {
+        name: req.body.name,
+        ano_nascimento: req.body.ano_nascimento,
+        carta_conducao: req.body.carta_conducao,
+        nif: req.body.nif,
+        genero: req.body.genero,
+        morada: req.body.morada,
+      },{ new: true }
+    );
+
+    if (!updatedMotorista) {
+      return res.status(404).json({ message: 'Motorista não encontrado.' });
+    }
+
+    console.log(updatedMotorista);
+    res.status(200).json({ message: 'Motorista atualizado com sucesso', motorista: updatedMotorista });
+  } catch (error) {
+    console.error('Erro ao fazer PUT no motorista:', error);
+    res.status(500).json({ message: 'Erro no servidor ao atualizar o motorista.' });
+  }
+});
 
 
 

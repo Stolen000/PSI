@@ -3,7 +3,7 @@
 
 <form #meuFormulario="ngForm">
   <label for="name">Nome:</label>
-  <input id="name" type="text" name="name" ngModel required />
+  <input id="name" type="text" name="name" [(ngModel)]="name_edit"  required  />
 
   <label for="anoNascimento">Ano de Nascimento:</label>
 
@@ -11,7 +11,7 @@
     id="anoNascimento"
     type="number"
     name="anoNascimento"
-    ngModel
+    [(ngModel)]="anoNascimento_edit"
     required
     #anoNascimento="ngModel"
     [ngClass]="{
@@ -31,7 +31,7 @@
     id="cartaConducao"
     type="number"
     name="cartaConducao"
-    ngModel
+    [(ngModel)]="cartaConducao_edit"
     required
     #cartaConducao="ngModel"
     [ngClass]="{
@@ -50,7 +50,7 @@
     id="nif" 
     type="number" 
     name="nif" 
-    ngModel 
+    [(ngModel)]="nif_edit" 
     required 
     pattern="^[0-9]{9}$"
     #nif="ngModel"
@@ -60,7 +60,7 @@
   </div>
 
   <label for="genero">Género:</label>
-  <select id="genero" name="genero" ngModel required>
+  <select id="genero" name="genero" [(ngModel)]="genero_edit" required>
     <option value="">Selecione...</option>
     <option value="Masculino">Masculino</option>
     <option value="Feminino">Feminino</option>
@@ -69,17 +69,17 @@
   <h3>Morada</h3>
 
   <label for="rua">Rua:</label>
-  <input id="rua" type="text" name="rua" ngModel required />
+  <input id="rua" type="text" name="rua" [(ngModel)]="rua_edit" required />
 
   <label for="numeroPorta">Número da Porta:</label>
-  <input id="numeroPorta" type="number" name="numeroPorta" ngModel required />
+  <input id="numeroPorta" type="number" name="numeroPorta" [(ngModel)]="numeroPorta_edit" required />
 
     <label for="codigoPostal">Código Postal:</label>
     <input
       id="codigoPostal"
       type="text"
       name="codigoPostal"
-      ngModel
+      [(ngModel)]="codigoPostal_edit"
       required
       (blur)="buscarLocalidade(meuFormulario.value.codigoPostal)" />
   
@@ -96,7 +96,7 @@
 
   <div class="botoes-formulario">
     <button type="button" class="add-button"
-      [disabled]="!meuFormulario.form.valid"
+      [disabled]="(!meuFormulario.form.valid) || (isEditMode && !hasFormChanged())"
       (click)="registarMotorista(
         meuFormulario.value.name,
         +meuFormulario.value.anoNascimento,
@@ -109,7 +109,7 @@
         meuFormulario.value.localidade,
         meuFormulario
       );">
-      Registar Motorista
+      {{ isEditMode ? 'Atualizar Motorista' : 'Registar Motorista' }}
     </button>
 
     <button type="button" class="clear-button" (click)="meuFormulario.resetForm()">
@@ -142,22 +142,15 @@
 
 <ul class="lista-motoristas" *ngIf="motoristas.length > 0">
   <li *ngFor="let motorista of motoristas" class="cartao-motorista">
-    <a routerLink="/motorista-perfil/{{motorista._id}}">
+    <a [routerLink]="'/motorista-perfil/' + motorista._id">
       <span class="badge">&nbsp;</span>{{ motorista.name }}
     </a>
-    <button type="button" class="delete" title="delete motorista"
-    (click)="delete(motorista)">x</button>
-
-    <!--
-        <p><strong>NIF:</strong> {{ motorista.nif }}</p>
-    <p><strong>Carta de Condução:</strong> {{ motorista.carta_conducao }}</p>
-    <p><strong>Ano de Nascimento:</strong> {{ motorista.ano_nascimento }}</p>
-    <p><strong>Género:</strong> {{ motorista.genero }}</p>
-    <p><strong>Morada:</strong> {{ motorista.morada.rua }}, Nº {{ motorista.morada.numero_porta }}</p>
-    <p><strong>Código Postal:</strong> {{ motorista.morada.codigo_postal }}</p>
-    <p><strong>Localidade:</strong> {{ motorista.morada.localidade }}</p>
-    -->
-
+    <div class="action-buttons">
+      <button type="button" class="edit" title="edit motorista"
+        (click)="edit(motorista)" [class.selected]="editingMotoristaId === motorista._id">⚙</button>
+      <button type="button" class="delete" title="delete motorista"
+        (click)="delete(motorista)" [disabled]="!canDeleteMap[motorista._id]">x</button>
+    </div>
   </li>
 </ul>
 

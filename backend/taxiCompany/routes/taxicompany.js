@@ -34,6 +34,8 @@ router.post("/motoristas", motoristas_controller.motorista_create);
 
 router.delete("/motoristas/:id", motoristas_controller.motorista_delete_post);
 
+router.put("/motoristas/:id", motoristas_controller.put_motorista_by_id);
+
 //TURNOS
 router.get("/turnos",turnos_controller.get_turnos_list);
 
