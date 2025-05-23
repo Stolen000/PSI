@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { Motorista } from '../motorista';
@@ -26,7 +26,6 @@ export class MotoristaService {
       catchError(this.handleError<Motorista>('addMotorista'))
     );
   }
-
 
   getMotoristas(): Observable<Motorista[]> {
     return this.http.get<Motorista[]>(this.motoristaUrl)
@@ -53,6 +52,18 @@ export class MotoristaService {
     return this.http.get<Motorista>(url).pipe(
       tap(_ => this.log(`fetched motorista _id=${id}`)),
       catchError(this.handleError<Motorista>(`getMotorista _id=${id}`))
+    );
+  }
+
+  putMotorista(motorista: Motorista): Observable<any> {
+    console.log("Motorista no service: " + motorista._id);
+    console.log(motorista);
+    const url = `${this.motoristaUrl}/${motorista._id}`; // Mantém a mesma estrutura de URL
+    return this.http.put(url, motorista, this.httpOptions).pipe(
+        catchError(err => {
+          console.error('Error occurred:', err);
+          return throwError(err);
+      })
     );
   }
 

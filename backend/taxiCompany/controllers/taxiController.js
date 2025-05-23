@@ -59,3 +59,28 @@ exports.taxi_list = asyncHandler(async (req, res, next) => {
     res.json(taxi);
   }
   );  
+
+  exports.taxi_update_post = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+    const { matricula, marca, modelo, ano_de_compra, nivel_de_conforto } = req.body;
+
+    const updatedTaxi = await Taxi.findByIdAndUpdate(
+      id,
+      {
+        matricula,
+        marca,
+        modelo,
+        ano_de_compra,
+        nivel_de_conforto
+      },
+      { new: true } // para retornar o documento atualizado
+    );
+
+    if (!updatedTaxi) {
+      const err = new Error("Táxi não encontrado");
+      err.status = 404;
+      return next(err);
+    }
+
+    res.json(updatedTaxi);
+  });

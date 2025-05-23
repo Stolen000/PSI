@@ -23,12 +23,16 @@ export class MotoristaPerfilComponent {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.motoristaService.getMotoristaById(id).subscribe(motorista => {
-        this.motorista = motorista;
-
-        // Verifica se há turno ativo
-        this.turnoService.getTurnoAtual(id).subscribe(turno => {
-          this.turnoAtivo = !!turno;
-        });
+        if(motorista){
+          this.motorista = motorista;
+          // Verifica se há turno ativo
+          this.turnoService.getTurnoAtual(id).subscribe(turno => {
+            if(turno){
+              this.turnoAtivo = !!turno;
+            }
+            
+          });
+        }
       });
     }
   }

@@ -25,6 +25,11 @@ exports.patch_turno_mais_um = asyncHandler(async (req, res, next) => {
   res.json(turno);  
 });
 
+exports.get_turnos_taxi = asyncHandler(async (req, res, next) => {
+  const taxiId = req.params.taxi_id;
+  const turnos = await Turno.find({ taxi_id: taxiId });
+  res.json({ turnos });
+});
 
 exports.get_turno_by_id = asyncHandler(async (req, res, next) => {
   const turno = await Turno.findById(req.params.id);
@@ -48,8 +53,8 @@ exports.get_turnos_by_motorista = asyncHandler(async (req, res, next) => {
       // Query the Turno model directly by motorista_id
       const turnos = await Turno.find({ motorista_id: motoristaId }).exec();
       
-      if (!turnos || turnos.length === 0) {
-      return res.status(404).json({ message: 'Nenhum turno encontrado para este motorista' });
+      if(!turnos){
+        return res.status(404).json({ message: 'Erro no buscar turnos por motorista' });
       }
       res.json(turnos); // Return the list of turnos
   } catch (err) {

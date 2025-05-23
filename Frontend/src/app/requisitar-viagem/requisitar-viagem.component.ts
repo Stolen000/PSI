@@ -6,7 +6,9 @@ import { LocalizationService } from '../services/localization.service';
 import { TransportPricesService } from '../services/transport-prices.service';
 import { ViagemService } from '../services/viagem.service';
 import { TurnoService } from '../services/turno.service';
+import { TaxiService } from '../services/taxi.service';
 
+import { Taxi } from '../taxi';
 import { Morada } from '../morada';
 import { forkJoin, map, Observable } from 'rxjs';
 import { Turno } from '../turno';
@@ -41,6 +43,10 @@ export class RequisitarViagemComponent implements OnInit {
   usarLocalizacao: boolean = false;
   coordenadasOrigem: { lat: number; lon: number } | null = null;
   turnoSelecionado?: Turno;
+
+  taxiDetalhesMap: { [taxiId: string]: Taxi } = {};
+
+
   moradaOrigem: Morada = {
     rua: '',
     numero_porta: 0,
@@ -48,11 +54,8 @@ export class RequisitarViagemComponent implements OnInit {
     localidade: ''
   };
   motoristas: Motorista[] = [];
-
-
-
+  
   selectedPedido?: Pedido_Viagem;
-
 
   coordenadasSelecionadas: { lat: number; lon: number } | null = null;
   moradaDestino: Morada = {
@@ -70,7 +73,8 @@ export class RequisitarViagemComponent implements OnInit {
     private transpPriceService : TransportPricesService,
     private viagemService: ViagemService,
     private turnoService: TurnoService,
-    private motoristaService: MotoristaService
+    private motoristaService: MotoristaService,
+    private taxiService: TaxiService
   ) {}
 
   ngOnInit(): void {
@@ -79,8 +83,6 @@ export class RequisitarViagemComponent implements OnInit {
       this.codigosPostais = data;
       this.criarAutoMoradaOrigem();
     });
-     // Chama a função automaticamente no início
-
   }
 
   usarLocalizacaoAtual(): void {  
@@ -167,9 +169,6 @@ export class RequisitarViagemComponent implements OnInit {
     }, 5000);
   }
 
-
-  
-
   
   onSelect(pedido: Pedido_Viagem): void {
       console.log("Pedido selecionado:", pedido);
@@ -179,6 +178,21 @@ export class RequisitarViagemComponent implements OnInit {
   getPedidos(): void {
     this.pedidosViagemService.getPedidos().subscribe(pedidos => {
       this.pedidos = pedidos;
+
+      const taxiIdsUnicos = Array.from(new Set(
+        pedidos
+          .filter(p => p.taxi)   // só pedidos que têm taxi atribuído
+          .map(p => p.taxi!)
+      ));
+
+      // Para cada taxiId único, pega os dados do taxi (se ainda não estiver no mapa)
+      taxiIdsUnicos.forEach(taxiId => {
+        if (!this.taxiDetalhesMap[taxiId]) {
+          this.taxiService.getTaxi(taxiId).subscribe(taxi => {
+            this.taxiDetalhesMap[taxiId] = taxi;
+          });
+        }
+      });
       
       this.pedidos.forEach(element => {
         if(element.estado !== 'pendente' ){      

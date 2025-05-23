@@ -9,7 +9,7 @@ const MotoristaSchema = new Schema({
   nif: { type: Number, required: true },
   genero: { type: String, enum: ['Masculino', 'Feminino'], required: true },
   morada: { type: MoradaSchema, required: true }, // usa o subdocumento
-});
+}, { timestamps: true });
 
 // Export model
 module.exports = mongoose.model("Motorista", MotoristaSchema);
