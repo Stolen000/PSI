@@ -181,7 +181,7 @@ export class RequisitarViagemComponent implements OnInit {
       this.pedidos = pedidos;
       
       this.pedidos.forEach(element => {
-        if(element.estado === 'aceite'){      
+        if(element.estado !== 'pendente' ){      
           this.motoristaService.getMotoristaById(element.motorista)
           .subscribe(motorista => this.motoristas.push(motorista));}
 
@@ -190,8 +190,9 @@ export class RequisitarViagemComponent implements OnInit {
   }
 
   getMotoristaNome(id: string): string | undefined {
-    //console.log(this.motoristas);
+
     const motorista = this.motoristas.find(element => element._id === id);
+    //console.log(motorista?.name);
     return motorista?.name;
   }
 

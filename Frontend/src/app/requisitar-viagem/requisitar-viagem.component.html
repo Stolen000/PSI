@@ -130,16 +130,20 @@
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
 
       <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
-      <ng-container *ngIf="pedido.estado === 'aceite' || pedido.estado === 'em curso'">
+      <ng-container *ngIf="pedido.estado === 'aceite' || pedido.estado === 'em curso' || pedido.estado === 'aguardar motorista'">
         <span class="nome_motorista">Motorista: {{ this.getMotoristaNome(pedido.motorista)}} </span><br />
-
         <span class="distancia">Distância ao Motorista: {{ pedido.distancia_motorista }} km</span><br />
+        <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
+        <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
+      </ng-container>
+
+      <ng-container *ngIf="pedido.estado === 'terminada'">
+        <span class="nome_motorista">Motorista: {{ this.getMotoristaNome(pedido.motorista)}} </span><br />
+        <span class="custo">Custo Final: €{{ pedido.custo_final }}</span>
       </ng-container>
 
 
 
-      <span class="tempo">Tempo Estimado: {{ pedido.tempo_estimado }} min</span><br />
-      <span class="custo">Custo Estimado: €{{ pedido.custo_estimado }}</span>
     </button>
 
     <ng-container *ngIf="pedido.estado === 'aceite'">

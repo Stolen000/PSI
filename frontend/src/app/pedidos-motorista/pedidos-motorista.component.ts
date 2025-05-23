@@ -96,7 +96,8 @@ getPedidos(): void {
         console.log(pedido)
         if (pedido.nivel_conforto !== this.taxi?.nivel_de_conforto ||
   (Array.isArray(pedido.motoristas_rejeitados) &&
-   pedido.motoristas_rejeitados.includes(this.motoristaId))
+   pedido.motoristas_rejeitados.includes(this.motoristaId)) ||
+   pedido.estado === 'em curso' || pedido.estado === 'terminada' || pedido.estado === 'aguardar motorista'
         ) {
           return false;
         }

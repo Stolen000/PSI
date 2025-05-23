@@ -110,28 +110,54 @@ iniciarViagem(): void {
 }
 
 
-finalizarViagem(): void {
-  if (this.selectedViagem) {
-    const fim_viagem = new Date();
+async finalizarViagem(): Promise<void> {
+  if (!this.selectedViagem) return;
 
-    // Atualizar o fim da viagem
-    this.viagemService.atualizarViagemFim(fim_viagem, this.selectedViagem)
-      .subscribe(() => {
-        console.log("Viagem atualizada com sucesso:", this.selectedViagem);
-        this.getViagens();
+  const viagem = this.selectedViagem;
+  const fim_viagem = new Date();
 
-        // Terminar o pedido associado à viagem
-        const pedidoId = this.selectedViagem?.pedido_id; // ou .pedido_id conforme o campo certo
-        if (pedidoId) {
-          this.pedidosService.terminarPedido(pedidoId).subscribe(() => {
-            console.log(`Pedido ${pedidoId} terminado com sucesso`);
-          });
-        }
-      });
-  }
-  this.calcularPrecoViagem();
-  this.viagemEmCurso = false;
+  this.viagemService.atualizarViagemFim(fim_viagem, viagem).subscribe(async () => {
+    viagem.fim_viagem = fim_viagem;
+    this.getViagens();
+
+    // Terminar o pedido associado à viagem, se existir
+
+
+    try {
+      // Calcular custo
+      const custo = await this.calcularCustoViagem(viagem);
+
+      // Encontrar o pedido associado pela viagem.pedido_id
+      const pedido = this.pedidos.find(p => p._id === viagem.pedido_id);
+      if (pedido) {
+        pedido.custo_final = custo;
+        pedido.estado = 'terminada';
+
+        // Atualizar o pedido com o custo final
+        this.pedidosService.updatePedido(pedido).subscribe({
+          next: () => {
+            console.log(`Pedido ${pedido._id} atualizado com custo final: €${custo}`);
+          },
+          error: (err) => {
+            console.error("Erro ao atualizar o pedido:", err);
+          }
+        });
+      } else {
+        console.warn("Pedido não encontrado para a viagem:", viagem);
+      }
+
+      console.log("Custo da viagem:", custo);
+    } catch (erro) {
+      console.error("Erro ao calcular custo:", erro);
+    }
+
+    this.viagemEmCurso = false;
+  });
 }
+
+
+
+
 
 
   getViagens(): void {
@@ -216,5 +242,55 @@ finalizarViagem(): void {
       });
     });
   }
+
+  calcularCustoViagem(viagem?: Viagem): Promise<number> {
+  return new Promise((resolve, reject) => {
+    if (!viagem || !viagem.inicio_viagem || !viagem.fim_viagem) {
+      console.log(viagem, viagem?.inicio_viagem, viagem?.fim_viagem);
+      console.warn('Viagem ou datas de início/fim em falta.');
+      return reject('Dados da viagem inválidos');
+    }
+
+    const begin = new Date(viagem.inicio_viagem);
+    const end = new Date(viagem.fim_viagem);
+    if (!begin || !end) {
+      console.warn('Datas de início ou fim inválidas.');
+      return reject('Datas inválidas');
+    }
+
+    this.turnoService.getTurnoById(viagem.turno_id).subscribe(turno => {
+      if (!turno) return reject('Turno não encontrado');
+
+      this.taxiService.getTaxi(turno.taxi_id).subscribe(taxi => {
+        if (!taxi) return reject('Táxi não encontrado');
+
+        const conforto = taxi.nivel_de_conforto;
+
+        this.transpPriceService.getPrices().subscribe(price => {
+          const startMin = begin.getHours() * 60 + begin.getMinutes();
+          let endMin = end.getHours() * 60 + end.getMinutes();
+          if (end <= begin) endMin += 24 * 60;
+
+          const pricePerMinute = conforto === 'basic'
+            ? parseFloat(price.basic_price)
+            : parseFloat(price.luxurious_price);
+
+          const taxRate = parseFloat(price.nocturne_tax) / 100;
+          let total = 0;
+
+          for (let i = startMin; i < endMin; i++) {
+            const hour = Math.floor(i % 1440 / 60);
+            const isNight = hour >= 21 || hour < 6;
+            total += pricePerMinute * (isNight ? 1 + taxRate : 1);
+          }
+
+          const custo_estimado = Math.round(total * 100) / 100;
+          resolve(custo_estimado);
+        }, () => reject('Erro ao obter preços'));
+      }, () => reject('Erro ao obter táxi'));
+    }, () => reject('Erro ao obter turno'));
+  });
+}
+
 
 }
