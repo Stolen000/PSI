@@ -5,6 +5,7 @@ import { CodigoPostalService } from '../services/codigo-postal.service';
 import { NgForm } from '@angular/forms';
 import { TurnoService } from '../services/turno.service';
 import { Turno } from '../turno';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-motorista',
@@ -21,7 +22,6 @@ export class MotoristaComponent implements OnInit {
   motoristaNaoEncontrado: boolean = false;
   mensagemSucesso: string = '';
 
-  //new 
   name_edit: string = '';
   anoNascimento_edit: number | undefined;
   cartaConducao_edit: number | undefined;
@@ -127,20 +127,22 @@ export class MotoristaComponent implements OnInit {
       },
     };
 
-    if(!this.isEditMode){
-      console.log('Motorista a registar:', motorista);
-      this.motoristaService.addMotorista(motorista as Motorista)
-        .subscribe(motorista => {
-          console.log("Motorista recebido do backend:", motorista);
-          this.motoristas.unshift(motorista);
-        });
-      this.mensagemSucesso = 'Motorista registado com sucesso!';
-      formulario.resetForm();
-      setTimeout(() => {
-        this.mensagemSucesso = '';
-      }, 3000);
-      this.getMotoristas(); 
-    } else {
+  if (!this.isEditMode) {
+    this.motoristaService.addMotorista(motorista as Motorista)
+      .pipe(
+        tap((newMotorista) => {
+          this.motoristas.unshift(newMotorista); // guaranteed from backend
+          this.checkIfCanDelete();
+        })
+      )
+      .subscribe(() => {
+        this.mensagemSucesso = 'Motorista registado com sucesso!';
+        formulario.resetForm();
+        setTimeout(() => {
+          this.mensagemSucesso = '';
+        }, 3000);
+      });
+  } else {
       let motoristaUpdate  = {
         ...motorista,
         _id: this.editingMotoristaId
