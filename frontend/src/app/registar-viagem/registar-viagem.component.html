@@ -22,7 +22,9 @@
     <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
     <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
     <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
+    <strong>Morada Início:</strong> {{ viagem.coordenadas }}<br>
     <strong>Data Fim:</strong> {{ viagem.fim_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
+    <strong>Morada Final:</strong> {{ viagem.inicio_viagem }}<br>
   </button>
 
   <div *ngIf="viagem === selectedViagem">
@@ -30,10 +32,36 @@
       Iniciar Viagem
     </button>
 
-    <button *ngIf="viagemEmCurso && selectedViagem?.inicio_viagem && !selectedViagem?.fim_viagem" 
-            (click)="finalizarViagem()">
-      Terminar Viagem
-    </button>
+<form #pedidoForm="ngForm" class="viagem-form" (ngSubmit)="finalizarViagem()" *ngIf="viagemEmCurso && selectedViagem?.inicio_viagem && !selectedViagem?.fim_viagem">
+  <div>
+    <label for="ruaDestino">Rua:</label>
+    <input id="ruaDestino" type="text" name="ruaDestino" ngModel [(ngModel)]="moradaDestino.rua" #ruaDestino="ngModel">
+  </div>
+
+  <div>
+    <label for="numeroPortaDestino">Número da Porta:</label>
+    <input id="numeroPortaDestino" type="number" name="numeroPortaDestino" [(ngModel)]="moradaDestino.numero_porta" required #numeroPortaDestino="ngModel">
+  </div>
+
+  <div>
+    <label for="codigoPostalDestino">Código Postal:</label>
+    <input id="codigoPostalDestino" type="text" name="codigoPostalDestino" [(ngModel)]="moradaDestino.codigo_postal" required #codigoPostalDestino="ngModel"
+      (blur)="buscarLocalidadeDestino(moradaDestino.codigo_postal)">
+    <div *ngIf="codigoPostalDestinoNaoEncontrado" class="info-msg">Código postal de destino não encontrado.</div>
+  </div>
+
+  <div>
+    <label for="localidadeDestino">Localidade:</label>
+    <input id="localidadeDestino" type="text" name="localidadeDestino" [(ngModel)]="localidadeDestino" required>
+  </div>
+  <button type="button" (click)="buscarMoradaAtual()">
+  Usar Localização Atual
+  </button>
+  <!-- Submit button at the bottom -->
+  <button type="submit">
+    Terminar Viagem
+  </button>
+</form>
 
     <div *ngIf="viagem.inicio_viagem && viagem.fim_viagem">
       <strong>Custo total:</strong> €{{ precoViagemSelecionada }}

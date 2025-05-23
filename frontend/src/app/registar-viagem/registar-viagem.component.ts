@@ -10,6 +10,8 @@ import { MotoristaService } from '../services/motorista.service';
 import { Motorista } from '../motorista';
 import { Pedido_Viagem } from '../pedido-viagem';
 import { PedidosViagemService } from '../services/pedidos-viagem.service';
+import { Morada } from '../morada';
+import { CodigoPostalService } from '../services/codigo-postal.service';
 
 @Component({
   selector: 'app-registar-viagem',
@@ -17,9 +19,10 @@ import { PedidosViagemService } from '../services/pedidos-viagem.service';
 })
 
 export class RegistarViagemComponent implements OnInit {
+
   viagens: Viagem[] = [];
   motorista_id: string = "";
-  viagemAtual?: Viagem;
+  viagemAtual?: Viagem; //?
   selectedViagem?: Viagem;
   viagemEmCurso: boolean = false;
   precoViagemSelecionada?: number;
@@ -30,8 +33,20 @@ export class RegistarViagemComponent implements OnInit {
 
 
   viagensEmCurso: Viagem[] = [];
-viagensTerminadas: Viagem[] = [];
+  viagensTerminadas: Viagem[] = [];
 
+
+  //new Stuff
+  usarLocalizacao: boolean = false;
+  codigosPostais: any[] = [];
+  codigoPostalDestinoNaoEncontrado: boolean = false;
+  localidadeDestino: string = '';
+  moradaDestino: Morada = {
+    rua: '',
+    numero_porta: 0,
+    codigo_postal: '',
+    localidade: ''
+  }; //vai ter o codigo postal e o num de porta
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +56,8 @@ viagensTerminadas: Viagem[] = [];
     private taxiService: TaxiService,
     private localizationService: LocalizationService,
     private motoristaService: MotoristaService,
-    private pedidosService: PedidosViagemService
+    private pedidosService: PedidosViagemService,
+    private codigoPostalService: CodigoPostalService
   ) {}
 
   ngOnInit(): void {
@@ -51,18 +67,19 @@ viagensTerminadas: Viagem[] = [];
       console.log("Motorista ID obtido do path:", this.motorista_id);
       this.getNomeMotorista(this.motorista_id);
       this.getViagens();
-      
-
     }
+    this.codigoPostalService.getCodigosPostais().subscribe(data => {
+      this.codigosPostais = data;
+    });
   }
   getNomeMotorista(motorista_id: string): void {
     this.motoristaService.getMotoristaById(motorista_id).subscribe(motorista => this.nome_motorista = motorista.name);
   }
 
-getNomeCliente(pedido_id: string): string {
-  const pedido = this.pedidos.find(p => p._id === pedido_id);
-  return pedido ? pedido.cliente_nome : 'Cliente não encontrado';
-}
+  getNomeCliente(pedido_id: string): string {
+    const pedido = this.pedidos.find(p => p._id === pedido_id);
+    return pedido ? pedido.cliente_nome : 'Cliente não encontrado';
+  }
 
 
   getPedidos(): void {
@@ -71,6 +88,20 @@ getNomeCliente(pedido_id: string): string {
       this.pedidos = todosPedidos.filter(p => idsViagens.includes(p._id));
       //console.log(this.pedidos);
     });
+  }
+
+  buscarLocalidadeDestino(codigoPostal: string): void {
+    const resultado = this.codigosPostais.find(
+      c => c.codigo_postal === codigoPostal
+    );
+
+    if (resultado) {
+      this.localidadeDestino = resultado.localidade;
+      this.codigoPostalDestinoNaoEncontrado = false;
+    } else {
+      this.localidadeDestino = '';
+      this.codigoPostalDestinoNaoEncontrado = true;
+    }
   }
 
 
@@ -113,20 +144,17 @@ iniciarViagem(): void {
   }
 }
 
-
 async finalizarViagem(): Promise<void> {
   if (!this.selectedViagem) return;
 
   const viagem = this.selectedViagem;
   const fim_viagem = new Date();
-
+  
   this.viagemService.atualizarViagemFim(fim_viagem, viagem).subscribe(async () => {
     viagem.fim_viagem = fim_viagem;
     this.getViagens();
 
     // Terminar o pedido associado à viagem, se existir
-
-
     try {
       // Calcular custo
       const custo = await this.calcularCustoViagem(viagem);
@@ -159,11 +187,6 @@ async finalizarViagem(): Promise<void> {
   });
 }
 
-
-
-
-
-
   getViagens(): void {
     this.viagemService.getViagens().subscribe(todasViagens => {
       this.viagens = todasViagens.filter(
@@ -177,9 +200,32 @@ async finalizarViagem(): Promise<void> {
       });
 
       // Atualiza estado da viagem em curso
-      this.viagemEmCurso = this.viagens.some(
+      const viagemEmCursoObj = this.viagens.find(
         viagem => viagem.inicio_viagem && !viagem.fim_viagem
       );
+
+      // Atualiza estado da viagem em curso
+      this.viagemEmCurso = !!viagemEmCursoObj;
+      //Popular os parametros do forms com os da viagem!!
+      // Se houver uma viagem em curso, popula os parâmetros do formulário
+      if (viagemEmCursoObj) {
+        this.localizationService.getMoradaPorCoordenadas(
+          viagemEmCursoObj.coordenadas_destino.lat,viagemEmCursoObj.coordenadas_destino.lon
+        ).subscribe(morada => {
+            if (morada) {
+              this.moradaDestino = morada;
+              console.log('Morada Destino obtida:', morada);
+              if (this.moradaDestino?.codigo_postal && this.moradaDestino.codigo_postal.length === 8) {
+                setTimeout(() => {
+                  this.buscarLocalidadeDestino(this.moradaDestino.codigo_postal);
+                  console.log("Entrei aqui no guardar coordenadas")
+                });
+              }
+          } else {
+            console.error('Erro ao obter morada de origem.');
+          }
+        });
+      }
       this.getPedidos();
       console.log(this.pedidos);
       this.viagensEmCurso = this.viagens.filter(v => !v.fim_viagem);
@@ -300,5 +346,57 @@ async finalizarViagem(): Promise<void> {
   });
 }
 
+  buscarMoradaAtual(): void {
+    this.localizationService.getLocalizacaoAtual().then(
+      (coords) => {
+        let coordenadas = coords;
+        this.usarLocalizacao = true; // <- aqui você define que o utilizador aceitou
+        console.log('Coordenadas de origem obtidas:', coords);
 
+        // Chamar o reverse geocoding com as coordenadas
+        this.localizationService.getMoradaPorCoordenadas(coords.lat, coords.lon)
+          .subscribe(morada => {
+            if (morada) {
+              this.moradaDestino = morada;
+              console.log('Morada obtida:', morada);
+              if (this.moradaDestino?.codigo_postal && this.moradaDestino.codigo_postal.length === 8) {
+                setTimeout(() => {
+                  this.buscarLocalidadeOrigem(this.moradaDestino.codigo_postal);
+                });
+              }
+
+
+            } else {
+              console.error('Erro ao obter morada de origem.');
+            }
+          });
+
+      },
+      (error) => {
+        this.usarLocalizacao = false; // <- aqui define que o utilizador recusou
+        console.error('Erro ao obter localização:', error);
+        // Aqui você pode também mostrar uma mensagem ao utilizador, se quiser
+      }
+    );
+  }
+
+  usarLocalizacaoAtual(): void {  
+    this.usarLocalizacao = true;
+  }
+
+  buscarLocalidadeOrigem(codigoPostal: string): void {
+    console.log('A procurar localidade para:', `"${codigoPostal}"`);
+    const resultado = this.codigosPostais.find(
+      c => c.codigo_postal === codigoPostal
+    );
+      console.log("Localidade Encontrada:",resultado)
+    if (resultado) {
+
+      this.localidadeDestino = resultado.localidade;
+      this.codigoPostalDestinoNaoEncontrado = false;
+    } else {
+      this.localidadeDestino = '';
+      this.codigoPostalDestinoNaoEncontrado = true;
+    }
+  }
 }
