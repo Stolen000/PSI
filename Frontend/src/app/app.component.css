@@ -63,7 +63,7 @@ html, body {
   
   .content {
     flex-grow: 1;
-    
+
     padding: 2rem;
     padding-top: 0%;
     background-color: #f3f4f6;
@@ -89,6 +89,7 @@ html, body {
     padding: 2rem;
     background-color: #f3f4f6;
     overflow-y: auto;
+    padding-left: 80px; /* or 16px — adjust to your liking */
   }
 .toggle-btn {
   position: absolute;
@@ -153,7 +154,7 @@ html, body {
 
 /* Individual icons */
 .sidenav.collapsed .link_taxis::before {
-  background-image: url('/assets/icons/taxi.png');
+  background-image: url('/assets/icons/manager.png');
 }
 .sidenav.collapsed .link_motoristas::before {
   background-image: url('/assets/icons/driver.png');
