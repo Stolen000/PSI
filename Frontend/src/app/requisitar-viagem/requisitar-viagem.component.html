@@ -124,7 +124,7 @@
     <button [class.selected]="pedido === selectedPedido" (click)="onSelect(pedido)">
       <span class="cliente">Cliente: {{ pedido.cliente_nome }}</span><br />
       <span class="destino">
-        Destino: {{ pedido.morada_destino.codigo_postal }} {{ pedido.morada_destino.localidade }}
+        Destino: {{ pedido.morada_destino.rua }} {{ pedido.morada_destino.localidade }}
       </span><br />
       <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span>
       <br />
