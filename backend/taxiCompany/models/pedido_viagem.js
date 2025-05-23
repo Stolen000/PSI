@@ -35,6 +35,9 @@ const PedidoViagemSchema = new Schema({
     custo_estimado: { type: Number, default: null },
     motorista: { type: String, default: null },
     turno_id: { type: String, default: null },
+    custo_final: {type: Number, default: null},
+    motoristas_rejeitados: { type: [String], default: [] },
+
 
 });
 // Virtual for author's URL

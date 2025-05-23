@@ -17,6 +17,8 @@ export interface Pedido_Viagem {
   distancia_motorista: number;
   tempo_estimado: number;
   custo_estimado: number;
+  custo_final: number;
   motorista: string;
   turno_id: string;
+  motoristas_rejeitados: string[];
 }

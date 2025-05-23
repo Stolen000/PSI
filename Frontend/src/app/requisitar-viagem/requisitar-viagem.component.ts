@@ -279,10 +279,13 @@ export class RequisitarViagemComponent implements OnInit {
       //taxi id
       //motorista id
       //distancia ao motorista
+      console.log(pedido.motorista);
+      pedido.motoristas_rejeitados.push(pedido.motorista);
       pedido.distancia_motorista = -1;
       pedido.estado = 'pendente';
       pedido.taxi = '';
       pedido.motorista = '';
+
       //fazer o update para a db
       this.pedidosViagemService.updatePedido(pedido)
         .subscribe(() => {

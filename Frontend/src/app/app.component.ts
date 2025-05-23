@@ -16,4 +16,6 @@ export class AppComponent {
     this.sidenavCollapsed = !this.sidenavCollapsed;
   }
 
+  
+
 }

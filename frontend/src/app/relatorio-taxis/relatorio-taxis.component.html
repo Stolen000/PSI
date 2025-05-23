@@ -1,3 +1,4 @@
+<button onclick="history.back()">Voltar</button>
 
 <h2>Relatório de Estatísticas de Taxis</h2>
 <h3>Selecione o período de tempo para poder observar as estatísticas</h3>
@@ -19,7 +20,7 @@
         O início do período não pode ser posterior ao fim.
     </div>
 
-<div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
+<div *ngIf="inicio_periodo && fim_periodo && !perido_invalido" style="margin-top: 20px;">
   <div (click)="mostrarDetalhesViagens = !mostrarDetalhesViagens"
        style="cursor:pointer; background:#eee; padding:10px; border-radius:5px;">
     <strong>Total de viagens no período: {{ totalViagens }}</strong>

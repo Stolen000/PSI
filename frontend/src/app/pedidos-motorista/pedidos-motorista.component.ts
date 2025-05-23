@@ -89,9 +89,15 @@ getPedidos(): void {
 
   this.pedidoService.getPedidos().subscribe(pedidos => {
     // Filtra e processa os pedidos
+    console.log('motoristaId:', this.motoristaId, typeof this.motoristaId);
+
     this.pedidos = pedidos
       .filter(pedido => {
-        if (pedido.nivel_conforto !== this.taxi?.nivel_de_conforto) {
+        console.log(pedido)
+        if (pedido.nivel_conforto !== this.taxi?.nivel_de_conforto ||
+  (Array.isArray(pedido.motoristas_rejeitados) &&
+   pedido.motoristas_rejeitados.includes(this.motoristaId))
+        ) {
           return false;
         }
 
