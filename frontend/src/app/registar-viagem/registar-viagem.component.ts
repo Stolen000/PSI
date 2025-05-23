@@ -29,6 +29,10 @@ export class RegistarViagemComponent implements OnInit {
   pedidos: Pedido_Viagem[] = [];
 
 
+  viagensEmCurso: Viagem[] = [];
+viagensTerminadas: Viagem[] = [];
+
+
   constructor(
     private route: ActivatedRoute,
     private viagemService: ViagemService,
@@ -178,8 +182,12 @@ async finalizarViagem(): Promise<void> {
       );
       this.getPedidos();
       console.log(this.pedidos);
+      this.viagensEmCurso = this.viagens.filter(v => !v.fim_viagem);
+      this.viagensTerminadas = this.viagens.filter(v => v.fim_viagem);
     });
   }
+
+
 
   calcularDistancia(){
         if (!this.selectedViagem ) {

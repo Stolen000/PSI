@@ -20,7 +20,7 @@
     O início do período não pode ser posterior ao fim.
 </div>
 
-<div *ngIf="inicio_periodo && fim_periodo" style="margin-top: 20px;">
+<div *ngIf="inicio_periodo && fim_periodo && !perido_invalido" style="margin-top: 20px;">
   <!-- Total Viagens -->
   <div (click)="mostrarDetalhesViagens = !mostrarDetalhesViagens"
        style="cursor:pointer; background:#eee; padding:10px; border-radius:5px;">

@@ -1,39 +1,46 @@
 <button onclick="history.back()">Voltar</button>
 
 <div *ngIf="viagens.length > 0; else semViagens">
-  <h2>Viagens do Motorista</h2>
+  <h2>Viagens em Curso</h2>
   <ul class="lista-viagens">
-    <li *ngFor="let viagem of viagens">
-      <button [class.selected]="viagem === selectedViagem" (click)="onSelect(viagem)">
-        <strong>Cliente:</strong> {{ this.getNomeCliente(viagem.pedido_id) }}<br>
-        <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
-        <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
-        <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
-        <strong>Data Fim:</strong> {{ viagem.fim_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
+    <li *ngFor="let viagem of viagensEmCurso">
+      <ng-container *ngTemplateOutlet="templateViagem; context: { $implicit: viagem }"></ng-container>
+    </li>
+  </ul>
 
-      </button>
-
-      <div *ngIf="viagem === selectedViagem">
-        <button *ngIf="!viagemEmCurso && !selectedViagem.inicio_viagem" (click)="iniciarViagem()">
-          Iniciar Viagem
-        </button>
-
-        <button *ngIf="viagemEmCurso && selectedViagem.inicio_viagem && !selectedViagem.fim_viagem" 
-                (click)="finalizarViagem()">
-          Terminar Viagem
-        </button>
-
-        <!-- Mostrar custo se a viagem tiver início e fim definidos -->
-        <div *ngIf="viagem.inicio_viagem && viagem.fim_viagem">
-          <strong>Custo total:</strong> €{{ precoViagemSelecionada }}
-        <strong>Distância:</strong> {{ distanciaViagemSelecionada }} km
-        </div>
-      </div>
-
+  <h2>Viagens Terminadas</h2>
+  <ul class="lista-viagens">
+    <li *ngFor="let viagem of viagensTerminadas">
+      <ng-container *ngTemplateOutlet="templateViagem; context: { $implicit: viagem }"></ng-container>
     </li>
   </ul>
 </div>
 
+<ng-template #templateViagem let-viagem>
+  <button [class.selected]="viagem === selectedViagem" (click)="onSelect(viagem)">
+    <strong>Cliente:</strong> {{ this.getNomeCliente(viagem.pedido_id) }}<br>
+    <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
+    <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
+    <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
+    <strong>Data Fim:</strong> {{ viagem.fim_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
+  </button>
+
+  <div *ngIf="viagem === selectedViagem">
+    <button *ngIf="!viagemEmCurso && !selectedViagem?.inicio_viagem" (click)="iniciarViagem()">
+      Iniciar Viagem
+    </button>
+
+    <button *ngIf="viagemEmCurso && selectedViagem?.inicio_viagem && !selectedViagem?.fim_viagem" 
+            (click)="finalizarViagem()">
+      Terminar Viagem
+    </button>
+
+    <div *ngIf="viagem.inicio_viagem && viagem.fim_viagem">
+      <strong>Custo total:</strong> €{{ precoViagemSelecionada }}
+      <strong>Distância:</strong> {{ distanciaViagemSelecionada }} km
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #semViagens>
   <p>Este motorista ainda não tem viagens registadas.</p>

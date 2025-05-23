@@ -129,6 +129,18 @@
       <span class="conforto">Conforto: {{ pedido.nivel_conforto }}</span>
       <br />
       <span class="estado">Estado: {{ pedido.estado }}</span><br />
+            <ng-container *ngIf="pedido.estado !== 'pendente'">
+        <div *ngIf="taxiDetalhesMap[pedido.taxi] as detalhes">
+          <br />
+          <span class="taxi-title">Taxi informações:</span><br />
+          <br />
+          <span class="taxi-field">Matricula:{{ detalhes.matricula }}</span><br />
+          <span class="taxi-field">Marca:{{ detalhes.marca }}</span><br />
+          <span class="taxi-field">Modelo:{{ detalhes.modelo }}</span><br />
+          <span class="taxi-field">Ano de Compra:{{ detalhes.ano_de_compra }}</span><br />
+          <br />
+        </div>
+      </ng-container>
 
       <!-- Só mostra distância e taxi_id se estado for 'aceite' -->
       <ng-container *ngIf="pedido.estado === 'aceite' || pedido.estado === 'em curso' || pedido.estado === 'aguardar motorista'">
