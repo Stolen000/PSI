@@ -60,7 +60,7 @@ export class TaxisComponent {
 
   getTaxis(): void {
     this.taxiService.getTaxis()
-        .subscribe(taxis => this.taxis = taxis.reverse());
+        .subscribe(taxis => this.taxis = taxis);
   }
 
   createTaxi(matricula: string, marca : string, modelo : string, anoCompra : string, conforto : string){
@@ -95,17 +95,13 @@ export class TaxisComponent {
 
   
 
-  updateTaxi() {
+updateTaxi() {
     if (!this.selectedTaxi) return;
-    //ver se nivel de conforto pode ser mudado
-    //eh necessario taxi nao ter feito nenhuma viagem
-    //criar end point das viagens por taxi id
-    //retornar se taxi fez viagens ou nao
 
     const formato = /^[A-Z0-9]{2}-[A-Z0-9]{2}-[A-Z0-9]{2}$/i;
 
-    if (!formato.test(this.selectedTaxi.matricula) ) {
-      console.error("A matrícula deve ser possuir 6 caracteres, e que possua tanto letras como número.");
+    if (!formato.test(this.selectedTaxi.matricula)) {
+      console.error("A matrícula deve possuir 6 caracteres, com letras e números.");
       this.validPlate = false;
       return;
     }
@@ -113,10 +109,10 @@ export class TaxisComponent {
     this.validPlate = true;
 
     this.taxiService.updateTaxi(this.selectedTaxi, this.selectedTaxi._id).subscribe(updatedTaxi => {
-      const index = this.taxis.findIndex(t => t._id === updatedTaxi._id);
-      if (index !== -1) {
-        this.taxis[index] = updatedTaxi;
-      }
+      this.taxis = this.taxis.filter(t => t._id !== updatedTaxi._id);
+
+      this.taxis.unshift(updatedTaxi);
+
       this.selectedTaxi = undefined;
     });
   }

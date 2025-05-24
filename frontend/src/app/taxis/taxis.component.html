@@ -48,7 +48,7 @@
 
 <h2>Lista de Táxis</h2>
 <ul class="lista-taxis">
-  <li *ngFor="let taxi of taxis.slice().reverse()" class="taxi-item">
+  <li *ngFor="let taxi of taxis.slice()" class="taxi-item">
     <div class="taxi-container">
       <button [class.selected]="taxi === selectedTaxi" (click)="onSelect(taxi)" class="taxi-button">
         <span class="matricula">Matrícula: {{ taxi.matricula }}</span><br />
