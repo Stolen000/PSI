@@ -20,6 +20,7 @@ import { CodigoPostalService } from '../services/codigo-postal.service';
 
 export class RegistarViagemComponent implements OnInit {
 
+
   viagens: Viagem[] = [];
   motorista_id: string = "";
   viagemAtual?: Viagem; //?
@@ -111,7 +112,7 @@ export class RegistarViagemComponent implements OnInit {
   
   onSelect(viagem: Viagem): void {
     this.selectedViagem = viagem;
-    this.pedidoAtual = this.pedidos.find(p => p._id === viagem.pedido_id);
+
 
 
     if (viagem.inicio_viagem && viagem.fim_viagem) {
@@ -402,4 +403,15 @@ async finalizarViagem(): Promise<void> {
       this.codigoPostalDestinoNaoEncontrado = true;
     }
   }
+
+  getMoradaDestino(pedido_id: string): string | undefined {
+    const pedido = this.pedidos.find(p => p._id === pedido_id);
+    return pedido?.morada_destino.rua;
+  }
+
+  getMoradaOrigem(pedido_id: string): string | undefined {
+    const pedido = this.pedidos.find(p => p._id === pedido_id);
+    return pedido?.morada_origem.rua;
+  }
+
 }
