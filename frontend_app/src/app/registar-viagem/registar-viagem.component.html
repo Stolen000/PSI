@@ -22,9 +22,9 @@
     <strong>Número de Pessoas:</strong> {{ viagem.num_pessoas }}<br>
     <strong>Sequência:</strong> {{ viagem.sequencia }}<br>
     <strong>Data Início:</strong> {{ viagem.inicio_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
-    <strong>Morada Início:</strong> {{ viagem.coordenadas }}<br>
+    <strong>Morada Início:</strong> {{ pedidoAtual?.morada_origem }}<br>
     <strong>Data Fim:</strong> {{ viagem.fim_viagem | date: 'dd-MM-yyyy HH:mm' }}<br>
-    <strong>Morada Final:</strong> {{ viagem.inicio_viagem }}<br>
+    <strong>Morada Final:</strong> {{ pedidoAtual?.morada_destino }}<br>
   </button>
 
   <div *ngIf="viagem === selectedViagem">

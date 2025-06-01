@@ -23,6 +23,7 @@ export class RegistarViagemComponent implements OnInit {
   viagens: Viagem[] = [];
   motorista_id: string = "";
   viagemAtual?: Viagem; //?
+  pedidoAtual?: Pedido_Viagem;
   selectedViagem?: Viagem;
   viagemEmCurso: boolean = false;
   precoViagemSelecionada?: number;
@@ -30,7 +31,7 @@ export class RegistarViagemComponent implements OnInit {
   math: any;
   nome_motorista : String = "";
   pedidos: Pedido_Viagem[] = [];
-
+  
 
   viagensEmCurso: Viagem[] = [];
   viagensTerminadas: Viagem[] = [];
@@ -110,6 +111,8 @@ export class RegistarViagemComponent implements OnInit {
   
   onSelect(viagem: Viagem): void {
     this.selectedViagem = viagem;
+    this.pedidoAtual = this.pedidos.find(p => p._id === viagem.pedido_id);
+
 
     if (viagem.inicio_viagem && viagem.fim_viagem) {
       this.calcularPrecoViagem();
