@@ -1,18 +1,3 @@
-# Ignore tudo por padrão
-*
-
-# Mas inclui explicitamente o diretório src
-!/src
-!/src/**
-
-# Permitir o ficheiro .gitignore em si (opcional)
-!.gitignore
-
-# Incluir package.json e angular.json se quiseres que o projeto ainda funcione em outros ambientes
-!package.json
-!angular.json
-!tsconfig.json
-!tsconfig.app.json
-!tsconfig.spec.json
-!karma.conf.js
-!README.md
+node_modules/
+.angular/
+.vscode/
