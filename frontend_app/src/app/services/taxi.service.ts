@@ -11,7 +11,7 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class TaxiService {
 
-  private taxiUrl = 'http://localhost:3000/taxis';  // URL to web api
+  private taxiUrl = 'http://10.101.151.25:3028/taxis';  // URL to web api
 
   
   httpOptions = {

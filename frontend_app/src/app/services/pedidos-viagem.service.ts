@@ -9,7 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PedidosViagemService {
-  private pedidosUrl = 'http://localhost:3000/pedidos';  
+  private pedidosUrl = 'http://10.101.151.25:3028/pedidos';  
 
 
   httpOptions = {

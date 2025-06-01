@@ -7,7 +7,7 @@ import { catchError, Observable, throwError, map } from 'rxjs';
   providedIn: 'root'
 })
 export class ViagemService {
-  private viagemUrl = 'http://localhost:3000/viagens';
+  private viagemUrl = 'http://10.101.151.25:3028/viagens';
   constructor(private http: HttpClient) { }
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })

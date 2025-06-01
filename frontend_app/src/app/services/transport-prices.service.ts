@@ -8,7 +8,7 @@ import { catchError, map, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class TransportPricesService {
-  private pricesUrl = 'http://localhost:3000/prices';  // URL to web api
+  private pricesUrl = 'http://10.101.151.25:3028/prices';  // URL to web api
 
   constructor(private http: HttpClient) { }
   httpOptions = {

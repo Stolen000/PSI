@@ -7,7 +7,7 @@ import { catchError, first, map, Observable, of, tap, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class TurnoService {
-  private turnosUrl = 'http://localhost:3000/turnos';  // URL to web api
+  private turnosUrl = 'http://10.101.151.25:3028/turnos';  // URL to web api
   constructor(private http: HttpClient) { }
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
