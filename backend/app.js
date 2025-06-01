@@ -15,8 +15,8 @@ app.use(cors())
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://gcalcadas:72Balerion19@cluster0.1wrld.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
-
+//const mongoDB = "mongodb+srv://gcalcadas:72Balerion19@cluster0.1wrld.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = "mongodb://psi028:psi028@localhost:27017/psi028?retryWrites=true&authSource=psi028";
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
